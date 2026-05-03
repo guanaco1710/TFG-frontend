@@ -114,4 +114,13 @@ void main() {
     expect(find.byKey(const Key('gym_list_error')), findsOneWidget);
     expect(find.text('Service unavailable'), findsOneWidget);
   });
+
+  testWidgets('shows error message on generic exception', (tester) async {
+    when(() => repo.fetchGyms()).thenThrow(Exception('Network failure'));
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('gym_list_error')), findsOneWidget);
+  });
 }
