@@ -43,6 +43,7 @@ class AuthProvider extends ChangeNotifier {
     required String name,
     required String email,
     required String password,
+    String? phone,
   }) async {
     _status = AuthStatus.loading;
     _errorMessage = null;
@@ -53,6 +54,7 @@ class AuthProvider extends ChangeNotifier {
         name: name,
         email: email,
         password: password,
+        phone: phone,
       );
       _currentUser = response.user;
       _refreshToken = response.tokens.refreshToken;
