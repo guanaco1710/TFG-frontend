@@ -6,6 +6,11 @@ import 'package:tfg_frontend/features/auth/data/repositories/auth_repository.dar
 import 'package:tfg_frontend/features/auth/presentation/providers/auth_provider.dart';
 import 'package:tfg_frontend/features/auth/presentation/screens/login_screen.dart';
 import 'package:tfg_frontend/features/auth/presentation/screens/signup_screen.dart';
+import 'package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart';
+import 'package:tfg_frontend/features/subscriptions/presentation/providers/subscription_provider.dart';
+import 'package:tfg_frontend/features/subscriptions/presentation/screens/my_subscription_screen.dart';
+
+const _baseUrl = 'http://localhost:8080/api/v1';
 
 void main() {
   runApp(const App());
@@ -20,11 +25,18 @@ class App extends StatelessWidget {
     final authRepository = AuthRepository(
       httpClient: http.Client(),
       tokenStorage: tokenStorage,
-      baseUrl: 'http://localhost:8080/api/v1',
+      baseUrl: _baseUrl,
     );
 
-    return ChangeNotifierProvider(
-      create: (_) => AuthProvider(repository: authRepository)..restoreSession(),
+    return MultiProvider(
+      providers: [
+        Provider<TokenStorage>.value(value: tokenStorage),
+        Provider<String>.value(value: _baseUrl),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(repository: authRepository)
+            ..restoreSession(),
+        ),
+      ],
       child: MaterialApp(
         title: 'TFG App',
         theme: ThemeData(
@@ -56,20 +68,8 @@ class _AuthGateState extends State<_AuthGate> {
     }
 
     if (status == AuthStatus.authenticated) {
-      final user = context.read<AuthProvider>().currentUser!;
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: () {
-                context.read<AuthProvider>().logout();
-              },
-            ),
-          ],
-        ),
-        body: Center(child: Text('Welcome, ${user.name}!')),
+      return _HomeShell(
+        onLogout: () => context.read<AuthProvider>().logout(),
       );
     }
 
@@ -77,5 +77,39 @@ class _AuthGateState extends State<_AuthGate> {
       return LoginScreen(onSignupTap: () => setState(() => _showLogin = false));
     }
     return SignupScreen(onLoginTap: () => setState(() => _showLogin = true));
+  }
+}
+
+class _HomeShell extends StatelessWidget {
+  const _HomeShell({required this.onLogout});
+
+  final VoidCallback onLogout;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokenStorage = context.read<TokenStorage>();
+    final baseUrl = context.read<String>();
+
+    return ChangeNotifierProvider(
+      create: (_) => SubscriptionProvider(
+        repository: SubscriptionRepository(
+          httpClient: http.Client(),
+          tokenStorage: tokenStorage,
+          baseUrl: baseUrl,
+        ),
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('My Subscription'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: onLogout,
+            ),
+          ],
+        ),
+        body: const MySubscriptionScreen(),
+      ),
+    );
   }
 }

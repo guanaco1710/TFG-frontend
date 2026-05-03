@@ -468,13 +468,27 @@ Concrete scheduled occurrences of a class type.
   "membershipPlanId": 2,
   "gymId": 1
 }
-// Response 201 + Location: /api/v1/subscriptions/{id}
+```
+
+### POST /subscriptions — Response 201
+```json
+{
+  "id": 7,
+  "plan": { "id": 2, "name": "Premium Monthly", "priceMonthly": 49.99 },
+  "gym": { "id": 1, "name": "GymBook Central", "address": "Calle Mayor 1", "city": "Madrid" },
+  "status": "ACTIVE",
+  "startDate": "2024-05-01",
+  "renewalDate": "2024-06-01",
+  "endDate": null,
+  "classesUsedThisMonth": 0,
+  "classesRemainingThisMonth": 12
+}
 ```
 
 ### GET /subscriptions/me — Response 200
 
 Always returns **one object** — the single active subscription for the authenticated user.  
-Returns 404 if the user has no active subscription.
+Returns `204 No Content` if the user has no active subscription.
 
 ```json
 {
@@ -484,12 +498,14 @@ Returns 404 if the user has no active subscription.
   "status": "ACTIVE",
   "startDate": "2024-05-01",
   "renewalDate": "2024-06-01",
+  "endDate": null,
   "classesUsedThisMonth": 5,
   "classesRemainingThisMonth": 7
 }
 ```
 
 `status` is one of `ACTIVE`, `CANCELLED`, `EXPIRED`.  
+`endDate` is the date the subscription ended or was cancelled; `null` when `status` is `ACTIVE`.  
 `classesRemainingThisMonth` is `null` when the plan grants unlimited classes.
 
 ### GET /subscriptions — Query params (admin)
@@ -512,6 +528,7 @@ Returns 404 if the user has no active subscription.
       "status": "ACTIVE",
       "startDate": "2024-05-01",
       "renewalDate": "2024-06-01",
+      "endDate": null,
       "classesUsedThisMonth": 5,
       "classesRemainingThisMonth": 7
     }
