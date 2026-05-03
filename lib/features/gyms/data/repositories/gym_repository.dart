@@ -27,9 +27,9 @@ class GymRepository {
   }
 
   Future<GymPage> fetchGyms({int page = 0, int size = 20}) async {
-    final uri = Uri.parse('$_baseUrl/gyms').replace(
-      queryParameters: {'page': '$page', 'size': '$size'},
-    );
+    final uri = Uri.parse(
+      '$_baseUrl/gyms',
+    ).replace(queryParameters: {'page': '$page', 'size': '$size'});
 
     final response = await _client.get(uri, headers: await _authHeaders());
 
@@ -38,8 +38,6 @@ class GymRepository {
       throw ApiException.fromJson(body, response.statusCode);
     }
 
-    return GymPage.fromJson(
-      jsonDecode(response.body) as Map<String, dynamic>,
-    );
+    return GymPage.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 }

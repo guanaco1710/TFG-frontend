@@ -26,10 +26,10 @@ class _GymListScreenState extends State<GymListScreen> {
       body: Consumer<GymListProvider>(
         builder: (context, provider, _) {
           return switch (provider.state) {
-            GymListLoadState.initial || GymListLoadState.loading =>
-              const Center(
-                child: CircularProgressIndicator(key: Key('gym_list_loading')),
-              ),
+            GymListLoadState.initial ||
+            GymListLoadState.loading => const Center(
+              child: CircularProgressIndicator(key: Key('gym_list_loading')),
+            ),
             GymListLoadState.error => Center(
               child: Text(
                 key: const Key('gym_list_error'),
@@ -37,17 +37,18 @@ class _GymListScreenState extends State<GymListScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
-            GymListLoadState.loaded => provider.gyms.isEmpty
-                ? const Center(
-                    key: Key('gym_list_empty'),
-                    child: Text('No gyms available'),
-                  )
-                : ListView.builder(
-                    key: const Key('gym_list'),
-                    itemCount: provider.gyms.length,
-                    itemBuilder: (context, index) =>
-                        _GymCard(gym: provider.gyms[index]),
-                  ),
+            GymListLoadState.loaded =>
+              provider.gyms.isEmpty
+                  ? const Center(
+                      key: Key('gym_list_empty'),
+                      child: Text('No gyms available'),
+                    )
+                  : ListView.builder(
+                      key: const Key('gym_list'),
+                      itemCount: provider.gyms.length,
+                      itemBuilder: (context, index) =>
+                          _GymCard(gym: provider.gyms[index]),
+                    ),
           };
         },
       ),

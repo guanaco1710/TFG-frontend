@@ -32,6 +32,23 @@ const _activeSubscription = Subscription(
   classesRemainingThisMonth: 7,
 );
 
+const _expiredSubscription = Subscription(
+  id: 9,
+  plan: SubscriptionPlan(id: 1, name: 'Basic', priceMonthly: 19.99),
+  gym: SubscriptionGym(
+    id: 1,
+    name: 'GymBook Central',
+    address: 'Calle Mayor 1',
+    city: 'Madrid',
+  ),
+  status: SubscriptionStatus.expired,
+  startDate: '2024-01-01',
+  renewalDate: '2024-02-01',
+  endDate: '2024-02-01',
+  classesUsedThisMonth: 0,
+  classesRemainingThisMonth: null,
+);
+
 const _cancelledSubscription = Subscription(
   id: 8,
   plan: SubscriptionPlan(id: 1, name: 'Basic', priceMonthly: 19.99),
@@ -59,9 +76,8 @@ Widget _buildSubject(MockSubscriptionRepository repo) {
         create: (_) => SubscriptionProvider(repository: repo),
       ),
     ],
-    child: const MaterialApp(
-      home: Scaffold(body: MySubscriptionScreen()),
-    ),
+    // ignore: prefer_const_constructors
+    child: MaterialApp(home: Scaffold(body: MySubscriptionScreen())),
   );
 }
 
@@ -75,12 +91,10 @@ void main() {
   testWidgets('shows loading indicator while fetching subscription', (
     tester,
   ) async {
-    when(() => repo.fetchMySubscription()).thenAnswer(
-      (_) async {
-        await Future<void>.delayed(const Duration(seconds: 1));
-        return _activeSubscription;
-      },
-    );
+    when(() => repo.fetchMySubscription()).thenAnswer((_) async {
+      await Future<void>.delayed(const Duration(seconds: 1));
+      return _activeSubscription;
+    });
 
     await tester.pumpWidget(_buildSubject(repo));
     await tester.pump();
@@ -151,18 +165,41 @@ void main() {
     expect(find.text('Token expired'), findsOneWidget);
   });
 
-  testWidgets(
-    'browse gyms button navigates to GymListScreen when tapped',
-    (tester) async {
-      when(() => repo.fetchMySubscription()).thenAnswer((_) async => null);
+  testWidgets('shows EXPIRED status badge for expired subscription', (
+    tester,
+  ) async {
+    when(
+      () => repo.fetchMySubscription(),
+    ).thenAnswer((_) async => _expiredSubscription);
 
-      await tester.pumpWidget(_buildSubject(repo));
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('browse_gyms_button')));
-      await tester.pumpAndSettle();
+    expect(find.text('EXPIRED'), findsOneWidget);
+  });
 
-      expect(find.text('Gyms'), findsOneWidget);
-    },
-  );
+  testWidgets('shows error message on generic exception', (tester) async {
+    when(
+      () => repo.fetchMySubscription(),
+    ).thenThrow(Exception('Network failure'));
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('subscription_error')), findsOneWidget);
+  });
+
+  testWidgets('browse gyms button navigates to GymListScreen when tapped', (
+    tester,
+  ) async {
+    when(() => repo.fetchMySubscription()).thenAnswer((_) async => null);
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('browse_gyms_button')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Gyms'), findsOneWidget);
+  });
 }

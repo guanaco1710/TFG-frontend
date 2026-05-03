@@ -49,12 +49,10 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
     return Consumer<SubscriptionProvider>(
       builder: (context, provider, _) {
         return switch (provider.state) {
-          SubscriptionLoadState.initial || SubscriptionLoadState.loading =>
-            const Center(
-              child: CircularProgressIndicator(
-                key: Key('subscription_loading'),
-              ),
-            ),
+          SubscriptionLoadState.initial ||
+          SubscriptionLoadState.loading => const Center(
+            child: CircularProgressIndicator(key: Key('subscription_loading')),
+          ),
           SubscriptionLoadState.error => Center(
             child: Text(
               key: const Key('subscription_error'),
@@ -62,9 +60,10 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
               textAlign: TextAlign.center,
             ),
           ),
-          SubscriptionLoadState.loaded => provider.subscription == null
-              ? _EmptyState(onBrowseGyms: () => _browseGyms(context))
-              : _SubscriptionCard(subscription: provider.subscription!),
+          SubscriptionLoadState.loaded =>
+            provider.subscription == null
+                ? _EmptyState(onBrowseGyms: () => _browseGyms(context))
+                : _SubscriptionCard(subscription: provider.subscription!),
         };
       },
     );
@@ -145,10 +144,7 @@ class _SubscriptionCard extends StatelessWidget {
                 ),
               ),
               const Divider(height: 32),
-              _InfoRow(
-                label: 'Plan',
-                value: subscription.plan.name,
-              ),
+              _InfoRow(label: 'Plan', value: subscription.plan.name),
               const SizedBox(height: 8),
               _InfoRow(
                 label: 'Price',

@@ -46,14 +46,15 @@ class SubscriptionRepository {
         throw ApiException(
           status: response.statusCode,
           error: 'Server error',
-          message: 'Server returned ${response.statusCode}. Check backend logs.',
+          message:
+              'Server returned ${response.statusCode}. Check backend logs.',
           path: '/subscriptions/me',
         );
       }
     }
 
     final bodyStr = response.body.trim();
-    if (bodyStr.isEmpty || bodyStr == 'null') return null;
+    if (bodyStr.isEmpty) return null;
 
     final json = jsonDecode(bodyStr);
     if (json == null) return null;

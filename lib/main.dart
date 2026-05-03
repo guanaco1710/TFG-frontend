@@ -33,8 +33,8 @@ class App extends StatelessWidget {
         Provider<TokenStorage>.value(value: tokenStorage),
         Provider<String>.value(value: _baseUrl),
         ChangeNotifierProvider(
-          create: (_) => AuthProvider(repository: authRepository)
-            ..restoreSession(),
+          create: (_) =>
+              AuthProvider(repository: authRepository)..restoreSession(),
         ),
       ],
       child: MaterialApp(
@@ -68,9 +68,7 @@ class _AuthGateState extends State<_AuthGate> {
     }
 
     if (status == AuthStatus.authenticated) {
-      return _HomeShell(
-        onLogout: () => context.read<AuthProvider>().logout(),
-      );
+      return _HomeShell(onLogout: () => context.read<AuthProvider>().logout());
     }
 
     if (_showLogin) {
@@ -102,10 +100,7 @@ class _HomeShell extends StatelessWidget {
         appBar: AppBar(
           title: const Text('My Subscription'),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: onLogout,
-            ),
+            IconButton(icon: const Icon(Icons.logout), onPressed: onLogout),
           ],
         ),
         body: const MySubscriptionScreen(),

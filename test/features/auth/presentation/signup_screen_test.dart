@@ -67,7 +67,10 @@ void main() {
 
     await tester.enterText(find.byKey(const Key('name_field')), 'Alice');
     await tester.enterText(find.byKey(const Key('email_field')), 'notanemail');
-    await tester.enterText(find.byKey(const Key('password_field')), 'securePass123!');
+    await tester.enterText(
+      find.byKey(const Key('password_field')),
+      'securePass123!',
+    );
     await tester.enterText(
       find.byKey(const Key('confirm_password_field')),
       'securePass123!',
@@ -78,28 +81,29 @@ void main() {
     expect(find.text('Enter a valid email'), findsOneWidget);
   });
 
-  testWidgets('shows validation error when password is 12 characters or fewer', (
-    tester,
-  ) async {
-    await tester.pumpWidget(_buildSubject(repo));
+  testWidgets(
+    'shows validation error when password is 12 characters or fewer',
+    (tester) async {
+      await tester.pumpWidget(_buildSubject(repo));
 
-    await tester.enterText(find.byKey(const Key('name_field')), 'Alice');
-    await tester.enterText(
-      find.byKey(const Key('email_field')),
-      'alice@example.com',
-    );
-    await tester.enterText(
-      find.byKey(const Key('password_field')),
-      'short123456',
-    );
-    await tester.tap(find.byKey(const Key('signup_button')));
-    await tester.pump();
+      await tester.enterText(find.byKey(const Key('name_field')), 'Alice');
+      await tester.enterText(
+        find.byKey(const Key('email_field')),
+        'alice@example.com',
+      );
+      await tester.enterText(
+        find.byKey(const Key('password_field')),
+        'short123456',
+      );
+      await tester.tap(find.byKey(const Key('signup_button')));
+      await tester.pump();
 
-    expect(
-      find.text('Password must be longer than 12 characters'),
-      findsOneWidget,
-    );
-  });
+      expect(
+        find.text('Password must be longer than 12 characters'),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('shows validation error when passwords do not match', (
     tester,
@@ -111,7 +115,10 @@ void main() {
       find.byKey(const Key('email_field')),
       'alice@example.com',
     );
-    await tester.enterText(find.byKey(const Key('password_field')), 'securePass123!');
+    await tester.enterText(
+      find.byKey(const Key('password_field')),
+      'securePass123!',
+    );
     await tester.enterText(
       find.byKey(const Key('confirm_password_field')),
       'different',
@@ -144,7 +151,10 @@ void main() {
       find.byKey(const Key('email_field')),
       'alice@example.com',
     );
-    await tester.enterText(find.byKey(const Key('password_field')), 'securePass123!');
+    await tester.enterText(
+      find.byKey(const Key('password_field')),
+      'securePass123!',
+    );
     await tester.enterText(
       find.byKey(const Key('confirm_password_field')),
       'securePass123!',
@@ -176,7 +186,10 @@ void main() {
       find.byKey(const Key('email_field')),
       'alice@example.com',
     );
-    await tester.enterText(find.byKey(const Key('password_field')), 'securePass123!');
+    await tester.enterText(
+      find.byKey(const Key('password_field')),
+      'securePass123!',
+    );
     await tester.enterText(
       find.byKey(const Key('confirm_password_field')),
       'securePass123!',
@@ -211,7 +224,10 @@ void main() {
       find.byKey(const Key('email_field')),
       'alice@example.com',
     );
-    await tester.enterText(find.byKey(const Key('password_field')), 'securePass123!');
+    await tester.enterText(
+      find.byKey(const Key('password_field')),
+      'securePass123!',
+    );
     await tester.enterText(
       find.byKey(const Key('confirm_password_field')),
       'securePass123!',
@@ -257,7 +273,10 @@ void main() {
       find.byKey(const Key('phone_field')),
       '+34600000000',
     );
-    await tester.enterText(find.byKey(const Key('password_field')), 'securePass123!');
+    await tester.enterText(
+      find.byKey(const Key('password_field')),
+      'securePass123!',
+    );
     await tester.enterText(
       find.byKey(const Key('confirm_password_field')),
       'securePass123!',
@@ -294,7 +313,10 @@ void main() {
       find.byKey(const Key('email_field')),
       'alice@example.com',
     );
-    await tester.enterText(find.byKey(const Key('password_field')), 'securePass123!');
+    await tester.enterText(
+      find.byKey(const Key('password_field')),
+      'securePass123!',
+    );
     await tester.enterText(
       find.byKey(const Key('confirm_password_field')),
       'securePass123!',

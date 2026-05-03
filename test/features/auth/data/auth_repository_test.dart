@@ -174,6 +174,37 @@ void main() {
       );
     });
 
+    test('sends phone when provided', () async {
+      when(
+        () => httpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).thenAnswer((_) async => _jsonOk(_authEnvelope, status: 201));
+      when(
+        () => tokenStorage.saveTokens(any(), any()),
+      ).thenAnswer((_) async {});
+
+      await repository.register(
+        name: 'Alice',
+        email: 'alice@example.com',
+        password: 'password123',
+        phone: '+1234567890',
+      );
+
+      final captured = verify(
+        () => httpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: captureAny(named: 'body'),
+        ),
+      ).captured;
+
+      final body = jsonDecode(captured.first as String) as Map<String, dynamic>;
+      expect(body['phone'], '+1234567890');
+    });
+
     test('sends role when provided', () async {
       when(
         () => httpClient.post(

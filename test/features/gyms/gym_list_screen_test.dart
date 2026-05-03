@@ -61,12 +61,10 @@ void main() {
   });
 
   testWidgets('shows loading indicator while fetching gyms', (tester) async {
-    when(() => repo.fetchGyms()).thenAnswer(
-      (_) async {
-        await Future<void>.delayed(const Duration(seconds: 1));
-        return _gymPageWithResults;
-      },
-    );
+    when(() => repo.fetchGyms()).thenAnswer((_) async {
+      await Future<void>.delayed(const Duration(seconds: 1));
+      return _gymPageWithResults;
+    });
 
     await tester.pumpWidget(_buildSubject(repo));
     await tester.pump();
