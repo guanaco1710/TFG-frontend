@@ -46,6 +46,7 @@ class AuthRepository {
     required String name,
     required String email,
     required String password,
+    String? phone,
     UserRole? role,
   }) async {
     final payload = <String, dynamic>{
@@ -53,6 +54,7 @@ class AuthRepository {
       'email': email,
       'password': password,
     };
+    if (phone != null && phone.isNotEmpty) payload['phone'] = phone;
     if (role != null) payload['role'] = role.toJson();
 
     final response = await _client.post(

@@ -104,6 +104,30 @@ void main() {
     await tester.pumpAndSettle();
   });
 
+  testWidgets('shows success snackbar on successful login', (tester) async {
+    when(
+      () => repo.login(
+        email: any(named: 'email'),
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((_) async => _fakeAuthResponse());
+
+    await tester.pumpWidget(_buildSubject(repo));
+
+    await tester.enterText(
+      find.byKey(const Key('email_field')),
+      'alice@example.com',
+    );
+    await tester.enterText(
+      find.byKey(const Key('password_field')),
+      'password123',
+    );
+    await tester.tap(find.byKey(const Key('login_button')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Login successful!'), findsOneWidget);
+  });
+
   testWidgets('shows error snackbar on ApiException', (tester) async {
     when(
       () => repo.login(

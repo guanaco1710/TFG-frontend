@@ -26,19 +26,28 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final messenger = ScaffoldMessenger.of(context);
+    final errorColor = Theme.of(context).colorScheme.error;
     final provider = context.read<AuthProvider>();
+
     await provider.login(
       email: _emailController.text.trim(),
       password: _passwordController.text,
     );
 
-    if (!mounted) return;
     final error = provider.errorMessage;
     if (error != null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error)));
+      messenger.showSnackBar(
+        SnackBar(content: Text(error), backgroundColor: errorColor),
+      );
       provider.clearError();
+    } else {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Login successful!'),
+          backgroundColor: Colors.green,
+        ),
+      );
     }
   }
 
