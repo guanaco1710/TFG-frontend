@@ -95,7 +95,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('gym_list_empty')), findsOneWidget);
-    expect(find.text('No gyms available'), findsOneWidget);
+    expect(find.text('No hay gimnasios disponibles'), findsOneWidget);
   });
 
   testWidgets('shows error message on ApiException', (tester) async {

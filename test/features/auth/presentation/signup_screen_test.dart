@@ -56,10 +56,10 @@ void main() {
     await tester.tap(find.byKey(const Key('signup_button')));
     await tester.pump();
 
-    expect(find.text('Name is required'), findsOneWidget);
-    expect(find.text('Email is required'), findsOneWidget);
-    expect(find.text('Password is required'), findsOneWidget);
-    expect(find.text('Please confirm your password'), findsOneWidget);
+    expect(find.text('El nombre es obligatorio'), findsOneWidget);
+    expect(find.text('El correo electrónico es obligatorio'), findsOneWidget);
+    expect(find.text('La contraseña es obligatoria'), findsOneWidget);
+    expect(find.text('Por favor, confirma tu contraseña'), findsOneWidget);
   });
 
   testWidgets('shows validation error for invalid email', (tester) async {
@@ -78,7 +78,7 @@ void main() {
     await tester.tap(find.byKey(const Key('signup_button')));
     await tester.pump();
 
-    expect(find.text('Enter a valid email'), findsOneWidget);
+    expect(find.text('Introduce un correo electrónico válido'), findsOneWidget);
   });
 
   testWidgets(
@@ -99,7 +99,7 @@ void main() {
       await tester.pump();
 
       expect(
-        find.text('Password must be longer than 12 characters'),
+        find.text('La contraseña debe tener más de 12 caracteres'),
         findsOneWidget,
       );
     },
@@ -126,7 +126,7 @@ void main() {
     await tester.tap(find.byKey(const Key('signup_button')));
     await tester.pump();
 
-    expect(find.text('Passwords do not match'), findsOneWidget);
+    expect(find.text('Las contraseñas no coinciden'), findsOneWidget);
   });
 
   testWidgets('shows loading indicator while registration is in progress', (
@@ -197,7 +197,7 @@ void main() {
     await tester.tap(find.byKey(const Key('signup_button')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Account created successfully!'), findsOneWidget);
+    expect(find.text('¡Cuenta creada con éxito!'), findsOneWidget);
   });
 
   testWidgets('shows error snackbar on ApiException', (tester) async {

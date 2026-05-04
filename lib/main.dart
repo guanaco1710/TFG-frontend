@@ -42,7 +42,7 @@ class App extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'TFG App',
+        title: 'GymBook',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

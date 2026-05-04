@@ -22,7 +22,7 @@ class _GymListScreenState extends State<GymListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Gyms')),
+      appBar: AppBar(title: const Text('Gimnasios')),
       body: Consumer<GymListProvider>(
         builder: (context, provider, _) {
           return switch (provider.state) {
@@ -33,7 +33,7 @@ class _GymListScreenState extends State<GymListScreen> {
             GymListLoadState.error => Center(
               child: Text(
                 key: const Key('gym_list_error'),
-                provider.errorMessage ?? 'Failed to load gyms',
+                provider.errorMessage ?? 'Error al cargar los gimnasios',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -41,7 +41,7 @@ class _GymListScreenState extends State<GymListScreen> {
               provider.gyms.isEmpty
                   ? const Center(
                       key: Key('gym_list_empty'),
-                      child: Text('No gyms available'),
+                      child: Text('No hay gimnasios disponibles'),
                     )
                   : ListView.builder(
                       key: const Key('gym_list'),

@@ -32,7 +32,7 @@ class GymListProvider extends ChangeNotifier {
       _errorMessage = e.message;
       _state = GymListLoadState.error;
     } catch (e) {
-      _errorMessage = 'An unexpected error occurred';
+      _errorMessage = 'Ha ocurrido un error inesperado';
       _state = GymListLoadState.error;
     } finally {
       notifyListeners();

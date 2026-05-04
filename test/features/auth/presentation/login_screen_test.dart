@@ -53,8 +53,8 @@ void main() {
     await tester.tap(find.byKey(const Key('login_button')));
     await tester.pump();
 
-    expect(find.text('Email is required'), findsOneWidget);
-    expect(find.text('Password is required'), findsOneWidget);
+    expect(find.text('El correo electrónico es obligatorio'), findsOneWidget);
+    expect(find.text('La contraseña es obligatoria'), findsOneWidget);
   });
 
   testWidgets('shows validation error for invalid email format', (
@@ -70,7 +70,7 @@ void main() {
     await tester.tap(find.byKey(const Key('login_button')));
     await tester.pump();
 
-    expect(find.text('Enter a valid email'), findsOneWidget);
+    expect(find.text('Introduce un correo electrónico válido'), findsOneWidget);
   });
 
   testWidgets('shows loading indicator while login is in progress', (
@@ -125,7 +125,7 @@ void main() {
     await tester.tap(find.byKey(const Key('login_button')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Login successful!'), findsOneWidget);
+    expect(find.text('¡Inicio de sesión correcto!'), findsOneWidget);
   });
 
   testWidgets('shows error snackbar on ApiException', (tester) async {
