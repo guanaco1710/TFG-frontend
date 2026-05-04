@@ -1,5 +1,6 @@
 // coverage:ignore-file
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:tfg_frontend/core/storage/token_storage.dart';
@@ -92,7 +93,12 @@ class _HomeShell extends StatelessWidget {
     final tokenStorage = context.read<TokenStorage>();
     final baseUrl = context.read<String>();
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) SystemNavigator.pop();
+      },
+      child: Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(icon: const Icon(Icons.logout), onPressed: onLogout),
@@ -164,6 +170,7 @@ class _HomeShell extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }
