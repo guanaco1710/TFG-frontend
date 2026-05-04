@@ -53,7 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
     } else {
       messenger.showSnackBar(
         const SnackBar(
-          content: Text('Account created successfully!'),
+          content: Text('¡Cuenta creada con éxito!'),
           backgroundColor: Colors.green,
         ),
       );
@@ -77,7 +77,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Create account',
+                    'Crear cuenta',
                     style: Theme.of(context).textTheme.headlineMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -87,12 +87,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: _nameController,
                     keyboardType: TextInputType.name,
                     decoration: const InputDecoration(
-                      labelText: 'Full name',
+                      labelText: 'Nombre completo',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Name is required';
+                        return 'El nombre es obligatorio';
                       }
                       return null;
                     },
@@ -103,15 +103,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      labelText: 'Email',
+                      labelText: 'Correo electrónico',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Email is required';
+                        return 'El correo electrónico es obligatorio';
                       }
                       if (!value.contains('@') || !value.contains('.')) {
-                        return 'Enter a valid email';
+                        return 'Introduce un correo electrónico válido';
                       }
                       return null;
                     },
@@ -122,7 +122,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                     decoration: const InputDecoration(
-                      labelText: 'Phone (optional)',
+                      labelText: 'Teléfono (opcional)',
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -132,15 +132,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'Contraseña',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Password is required';
+                        return 'La contraseña es obligatoria';
                       }
                       if (value.length <= 12) {
-                        return 'Password must be longer than 12 characters';
+                        return 'La contraseña debe tener más de 12 caracteres';
                       }
                       return null;
                     },
@@ -151,15 +151,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: _confirmPasswordController,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Confirm password',
+                      labelText: 'Confirmar contraseña',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
+                        return 'Por favor, confirma tu contraseña';
                       }
                       if (value != _passwordController.text) {
-                        return 'Passwords do not match';
+                        return 'Las contraseñas no coinciden';
                       }
                       return null;
                     },
@@ -174,13 +174,13 @@ class _SignupScreenState extends State<SignupScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Create account'),
+                        : const Text('Crear cuenta'),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     key: const Key('login_link'),
                     onPressed: widget.onLoginTap,
-                    child: const Text('Already have an account? Login'),
+                    child: const Text('¿Ya tienes cuenta? Inicia sesión'),
                   ),
                 ],
               ),

@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       messenger.showSnackBar(
         const SnackBar(
-          content: Text('Login successful!'),
+          content: Text('¡Inicio de sesión correcto!'),
           backgroundColor: Colors.green,
         ),
       );
@@ -67,26 +67,22 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Welcome back',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
+                  Image.asset('assets/logo.png', width: 96, height: 96),
                   const SizedBox(height: 32),
                   TextFormField(
                     key: const Key('email_field'),
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      labelText: 'Email',
+                      labelText: 'Correo electrónico',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Email is required';
+                        return 'El correo electrónico es obligatorio';
                       }
                       if (!value.contains('@') || !value.contains('.')) {
-                        return 'Enter a valid email';
+                        return 'Introduce un correo electrónico válido';
                       }
                       return null;
                     },
@@ -97,12 +93,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'Contraseña',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Password is required';
+                        return 'La contraseña es obligatoria';
                       }
                       return null;
                     },
@@ -117,13 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Login'),
+                        : const Text('Iniciar sesión'),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     key: const Key('signup_link'),
                     onPressed: widget.onSignupTap,
-                    child: const Text("Don't have an account? Sign up"),
+                    child: const Text('¿No tienes cuenta? Regístrate'),
                   ),
                 ],
               ),

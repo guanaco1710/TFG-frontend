@@ -118,13 +118,13 @@ void main() {
     expect(find.text('GymBook Central'), findsOneWidget);
     expect(find.text('Calle Mayor 1, Madrid'), findsOneWidget);
     expect(find.text('Premium Monthly'), findsOneWidget);
-    expect(find.text('\$49.99 / month'), findsOneWidget);
-    expect(find.text('ACTIVE'), findsOneWidget);
+    expect(find.text('49.99 € / mes'), findsOneWidget);
+    expect(find.text('ACTIVA'), findsOneWidget);
     expect(find.text('5'), findsOneWidget);
     expect(find.text('7'), findsOneWidget);
   });
 
-  testWidgets('shows "Unlimited" when classesRemainingThisMonth is null', (
+  testWidgets('shows "Ilimitadas" when classesRemainingThisMonth is null', (
     tester,
   ) async {
     when(
@@ -134,8 +134,8 @@ void main() {
     await tester.pumpWidget(_buildSubject(repo));
     await tester.pumpAndSettle();
 
-    expect(find.text('Unlimited'), findsOneWidget);
-    expect(find.text('CANCELLED'), findsOneWidget);
+    expect(find.text('Ilimitadas'), findsOneWidget);
+    expect(find.text('CANCELADA'), findsOneWidget);
   });
 
   testWidgets('shows empty state when subscription is null', (tester) async {
@@ -144,7 +144,7 @@ void main() {
     await tester.pumpWidget(_buildSubject(repo));
     await tester.pumpAndSettle();
 
-    expect(find.text('No active subscription'), findsOneWidget);
+    expect(find.text('Sin suscripción activa'), findsOneWidget);
     expect(find.byKey(const Key('browse_gyms_button')), findsOneWidget);
   });
 
@@ -175,7 +175,7 @@ void main() {
     await tester.pumpWidget(_buildSubject(repo));
     await tester.pumpAndSettle();
 
-    expect(find.text('EXPIRED'), findsOneWidget);
+    expect(find.text('EXPIRADA'), findsOneWidget);
   });
 
   testWidgets('shows error message on generic exception', (tester) async {
@@ -200,6 +200,6 @@ void main() {
     await tester.tap(find.byKey(const Key('browse_gyms_button')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Gyms'), findsOneWidget);
+    expect(find.text('Gimnasios'), findsOneWidget);
   });
 }

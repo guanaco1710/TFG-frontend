@@ -56,7 +56,7 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
           SubscriptionLoadState.error => Center(
             child: Text(
               key: const Key('subscription_error'),
-              provider.errorMessage ?? 'Failed to load subscription',
+              provider.errorMessage ?? 'Error al cargar la suscripción',
               textAlign: TextAlign.center,
             ),
           ),
@@ -86,20 +86,20 @@ class _EmptyState extends StatelessWidget {
             const Icon(Icons.fitness_center, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             Text(
-              'No active subscription',
+              'Sin suscripción activa',
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             const Text(
-              'Browse available gyms and find a membership plan that suits you.',
+              'Explora los gimnasios disponibles y encuentra un plan que se adapte a ti.',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             FilledButton(
               key: const Key('browse_gyms_button'),
               onPressed: onBrowseGyms,
-              child: const Text('Browse gyms'),
+              child: const Text('Ver gimnasios'),
             ),
           ],
         ),
@@ -147,24 +147,24 @@ class _SubscriptionCard extends StatelessWidget {
               _InfoRow(label: 'Plan', value: subscription.plan.name),
               const SizedBox(height: 8),
               _InfoRow(
-                label: 'Price',
+                label: 'Precio',
                 value:
-                    '\$${subscription.plan.priceMonthly.toStringAsFixed(2)} / month',
+                    '${subscription.plan.priceMonthly.toStringAsFixed(2)} € / mes',
               ),
               const SizedBox(height: 8),
               _InfoRow(
-                label: 'Classes used',
+                label: 'Clases utilizadas',
                 value: '${subscription.classesUsedThisMonth}',
               ),
               const SizedBox(height: 8),
               _InfoRow(
-                label: 'Classes remaining',
+                label: 'Clases restantes',
                 value: subscription.classesRemainingThisMonth == null
-                    ? 'Unlimited'
+                    ? 'Ilimitadas'
                     : '${subscription.classesRemainingThisMonth}',
               ),
               const SizedBox(height: 8),
-              _InfoRow(label: 'Renewal', value: subscription.renewalDate),
+              _InfoRow(label: 'Renovación', value: subscription.renewalDate),
             ],
           ),
         ),
@@ -181,9 +181,9 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (label, color) = switch (status) {
-      SubscriptionStatus.active => ('ACTIVE', Colors.green),
-      SubscriptionStatus.cancelled => ('CANCELLED', Colors.orange),
-      SubscriptionStatus.expired => ('EXPIRED', Colors.red),
+      SubscriptionStatus.active => ('ACTIVA', Colors.green),
+      SubscriptionStatus.cancelled => ('CANCELADA', Colors.orange),
+      SubscriptionStatus.expired => ('EXPIRADA', Colors.red),
     };
 
     return Container(
