@@ -11,12 +11,35 @@ class GymListScreen extends StatefulWidget {
 }
 
 class _GymListScreenState extends State<GymListScreen> {
+  final _searchController = TextEditingController();
+  final _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<GymListProvider>().loadGyms();
     });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final pos = _scrollController.position;
+    if (pos.pixels >= pos.maxScrollExtent - 300) {
+      context.read<GymListProvider>().loadMore();
+    }
+  }
+
+  void _clearSearch(GymListProvider provider) {
+    _searchController.clear();
+    provider.query = '';
   }
 
   @override
@@ -31,24 +54,72 @@ class _GymListScreenState extends State<GymListScreen> {
               child: CircularProgressIndicator(key: Key('gym_list_loading')),
             ),
             GymListLoadState.error => Center(
-              child: Text(
-                key: const Key('gym_list_error'),
-                provider.errorMessage ?? 'Error al cargar los gimnasios',
-                textAlign: TextAlign.center,
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(
+                  key: const Key('gym_list_error'),
+                  provider.errorMessage ?? 'Error al cargar los gimnasios',
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-            GymListLoadState.loaded =>
-              provider.gyms.isEmpty
-                  ? const Center(
-                      key: Key('gym_list_empty'),
-                      child: Text('No hay gimnasios disponibles'),
-                    )
-                  : ListView.builder(
-                      key: const Key('gym_list'),
-                      itemCount: provider.gyms.length,
-                      itemBuilder: (context, index) =>
-                          _GymCard(gym: provider.gyms[index]),
+            GymListLoadState.loaded => Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                  child: TextField(
+                    key: const Key('gym_search_field'),
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Buscar gimnasio...',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: provider.query.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () => _clearSearch(provider),
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
+                      contentPadding: EdgeInsets.zero,
                     ),
+                    onChanged: (value) => provider.query = value,
+                  ),
+                ),
+                Expanded(
+                  child: provider.filteredGyms.isEmpty
+                      ? Center(
+                          key: const Key('gym_list_empty'),
+                          child: Text(
+                            provider.gyms.isEmpty
+                                ? 'No hay gimnasios disponibles'
+                                : 'Sin resultados para "${provider.query}"',
+                          ),
+                        )
+                      : ListView.builder(
+                          key: const Key('gym_list'),
+                          controller: _scrollController,
+                          itemCount: provider.filteredGyms.length +
+                              (provider.isLoadingMore ? 1 : 0),
+                          itemBuilder: (_, index) {
+                            if (index == provider.filteredGyms.length) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+                            return _GymCard(
+                              gym: provider.filteredGyms[index],
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           };
         },
       ),
