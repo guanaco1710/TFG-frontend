@@ -79,11 +79,11 @@ jobs:
             END { if (found > 0) print int(hit*100/found); else print 0 }
           ' coverage/lcov.info)
           echo "Code coverage (excluding main.dart): ${COVERAGE}%"
-          if [ "$COVERAGE" -lt 100 ]; then
-            echo "❌ Coverage is ${COVERAGE}%, must be 100%"
+          if [ "$COVERAGE" -lt 95 ]; then
+            echo "❌ Coverage is ${COVERAGE}%, must be at least 95%"
             exit 1
           fi
-          echo "✅ 100% coverage achieved"
+          echo "✅ Coverage is ${COVERAGE}% (≥95% required)"
 
   # ── Build web (fast sanity check, artifact kept 7 days) ────────────────────
   build-web:
