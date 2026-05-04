@@ -27,9 +27,9 @@ class MembershipPlanRepository {
   }
 
   Future<List<MembershipPlan>> fetchActivePlans() async {
-    final uri = Uri.parse('$_baseUrl/membership-plans').replace(
-      queryParameters: {'active': 'true', 'size': '100'},
-    );
+    final uri = Uri.parse(
+      '$_baseUrl/membership-plans',
+    ).replace(queryParameters: {'active': 'true', 'size': '100'});
 
     final response = await _client.get(uri, headers: await _authHeaders());
 

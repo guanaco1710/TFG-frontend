@@ -132,7 +132,8 @@ class _GymListScreenState extends State<GymListScreen> {
                       : ListView.builder(
                           key: const Key('gym_list'),
                           controller: _scrollController,
-                          itemCount: provider.gyms.length +
+                          itemCount:
+                              provider.gyms.length +
                               (provider.isLoadingMore ? 1 : 0),
                           itemBuilder: (_, index) {
                             if (index == provider.gyms.length) {

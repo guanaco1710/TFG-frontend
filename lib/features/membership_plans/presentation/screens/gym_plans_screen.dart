@@ -91,17 +91,18 @@ class _GymPlansScreenState extends State<GymPlansScreen> {
                 ),
               ),
             ),
-            PlansLoadState.loaded => provider.plans.isEmpty
-                ? const Center(child: Text('No hay planes disponibles'))
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: provider.plans.length,
-                    itemBuilder: (_, index) => _PlanCard(
-                      plan: provider.plans[index],
-                      isSubscribing: provider.isSubscribing,
-                      onJoin: () => _onJoinTapped(provider.plans[index]),
+            PlansLoadState.loaded =>
+              provider.plans.isEmpty
+                  ? const Center(child: Text('No hay planes disponibles'))
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: provider.plans.length,
+                      itemBuilder: (_, index) => _PlanCard(
+                        plan: provider.plans[index],
+                        isSubscribing: provider.isSubscribing,
+                        onJoin: () => _onJoinTapped(provider.plans[index]),
+                      ),
                     ),
-                  ),
           };
         },
       ),
@@ -139,10 +140,7 @@ class _PlanCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Text(
-                    plan.name,
-                    style: theme.textTheme.titleLarge,
-                  ),
+                  child: Text(plan.name, style: theme.textTheme.titleLarge),
                 ),
                 Text(
                   '${plan.priceMonthly.toStringAsFixed(2)} €',
@@ -172,7 +170,10 @@ class _PlanCard extends StatelessWidget {
               children: [
                 _Chip(icon: Icons.fitness_center, label: classesLabel),
                 if (plan.allowsWaitlist)
-                  _Chip(icon: Icons.playlist_add_check, label: 'Lista de espera'),
+                  _Chip(
+                    icon: Icons.playlist_add_check,
+                    label: 'Lista de espera',
+                  ),
               ],
             ),
             const SizedBox(height: 16),

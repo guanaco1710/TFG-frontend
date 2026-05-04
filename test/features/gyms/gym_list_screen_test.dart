@@ -143,4 +143,97 @@ void main() {
 
     expect(find.byType(GymPlansScreen), findsOneWidget);
   });
+
+  testWidgets('typing in search field triggers debounced search', (
+    tester,
+  ) async {
+    when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+    when(
+      () => repo.fetchGyms(name: 'Central'),
+    ).thenAnswer((_) async => _emptyGymPage);
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const Key('gym_search_field')),
+      'Central',
+    );
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pump();
+
+    expect(find.byKey(const Key('gym_list_empty')), findsOneWidget);
+  });
+
+  testWidgets(
+    'shows "Sin resultados" when search returns empty with non-empty query',
+    (tester) async {
+      when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+      when(
+        () => repo.fetchGyms(name: 'XYZ'),
+      ).thenAnswer((_) async => _emptyGymPage);
+
+      await tester.pumpWidget(_buildSubject(repo));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byKey(const Key('gym_search_field')), 'XYZ');
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pump();
+
+      expect(find.text('Sin resultados para "XYZ"'), findsOneWidget);
+    },
+  );
+
+  testWidgets('X button appears when query is non-empty', (tester) async {
+    when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+    when(
+      () => repo.fetchGyms(name: 'Gym'),
+    ).thenAnswer((_) async => _gymPageWithResults);
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.clear), findsNothing);
+
+    await tester.enterText(find.byKey(const Key('gym_search_field')), 'Gym');
+    await tester.pump();
+
+    expect(find.byIcon(Icons.clear), findsOneWidget);
+
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('tapping X button clears search query', (tester) async {
+    when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+    when(
+      () => repo.fetchGyms(name: 'Gym'),
+    ).thenAnswer((_) async => _emptyGymPage);
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(const Key('gym_search_field')), 'Gym');
+    await tester.pump();
+
+    expect(find.byIcon(Icons.clear), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.clear));
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pump();
+
+    expect(find.byIcon(Icons.clear), findsNothing);
+    expect(find.byKey(const Key('gym_list')), findsOneWidget);
+  });
+
+  testWidgets('scrolling gym list triggers scroll listener', (tester) async {
+    when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byKey(const Key('gym_list')), const Offset(0, -200));
+    await tester.pump();
+
+    expect(find.byKey(const Key('gym_list')), findsOneWidget);
+  });
 }

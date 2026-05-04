@@ -87,7 +87,9 @@ class GymListProvider extends ChangeNotifier {
   }
 
   Future<void> loadMore() async {
-    if (!_hasMore || _isLoadingMore || _state != GymListLoadState.loaded) return;
+    if (!_hasMore || _isLoadingMore || _state != GymListLoadState.loaded) {
+      return;
+    }
 
     _isLoadingMore = true;
     notifyListeners();

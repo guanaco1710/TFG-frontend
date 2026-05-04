@@ -27,11 +27,13 @@ class GymRepository {
   }
 
   Future<GymPage> fetchGyms({int page = 0, int size = 20, String? name}) async {
-    final uri = Uri.parse('$_baseUrl/gyms').replace(queryParameters: {
-      'page': '$page',
-      'size': '$size',
-      if (name != null && name.isNotEmpty) 'name': name,
-    });
+    final uri = Uri.parse('$_baseUrl/gyms').replace(
+      queryParameters: {
+        'page': '$page',
+        'size': '$size',
+        if (name != null && name.isNotEmpty) 'name': name,
+      },
+    );
 
     final response = await _client.get(uri, headers: await _authHeaders());
 

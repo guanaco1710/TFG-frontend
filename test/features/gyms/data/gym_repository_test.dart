@@ -72,6 +72,42 @@ void main() {
       expect(result.totalElements, 1);
     });
 
+    test('includes name query parameter in URL when provided', () async {
+      Uri? capturedUri;
+      when(
+        () => httpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((invocation) async {
+        capturedUri = invocation.positionalArguments[0] as Uri;
+        return http.Response(
+          jsonEncode(_gymPageJson),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
+      });
+
+      await repository.fetchGyms(name: 'Central');
+
+      expect(capturedUri!.queryParameters['name'], 'Central');
+    });
+
+    test('omits name query parameter when name is null', () async {
+      Uri? capturedUri;
+      when(
+        () => httpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((invocation) async {
+        capturedUri = invocation.positionalArguments[0] as Uri;
+        return http.Response(
+          jsonEncode(_gymPageJson),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
+      });
+
+      await repository.fetchGyms();
+
+      expect(capturedUri!.queryParameters.containsKey('name'), false);
+    });
+
     test('throws ApiException on non-200 response', () async {
       when(
         () => httpClient.get(any(), headers: any(named: 'headers')),
