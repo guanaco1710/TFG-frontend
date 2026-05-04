@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+import 'package:tfg_frontend/core/storage/token_storage.dart';
 import 'package:tfg_frontend/features/auth/data/models/auth_models.dart';
 import 'package:tfg_frontend/features/gyms/data/models/gym_models.dart';
 import 'package:tfg_frontend/features/gyms/data/repositories/gym_repository.dart';
 import 'package:tfg_frontend/features/gyms/presentation/providers/gym_list_provider.dart';
 import 'package:tfg_frontend/features/gyms/presentation/screens/gym_list_screen.dart';
+import 'package:tfg_frontend/features/membership_plans/presentation/screens/gym_plans_screen.dart';
 
 class MockGymRepository extends Mock implements GymRepository {}
+
+class MockTokenStorage extends Mock implements TokenStorage {}
 
 const _gymPageWithResults = GymPage(
   content: [
@@ -47,8 +51,12 @@ const _emptyGymPage = GymPage(
 );
 
 Widget _buildSubject(MockGymRepository repo) {
-  return ChangeNotifierProvider(
-    create: (_) => GymListProvider(repository: repo),
+  return MultiProvider(
+    providers: [
+      Provider<TokenStorage>.value(value: MockTokenStorage()),
+      Provider<String>.value(value: 'http://localhost:8080/api/v1'),
+      ChangeNotifierProvider(create: (_) => GymListProvider(repository: repo)),
+    ],
     child: const MaterialApp(home: GymListScreen()),
   );
 }
@@ -122,5 +130,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('gym_list_error')), findsOneWidget);
+  });
+
+  testWidgets('tapping gym card navigates to GymPlansScreen', (tester) async {
+    when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('GymBook Central'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(GymPlansScreen), findsOneWidget);
   });
 }

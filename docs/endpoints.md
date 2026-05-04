@@ -222,6 +222,17 @@ Returns 401 if the token is unknown, already used, or expired (15-minute window)
 | `PUT` | `/gyms/{id}` | Update a gym | `ADMIN` |
 | `DELETE` | `/gyms/{id}` | Delete a gym | `ADMIN` |
 
+### GET /gyms — Query params
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `name` | String | Filter by gym name (case-insensitive partial match) |
+| `city` | String | Filter by city (exact, case-insensitive) |
+| `active` | Boolean | Filter by active status |
+| `q` | String | Full-text search across name and address |
+| `page` | Int | Page index (0-based, default 0) |
+| `size` | Int | Page size (default 20) |
+
 ### GET /gyms — Response 200
 ```json
 {
@@ -435,6 +446,49 @@ Concrete scheduled occurrences of a class type.
 | `PUT` | `/membership-plans/{id}` | Update a plan | `ADMIN` |
 | `DELETE` | `/membership-plans/{id}` | Deactivate a plan | `ADMIN` |
 
+Plans are **global** — not tied to a specific gym. When subscribing, the chosen gym is provided in the POST /subscriptions body alongside the plan.
+
+### GET /membership-plans — Query params
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `active` | Boolean | Filter by active status (omit to return all) |
+| `page` | int | Page index (0-based, default 0) |
+| `size` | int | Page size (default 20) |
+
+### GET /membership-plans — Response 200
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "name": "Basic",
+      "description": "Up to 12 classes per month",
+      "priceMonthly": 29.99,
+      "classesPerMonth": 12,
+      "allowsWaitlist": false,
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Unlimited",
+      "description": "Unlimited classes, waitlist priority",
+      "priceMonthly": 49.99,
+      "classesPerMonth": null,
+      "allowsWaitlist": true,
+      "active": true
+    }
+  ],
+  "page": 0,
+  "size": 20,
+  "totalElements": 2,
+  "totalPages": 1,
+  "hasMore": false
+}
+```
+
+`classesPerMonth: null` means unlimited.
+
 ### POST /membership-plans — Request
 ```json
 {
@@ -468,27 +522,13 @@ Concrete scheduled occurrences of a class type.
   "membershipPlanId": 2,
   "gymId": 1
 }
-```
-
-### POST /subscriptions — Response 201
-```json
-{
-  "id": 7,
-  "plan": { "id": 2, "name": "Premium Monthly", "priceMonthly": 49.99 },
-  "gym": { "id": 1, "name": "GymBook Central", "address": "Calle Mayor 1", "city": "Madrid" },
-  "status": "ACTIVE",
-  "startDate": "2024-05-01",
-  "renewalDate": "2024-06-01",
-  "endDate": null,
-  "classesUsedThisMonth": 0,
-  "classesRemainingThisMonth": 12
-}
+// Response 201 + Location: /api/v1/subscriptions/{id}
 ```
 
 ### GET /subscriptions/me — Response 200
 
 Always returns **one object** — the single active subscription for the authenticated user.  
-Returns `204 No Content` if the user has no active subscription.
+Returns 404 if the user has no active subscription.
 
 ```json
 {
@@ -498,14 +538,12 @@ Returns `204 No Content` if the user has no active subscription.
   "status": "ACTIVE",
   "startDate": "2024-05-01",
   "renewalDate": "2024-06-01",
-  "endDate": null,
   "classesUsedThisMonth": 5,
   "classesRemainingThisMonth": 7
 }
 ```
 
 `status` is one of `ACTIVE`, `CANCELLED`, `EXPIRED`.  
-`endDate` is the date the subscription ended or was cancelled; `null` when `status` is `ACTIVE`.  
 `classesRemainingThisMonth` is `null` when the plan grants unlimited classes.
 
 ### GET /subscriptions — Query params (admin)
@@ -528,7 +566,6 @@ Returns `204 No Content` if the user has no active subscription.
       "status": "ACTIVE",
       "startDate": "2024-05-01",
       "renewalDate": "2024-06-01",
-      "endDate": null,
       "classesUsedThisMonth": 5,
       "classesRemainingThisMonth": 7
     }

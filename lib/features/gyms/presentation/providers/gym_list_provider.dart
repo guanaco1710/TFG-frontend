@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:tfg_frontend/features/auth/data/models/auth_models.dart';
 import 'package:tfg_frontend/features/gyms/data/models/gym_models.dart';
@@ -18,6 +20,7 @@ class GymListProvider extends ChangeNotifier {
   int _currentPage = 0;
   bool _hasMore = false;
   bool _isLoadingMore = false;
+  Timer? _debounce;
 
   GymListLoadState get state => _state;
   List<Gym> get gyms => _gyms;
@@ -26,15 +29,11 @@ class GymListProvider extends ChangeNotifier {
   bool get hasMore => _hasMore;
   bool get isLoadingMore => _isLoadingMore;
 
-  List<Gym> get filteredGyms {
-    if (_query.isEmpty) return _gyms;
-    final q = _query.toLowerCase();
-    return _gyms.where((g) => g.name.toLowerCase().contains(q)).toList();
-  }
-
   set query(String value) {
     _query = value;
-    notifyListeners();
+    notifyListeners(); // clears/shows the X button immediately
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () => _search(value));
   }
 
   Future<void> loadGyms() async {
@@ -61,6 +60,32 @@ class GymListProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> _search(String name) async {
+    _state = GymListLoadState.loading;
+    _gyms = [];
+    _currentPage = 0;
+    _hasMore = false;
+    notifyListeners();
+
+    try {
+      final page = await _repository.fetchGyms(
+        page: 0,
+        name: name.isEmpty ? null : name,
+      );
+      _gyms = page.content;
+      _hasMore = page.hasMore;
+      _state = GymListLoadState.loaded;
+    } on ApiException catch (e) {
+      _errorMessage = e.message;
+      _state = GymListLoadState.error;
+    } catch (e) {
+      _errorMessage = 'Ha ocurrido un error inesperado';
+      _state = GymListLoadState.error;
+    } finally {
+      notifyListeners();
+    }
+  }
+
   Future<void> loadMore() async {
     if (!_hasMore || _isLoadingMore || _state != GymListLoadState.loaded) return;
 
@@ -68,7 +93,10 @@ class GymListProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final page = await _repository.fetchGyms(page: _currentPage + 1);
+      final page = await _repository.fetchGyms(
+        page: _currentPage + 1,
+        name: _query.isEmpty ? null : _query,
+      );
       _gyms = [..._gyms, ...page.content];
       _hasMore = page.hasMore;
       _currentPage++;
@@ -80,5 +108,11 @@ class GymListProvider extends ChangeNotifier {
       _isLoadingMore = false;
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 }

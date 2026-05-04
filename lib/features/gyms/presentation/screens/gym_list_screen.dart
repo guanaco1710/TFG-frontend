@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:tfg_frontend/core/storage/token_storage.dart';
 import 'package:tfg_frontend/features/gyms/data/models/gym_models.dart';
 import 'package:tfg_frontend/features/gyms/presentation/providers/gym_list_provider.dart';
+import 'package:tfg_frontend/features/membership_plans/data/repositories/membership_plan_repository.dart';
+import 'package:tfg_frontend/features/membership_plans/presentation/providers/gym_plans_provider.dart';
+import 'package:tfg_frontend/features/membership_plans/presentation/screens/gym_plans_screen.dart';
+import 'package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart';
 
 class GymListScreen extends StatefulWidget {
   const GymListScreen({super.key});
@@ -40,6 +46,31 @@ class _GymListScreenState extends State<GymListScreen> {
   void _clearSearch(GymListProvider provider) {
     _searchController.clear();
     provider.query = '';
+  }
+
+  void _openGymPlans(Gym gym) {
+    final tokenStorage = context.read<TokenStorage>();
+    final baseUrl = context.read<String>();
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ChangeNotifierProvider(
+          create: (_) => GymPlansProvider(
+            planRepository: MembershipPlanRepository(
+              httpClient: http.Client(),
+              tokenStorage: tokenStorage,
+              baseUrl: baseUrl,
+            ),
+            subscriptionRepository: SubscriptionRepository(
+              httpClient: http.Client(),
+              tokenStorage: tokenStorage,
+              baseUrl: baseUrl,
+            ),
+          ),
+          child: GymPlansScreen(gym: gym),
+        ),
+      ),
+    );
   }
 
   @override
@@ -89,11 +120,11 @@ class _GymListScreenState extends State<GymListScreen> {
                   ),
                 ),
                 Expanded(
-                  child: provider.filteredGyms.isEmpty
+                  child: provider.gyms.isEmpty
                       ? Center(
                           key: const Key('gym_list_empty'),
                           child: Text(
-                            provider.gyms.isEmpty
+                            provider.query.isEmpty
                                 ? 'No hay gimnasios disponibles'
                                 : 'Sin resultados para "${provider.query}"',
                           ),
@@ -101,10 +132,10 @@ class _GymListScreenState extends State<GymListScreen> {
                       : ListView.builder(
                           key: const Key('gym_list'),
                           controller: _scrollController,
-                          itemCount: provider.filteredGyms.length +
+                          itemCount: provider.gyms.length +
                               (provider.isLoadingMore ? 1 : 0),
                           itemBuilder: (_, index) {
-                            if (index == provider.filteredGyms.length) {
+                            if (index == provider.gyms.length) {
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Center(
@@ -112,8 +143,10 @@ class _GymListScreenState extends State<GymListScreen> {
                                 ),
                               );
                             }
+                            final gym = provider.gyms[index];
                             return _GymCard(
-                              gym: provider.filteredGyms[index],
+                              gym: gym,
+                              onTap: () => _openGymPlans(gym),
                             );
                           },
                         ),
@@ -128,33 +161,38 @@ class _GymListScreenState extends State<GymListScreen> {
 }
 
 class _GymCard extends StatelessWidget {
-  const _GymCard({required this.gym});
+  const _GymCard({required this.gym, required this.onTap});
 
   final Gym gym;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(gym.name, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text('${gym.address}, ${gym.city}'),
-            if (gym.openingHours != null) ...[
+      clipBehavior: Clip.hardEdge,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(gym.name, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(Icons.access_time, size: 14),
-                  const SizedBox(width: 4),
-                  Expanded(child: Text(gym.openingHours!)),
-                ],
-              ),
+              Text('${gym.address}, ${gym.city}'),
+              if (gym.openingHours != null) ...[
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.access_time, size: 14),
+                    const SizedBox(width: 4),
+                    Expanded(child: Text(gym.openingHours!)),
+                  ],
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
