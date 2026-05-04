@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -235,5 +237,32 @@ void main() {
     await tester.pump();
 
     expect(find.byKey(const Key('gym_list')), findsOneWidget);
+  });
+
+  testWidgets('RefreshIndicator is present when gym list is loaded',
+      (tester) async {
+    when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RefreshIndicator), findsOneWidget);
+  });
+
+  testWidgets('pull-to-refresh calls loadGyms again', (tester) async {
+    when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    final refreshState = tester.state<RefreshIndicatorState>(
+      find.byType(RefreshIndicator),
+    );
+    unawaited(refreshState.show());
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    verify(() => repo.fetchGyms()).called(greaterThanOrEqualTo(2));
   });
 }
