@@ -1,5 +1,6 @@
 // coverage:ignore-file
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:tfg_frontend/core/storage/token_storage.dart';
@@ -92,75 +93,81 @@ class _HomeShell extends StatelessWidget {
     final tokenStorage = context.read<TokenStorage>();
     final baseUrl = context.read<String>();
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(icon: const Icon(Icons.logout), onPressed: onLogout),
-        ],
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(
-                child: Image.asset('assets/logo.png', width: 80, height: 80),
-              ),
-              const SizedBox(height: 64),
-              FilledButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ChangeNotifierProvider(
-                      create: (_) => SubscriptionProvider(
-                        repository: SubscriptionRepository(
-                          httpClient: http.Client(),
-                          tokenStorage: tokenStorage,
-                          baseUrl: baseUrl,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) SystemNavigator.pop();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(icon: const Icon(Icons.logout), onPressed: onLogout),
+          ],
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Image.asset('assets/logo.png', width: 80, height: 80),
+                ),
+                const SizedBox(height: 64),
+                FilledButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => ChangeNotifierProvider(
+                        create: (_) => SubscriptionProvider(
+                          repository: SubscriptionRepository(
+                            httpClient: http.Client(),
+                            tokenStorage: tokenStorage,
+                            baseUrl: baseUrl,
+                          ),
                         ),
+                        child: const MySubscriptionScreen(),
                       ),
-                      child: const MySubscriptionScreen(),
                     ),
                   ),
-                ),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                child: const Text('MI SUSCRIPCIÓN'),
-              ),
-              const SizedBox(height: 16),
-              FilledButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ChangeNotifierProvider(
-                      create: (_) => GymListProvider(
-                        repository: GymRepository(
-                          httpClient: http.Client(),
-                          tokenStorage: tokenStorage,
-                          baseUrl: baseUrl,
-                        ),
-                      ),
-                      child: const GymListScreen(),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
                     ),
                   ),
+                  child: const Text('MI SUSCRIPCIÓN'),
                 ),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
+                const SizedBox(height: 16),
+                FilledButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => ChangeNotifierProvider(
+                        create: (_) => GymListProvider(
+                          repository: GymRepository(
+                            httpClient: http.Client(),
+                            tokenStorage: tokenStorage,
+                            baseUrl: baseUrl,
+                          ),
+                        ),
+                        child: const GymListScreen(),
+                      ),
+                    ),
                   ),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  child: const Text('GIMNASIOS'),
                 ),
-                child: const Text('GIMNASIOS'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

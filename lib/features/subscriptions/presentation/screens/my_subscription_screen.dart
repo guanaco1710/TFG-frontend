@@ -46,26 +46,34 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SubscriptionProvider>(
-      builder: (context, provider, _) {
-        return switch (provider.state) {
-          SubscriptionLoadState.initial ||
-          SubscriptionLoadState.loading => const Center(
-            child: CircularProgressIndicator(key: Key('subscription_loading')),
-          ),
-          SubscriptionLoadState.error => Center(
-            child: Text(
-              key: const Key('subscription_error'),
-              provider.errorMessage ?? 'Error al cargar la suscripción',
-              textAlign: TextAlign.center,
+    return Scaffold(
+      appBar: AppBar(title: const Text('Mi suscripción')),
+      body: Consumer<SubscriptionProvider>(
+        builder: (context, provider, _) {
+          return switch (provider.state) {
+            SubscriptionLoadState.initial ||
+            SubscriptionLoadState.loading => const Center(
+              child: CircularProgressIndicator(
+                key: Key('subscription_loading'),
+              ),
             ),
-          ),
-          SubscriptionLoadState.loaded =>
-            provider.subscription == null
-                ? _EmptyState(onBrowseGyms: () => _browseGyms(context))
-                : _SubscriptionCard(subscription: provider.subscription!),
-        };
-      },
+            SubscriptionLoadState.error => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(
+                  key: const Key('subscription_error'),
+                  provider.errorMessage ?? 'Error al cargar la suscripción',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            SubscriptionLoadState.loaded =>
+              provider.subscription == null
+                  ? _EmptyState(onBrowseGyms: () => _browseGyms(context))
+                  : _SubscriptionCard(subscription: provider.subscription!),
+          };
+        },
+      ),
     );
   }
 }
@@ -77,29 +85,45 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.fitness_center, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(28),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.card_membership_outlined,
+                size: 52,
+                color: theme.colorScheme.onPrimaryContainer,
+              ),
+            ),
+            const SizedBox(height: 28),
             Text(
               'Sin suscripción activa',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: theme.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
-            const Text(
+            const SizedBox(height: 12),
+            Text(
               'Explora los gimnasios disponibles y encuentra un plan que se adapte a ti.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
-            FilledButton(
+            const SizedBox(height: 32),
+            FilledButton.icon(
               key: const Key('browse_gyms_button'),
               onPressed: onBrowseGyms,
-              child: const Text('Ver gimnasios'),
+              icon: const Icon(Icons.search),
+              label: const Text('Ver gimnasios'),
             ),
           ],
         ),

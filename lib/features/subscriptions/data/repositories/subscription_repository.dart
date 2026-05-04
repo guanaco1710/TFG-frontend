@@ -61,4 +61,31 @@ class SubscriptionRepository {
 
     return Subscription.fromJson(json as Map<String, dynamic>);
   }
+
+  Future<void> subscribe({
+    required int membershipPlanId,
+    required int gymId,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('$_baseUrl/subscriptions'),
+      headers: await _authHeaders(),
+      body: jsonEncode({'membershipPlanId': membershipPlanId, 'gymId': gymId}),
+    );
+
+    if (response.statusCode != 201) {
+      try {
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        throw ApiException.fromJson(body, response.statusCode);
+      } on ApiException {
+        rethrow;
+      } catch (_) {
+        throw ApiException(
+          status: response.statusCode,
+          error: 'Server error',
+          message: 'Server returned ${response.statusCode}.',
+          path: '/subscriptions',
+        );
+      }
+    }
+  }
 }
