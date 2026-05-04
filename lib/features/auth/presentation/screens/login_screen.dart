@@ -67,11 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Welcome back',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
+                  Image.asset('assets/logo.png', width: 96, height: 96),
                   const SizedBox(height: 32),
                   TextFormField(
                     key: const Key('email_field'),
