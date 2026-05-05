@@ -9,6 +9,9 @@ import 'package:tfg_frontend/features/classes/presentation/screens/classes_scree
 import 'package:tfg_frontend/features/gyms/data/repositories/gym_repository.dart';
 import 'package:tfg_frontend/features/gyms/presentation/providers/gym_list_provider.dart';
 import 'package:tfg_frontend/features/gyms/presentation/screens/gym_list_screen.dart';
+import 'package:tfg_frontend/features/membership_plans/data/repositories/membership_plan_repository.dart';
+import 'package:tfg_frontend/features/membership_plans/presentation/providers/gym_plans_provider.dart';
+import 'package:tfg_frontend/features/membership_plans/presentation/screens/gym_plans_screen.dart';
 import 'package:tfg_frontend/features/profile/data/repositories/user_repository.dart';
 import 'package:tfg_frontend/features/profile/presentation/providers/profile_provider.dart';
 import 'package:tfg_frontend/features/profile/presentation/screens/profile_screen.dart';
@@ -158,7 +161,35 @@ class HomeTab extends StatelessWidget {
                         baseUrl: baseUrl,
                       ),
                     ),
-                    child: const MySubscriptionScreen(),
+                    child: MySubscriptionScreen(
+                      gymListScreenBuilder: () => ChangeNotifierProvider(
+                        create: (_) => GymListProvider(
+                          repository: GymRepository(
+                            httpClient: http.Client(),
+                            tokenStorage: tokenStorage,
+                            baseUrl: baseUrl,
+                          ),
+                        ),
+                        child: GymListScreen(
+                          gymPlansProviderBuilder: (gym) =>
+                              ChangeNotifierProvider(
+                            create: (_) => GymPlansProvider(
+                              planRepository: MembershipPlanRepository(
+                                httpClient: http.Client(),
+                                tokenStorage: tokenStorage,
+                                baseUrl: baseUrl,
+                              ),
+                              subscriptionRepository: SubscriptionRepository(
+                                httpClient: http.Client(),
+                                tokenStorage: tokenStorage,
+                                baseUrl: baseUrl,
+                              ),
+                            ),
+                            child: GymPlansScreen(gym: gym),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -185,7 +216,23 @@ class HomeTab extends StatelessWidget {
                         baseUrl: baseUrl,
                       ),
                     ),
-                    child: const GymListScreen(),
+                    child: GymListScreen(
+                      gymPlansProviderBuilder: (gym) => ChangeNotifierProvider(
+                        create: (_) => GymPlansProvider(
+                          planRepository: MembershipPlanRepository(
+                            httpClient: http.Client(),
+                            tokenStorage: tokenStorage,
+                            baseUrl: baseUrl,
+                          ),
+                          subscriptionRepository: SubscriptionRepository(
+                            httpClient: http.Client(),
+                            tokenStorage: tokenStorage,
+                            baseUrl: baseUrl,
+                          ),
+                        ),
+                        child: GymPlansScreen(gym: gym),
+                      ),
+                    ),
                   ),
                 ),
               ),

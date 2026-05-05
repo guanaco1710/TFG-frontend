@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:tfg_frontend/core/storage/token_storage.dart';
-import 'package:tfg_frontend/features/gyms/data/repositories/gym_repository.dart';
-import 'package:tfg_frontend/features/gyms/presentation/providers/gym_list_provider.dart';
-import 'package:tfg_frontend/features/gyms/presentation/screens/gym_list_screen.dart';
-import 'package:tfg_frontend/features/subscriptions/data/models/subscription_models.dart';
+import 'package:tfg_frontend/core/models/subscription.dart';
 import 'package:tfg_frontend/features/subscriptions/presentation/providers/subscription_provider.dart';
 
 class MySubscriptionScreen extends StatefulWidget {
-  const MySubscriptionScreen({super.key});
+  const MySubscriptionScreen({super.key, required this.gymListScreenBuilder});
+
+  final Widget Function() gymListScreenBuilder;
 
   @override
   State<MySubscriptionScreen> createState() => _MySubscriptionScreenState();
@@ -82,22 +79,8 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
   }
 
   void _browseGyms(BuildContext context) {
-    final tokenStorage = context.read<TokenStorage>();
-    final baseUrl = context.read<String>();
-
     Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ChangeNotifierProvider(
-          create: (_) => GymListProvider(
-            repository: GymRepository(
-              httpClient: http.Client(),
-              tokenStorage: tokenStorage,
-              baseUrl: baseUrl,
-            ),
-          ),
-          child: const GymListScreen(),
-        ),
-      ),
+      MaterialPageRoute<void>(builder: (_) => widget.gymListScreenBuilder()),
     );
   }
 

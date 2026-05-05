@@ -1,4 +1,208 @@
 {
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/generated_plugin_registrant.h": {
+    "mtime": 1777747016.860241,
+    "hash": "d295462c9da9f7fef22dc86c34492318"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/generated_plugin_registrant.cc": {
+    "mtime": 1777884994.672453,
+    "hash": "e51606128f6c2595af1393720bb05539"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_value.h": {
+    "mtime": 1777753762.6104805,
+    "hash": "0fad916a7405474cce0f6d85509a12ac"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_plugin_registry.h": {
+    "mtime": 1777753762.6134806,
+    "hash": "9093dc992b7f0c62c899bb5ee75437bb"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_method_response.h": {
+    "mtime": 1777753762.6154807,
+    "hash": "3373ee1d610372294796ae24f7b10b59"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_standard_message_codec.h": {
+    "mtime": 1777753762.6190357,
+    "hash": "cde1b5d81be59769b872be4d62b4bae8"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_binary_messenger.h": {
+    "mtime": 1777753762.620729,
+    "hash": "5b259053180f6c3a637a3760f5e78921"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_texture_gl.h": {
+    "mtime": 1777753762.6214805,
+    "hash": "3a535810e25ecd4fd017a2eb197dab30"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_method_call.h": {
+    "mtime": 1777753762.6234806,
+    "hash": "1187bb4f46363e874137ce4f71356e8b"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_json_method_codec.h": {
+    "mtime": 1777753762.6254807,
+    "hash": "c31254629784a8fd48a5ec671df85e64"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_basic_message_channel.h": {
+    "mtime": 1777753762.6281726,
+    "hash": "8730d7034562b44bcab7c48c894ba862"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_texture.h": {
+    "mtime": 1777753762.6294806,
+    "hash": "d1894650bbfe9ba65c6f0b195645a9a5"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_json_message_codec.h": {
+    "mtime": 1777753762.6314805,
+    "hash": "4f7385406239c0eb8b31855e75b9addc"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_binary_codec.h": {
+    "mtime": 1777753762.6336834,
+    "hash": "5997440e26e079541337c498925226f1"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_dart_project.h": {
+    "mtime": 1777753762.634952,
+    "hash": "1ddbe3c8a2821804ced450e37fa9701a"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/flutter_linux.h": {
+    "mtime": 1777753762.6358297,
+    "hash": "1dcce1af8eb3052e29d06a756f0535db"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_message_codec.h": {
+    "mtime": 1777753762.6363914,
+    "hash": "4e0c2c7002baf140a95f0067b781d498"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_method_codec.h": {
+    "mtime": 1777753762.6371477,
+    "hash": "1593085ded6e4a14d8129a5d9a95edb8"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_engine.h": {
+    "mtime": 1777753762.6379733,
+    "hash": "1b028c1fa72fa880b3f8ceb15c1c69df"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_method_channel.h": {
+    "mtime": 1777753762.6386747,
+    "hash": "de7b99c808de5c710ade00638cf7e484"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_application.h": {
+    "mtime": 1777753762.6395903,
+    "hash": "5774eb642609ea54649f5a74272b973f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_standard_method_codec.h": {
+    "mtime": 1777753762.6403034,
+    "hash": "09d4ac26822e07f1c2f16d89380b40dc"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_event_channel.h": {
+    "mtime": 1777753762.6410673,
+    "hash": "f3234aba146e57eced1b9febac78a1ec"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_pixel_buffer_texture.h": {
+    "mtime": 1777753762.6418748,
+    "hash": "613a2389f2fda4d844e82e63b690a975"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_string_codec.h": {
+    "mtime": 1777753762.6432955,
+    "hash": "5edcd4ae8b7d3acb2e56bf8bfad75d4d"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_texture_registrar.h": {
+    "mtime": 1777753762.6441681,
+    "hash": "455c45888f33294a5054d8adacac5a2e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_view.h": {
+    "mtime": 1777753762.6447375,
+    "hash": "e27fc7ec7888b59ffac04a45e4461699"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/ephemeral/flutter_linux/fl_plugin_registrar.h": {
+    "mtime": 1777753762.6452844,
+    "hash": "3d850b5432140f7e565baa806ee1f716"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/runner/my_application.h": {
+    "mtime": 1777747015.9358435,
+    "hash": "326a85d68857137fdfe8698a0c071baf"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/runner/main.cc": {
+    "mtime": 1777747015.9360702,
+    "hash": "0643b8609698e96b3abd63c210361a87"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/runner/my_application.cc": {
+    "mtime": 1777747015.9369414,
+    "hash": "1c3efc39d6bcdb9cda10bf49aa81d72e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/build.gradle.kts": {
+    "mtime": 1777747015.9524863,
+    "hash": "f11f360aed44d4f6871b398346af14f0"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/settings.gradle.kts": {
+    "mtime": 1777747015.9572465,
+    "hash": "094e3cafe85d4dbf756dfe0bd754c6cb"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/gradlew": {
+    "mtime": 1777747015.9818811,
+    "hash": "7f1cd7eb3f75a1dc85cd37753972a6e2"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/app/build.gradle.kts": {
+    "mtime": 1777747015.9528873,
+    "hash": "71845010601a431871948b41f01da3b3"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/app/src/main/kotlin/com/example/tfg_frontend/MainActivity.kt": {
+    "mtime": 1777747015.9534583,
+    "hash": "135757d31a5f9d3fb526db913f9d42f6"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java": {
+    "mtime": 1777753313.3105192,
+    "hash": "d88d6e421e5e87d61913253cd55ac36d"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/flutter/generated_plugin_registrant.h": {
+    "mtime": 1777747016.8614488,
+    "hash": "0ea33875f9f8e118f9c2ded03e2e2835"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/flutter/generated_plugin_registrant.cc": {
+    "mtime": 1777884994.6747866,
+    "hash": "abf3006978595decef5de781845ed71e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/flutter_window.h": {
+    "mtime": 1777747015.9625528,
+    "hash": "79bea736711adda00c49419a39a4a0b4"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/utils.h": {
+    "mtime": 1777747015.962774,
+    "hash": "c741fb9cddbf3a62f4688b6cca39ddcc"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/resource.h": {
+    "mtime": 1777747015.96343,
+    "hash": "c8f809a4f8d3f2f625e358fd90f72fee"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/win32_window.cpp": {
+    "mtime": 1777747015.963697,
+    "hash": "928e86a2be27eca688669dce6c9177d9"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/main.cpp": {
+    "mtime": 1777747015.9641383,
+    "hash": "07d3a96138e9f6f3b5552c2b06c25427"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/win32_window.h": {
+    "mtime": 1777747015.9642875,
+    "hash": "5a4cf051798d7e6931ee0405a4523c8f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/utils.cpp": {
+    "mtime": 1777747015.9645274,
+    "hash": "9b5697b276c8ad67a02ec12ad2c09851"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/flutter_window.cpp": {
+    "mtime": 1777747015.965372,
+    "hash": "9b92b95a9eecce25e3e9d356688d0cb6"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/RunnerTests/RunnerTests.swift": {
+    "mtime": 1777747015.926881,
+    "hash": "97d3a20fd20a063c192e886d1822b4a8"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/MainFlutterWindow.swift": {
+    "mtime": 1777747015.930213,
+    "hash": "4a747b1f256d62a2bbb79bd976891eb5"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/AppDelegate.swift": {
+    "mtime": 1777747015.9347553,
+    "hash": "2a7411ae3e7c6715525b94b6f8d2e80b"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Flutter/GeneratedPluginRegistrant.swift": {
+    "mtime": 1777884994.6727698,
+    "hash": "6a99062f3dfd3aaeb19812b3e6d04658"
+  },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/main.dart": {
     "mtime": 1777989685.8184195,
     "hash": "b9d04d1a78c3671020d6e3cbf26063c1"
@@ -247,6 +451,74 @@
     "mtime": 1777989685.9034195,
     "hash": "4f867d0398783d08bff23db82bb454a0"
   },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/RunnerTests/RunnerTests.swift": {
+    "mtime": 1777747015.944029,
+    "hash": "a225a382d14d7b16b6f602a5c1d49331"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Runner-Bridging-Header.h": {
+    "mtime": 1777747015.9442315,
+    "hash": "e07862ac930ed4d8479185d52c6cc66d"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/GeneratedPluginRegistrant.h": {
+    "mtime": 1777747016.8626928,
+    "hash": "decb9041b5e91a07e66f4664e5dac408"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/GeneratedPluginRegistrant.m": {
+    "mtime": 1777755064.9817638,
+    "hash": "983cf3e274c14ef02ac62163f460ea17"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/AppDelegate.swift": {
+    "mtime": 1777747015.9505367,
+    "hash": "2bd8469f2a4b701ff582f6574e58b13c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/SceneDelegate.swift": {
+    "mtime": 1777747015.950768,
+    "hash": "748d701e783e68faf618c00464257a19"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Flutter/ephemeral/flutter_lldb_helper.py": {
+    "mtime": 1777747016.8096287,
+    "hash": "98fc75412162af387e2e3461e4e58094"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/analysis_options.yaml": {
+    "mtime": 1777747015.9550438,
+    "hash": "66d03d7647c8e438164feaf5b922d44a"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/pubspec.yaml": {
+    "mtime": 1777905377.1965234,
+    "hash": "4bb702575708f75f56df403b18202bb1"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/CLAUDE.md": {
+    "mtime": 1777747641.4188273,
+    "hash": "2d5aba5bfb73ead615b10a1d97899ef7"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/README.md": {
+    "mtime": 1777747015.968669,
+    "hash": "f0341d22632c1e40c723aa8317e6fbda"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/CMakeLists.txt": {
+    "mtime": 1777747015.9378812,
+    "hash": "4711f12844c1941e6ff810c13623ea1c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/flutter/CMakeLists.txt": {
+    "mtime": 1777747015.9355872,
+    "hash": "46690fb8ffaf7d227d8bc4713f31140d"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/linux/runner/CMakeLists.txt": {
+    "mtime": 1777747015.9373162,
+    "hash": "6d75431dc21756981b53a7494c836311"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/CMakeLists.txt": {
+    "mtime": 1777747015.965881,
+    "hash": "71ee5657ee8598b31ca9a7b6d12b2eb9"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/flutter/CMakeLists.txt": {
+    "mtime": 1777747015.9619706,
+    "hash": "0c500410e3259a9a053797dc1c28070e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/windows/runner/CMakeLists.txt": {
+    "mtime": 1777747015.96558,
+    "hash": "e99a99b5cc82a168fc557eb23b8d5a96"
+  },
   "/home/guanaco/tfg/frontend/tfg_frontend/docs/REQUIREMENTS.md": {
     "mtime": 1777749384.284858,
     "hash": "885d9137cd7a2c9a8c19a837e6560101"
@@ -254,6 +526,138 @@
   "/home/guanaco/tfg/frontend/tfg_frontend/docs/endpoints.md": {
     "mtime": 1777977923.1475585,
     "hash": "54d7424bbc1b4cc432b52a7dc6dcab8d"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/index-sort-f.html": {
+    "mtime": 1777882889.6109066,
+    "hash": "ecc072e1172fb63e8d6cce7ff4612eef"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/index.html": {
+    "mtime": 1777882889.6096945,
+    "hash": "6f7f1985b393cbb478c3268ff2f77c70"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/index-sort-l.html": {
+    "mtime": 1777882889.610227,
+    "hash": "09f069051fb6ed6b716985e64d58af74"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/data/repositories/auth_repository.dart.gcov.html": {
+    "mtime": 1777882889.590474,
+    "hash": "d1472b2420c38357ae11552665024c60"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/data/repositories/index.html": {
+    "mtime": 1777882889.6070616,
+    "hash": "23ae4e1be615402f7ff9da53961f6bcf"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/data/models/auth_models.dart.gcov.html": {
+    "mtime": 1777882889.5864735,
+    "hash": "a0cbe4a844698482a4c2486797f735e2"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/data/models/index.html": {
+    "mtime": 1777882889.6068528,
+    "hash": "c08d3e3a6c9f010114d10d315498874c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/presentation/providers/index.html": {
+    "mtime": 1777882889.607233,
+    "hash": "2be4f4c0eb73435c0dd63d79c3889016"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/presentation/providers/auth_provider.dart.gcov.html": {
+    "mtime": 1777882889.587968,
+    "hash": "7fecb9399d4bc7929ebe91cd7c2a41a0"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/presentation/screens/index-sort-f.html": {
+    "mtime": 1777882889.6079857,
+    "hash": "8c4bcf028e4cf7766f50655b0d16e3be"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/presentation/screens/index.html": {
+    "mtime": 1777882889.607627,
+    "hash": "7f9f5742929f2c61dc96e6be47e94c98"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/presentation/screens/signup_screen.dart.gcov.html": {
+    "mtime": 1777882889.59378,
+    "hash": "e3eae4c3804c3df357aefc3273f297ec"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/presentation/screens/index-sort-l.html": {
+    "mtime": 1777882889.6078138,
+    "hash": "26119a0e897d7484fecdd13c5489651f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/auth/presentation/screens/login_screen.dart.gcov.html": {
+    "mtime": 1777882889.5954256,
+    "hash": "5451a26f7c69265f70af6b20e415b78c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/subscriptions/data/repositories/subscription_repository.dart.gcov.html": {
+    "mtime": 1777882889.6012077,
+    "hash": "b04da631fb182a280aaa83bc55c120b5"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/subscriptions/data/repositories/index.html": {
+    "mtime": 1777882889.60855,
+    "hash": "38c95b52f96d040adc3438146572d9d7"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/subscriptions/data/models/subscription_models.dart.gcov.html": {
+    "mtime": 1777882889.6020896,
+    "hash": "ae1190ebed5b6ad7323ce802dd03d30b"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/subscriptions/data/models/index.html": {
+    "mtime": 1777882889.6090417,
+    "hash": "f87070fbcdbc87926b4817c1e0bfa431"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/subscriptions/presentation/providers/subscription_provider.dart.gcov.html": {
+    "mtime": 1777882889.6062684,
+    "hash": "22217603fd5a6ce38ba768d1d0726a0f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/subscriptions/presentation/providers/index.html": {
+    "mtime": 1777882889.6092153,
+    "hash": "bb85c538a091afbf494c77b58af232c5"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/subscriptions/presentation/screens/my_subscription_screen.dart.gcov.html": {
+    "mtime": 1777882889.603968,
+    "hash": "c9cadc9a132dd53f91c36538eef9af0f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/subscriptions/presentation/screens/index.html": {
+    "mtime": 1777882889.6088808,
+    "hash": "e0efb21ea5a51008714d5bbd77834566"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/gyms/data/repositories/index.html": {
+    "mtime": 1777882889.6074147,
+    "hash": "712342a35207877498b09aa0957aeb22"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/gyms/data/repositories/gym_repository.dart.gcov.html": {
+    "mtime": 1777882889.5965397,
+    "hash": "7c237a21ec1b0c1ac2dcd17699c12be7"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/gyms/data/models/index.html": {
+    "mtime": 1777882889.608375,
+    "hash": "e9e80ed76ccfb2d50a095ffbc9c2a26a"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/gyms/data/models/gym_models.dart.gcov.html": {
+    "mtime": 1777882889.5976248,
+    "hash": "16304dd41b9fa4d2bc1d74ed302c7827"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/gyms/presentation/providers/index.html": {
+    "mtime": 1777882889.6087065,
+    "hash": "c9e9f6fcc170f46eb26233c03cc0d365"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/gyms/presentation/providers/gym_list_provider.dart.gcov.html": {
+    "mtime": 1777882889.6001885,
+    "hash": "b0f941e69b8cd6bb622513e58fc0edbe"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/gyms/presentation/screens/index.html": {
+    "mtime": 1777882889.6081996,
+    "hash": "e6a0c24649ed020099bc9562eff0d4c3"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/gyms/presentation/screens/gym_list_screen.dart.gcov.html": {
+    "mtime": 1777882889.5993035,
+    "hash": "e5dedcd21a03c72ce841c09a04e4b717"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/home/guanaco/tfg/frontend/tfg_frontend/lib/core/storage/index.html": {
+    "mtime": 1777882889.6066196,
+    "hash": "b838914a223b450813ac5f94847e21df"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md": {
+    "mtime": 1777747015.9499528,
+    "hash": "e175e436acacf76c814d83532d0b662c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/web/index.html": {
+    "mtime": 1777747015.9666502,
+    "hash": "5e1f3f00af58ed77a9995ad07c8489c6"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/docs/visily-multiscreens.pdf": {
     "mtime": 1777886095.0462258,
@@ -263,8 +667,176 @@
     "mtime": 1777747117.6318724,
     "hash": "c86b575702741585ac2b3ca17e34a72c"
   },
+  "/home/guanaco/tfg/frontend/tfg_frontend/assets/logo.png": {
+    "mtime": 1777886095.0416915,
+    "hash": "521cfddacdab2d25a5f53ebb44b96c08"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+    "mtime": 1777747015.9587193,
+    "hash": "6270344430679711b81476e29878caa7"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+    "mtime": 1777747015.9596019,
+    "hash": "afe1b655b9f32da22f9a4301bb8e6ba8"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+    "mtime": 1777747015.9598684,
+    "hash": "a0a8db5985280b3679d99a820ae2db79"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+    "mtime": 1777747015.960126,
+    "hash": "57838d52c318faff743130c3fcfae0c6"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/android/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+    "mtime": 1777747015.9603512,
+    "hash": "13e9c72ec37fac220397aa819fa1ef2d"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png": {
+    "mtime": 1777747015.9330397,
+    "hash": "3ded30823804caaa5ccc944067c54a36"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png": {
+    "mtime": 1777747015.9332726,
+    "hash": "dfe2c93d1536ae02f085cc63faa3430e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png": {
+    "mtime": 1777747015.9335282,
+    "hash": "0ad44039155424738917502c69667699"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png": {
+    "mtime": 1777747015.933819,
+    "hash": "04e7b6ef05346c70b663ca1d97de3ad5"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png": {
+    "mtime": 1777747015.93441,
+    "hash": "8bf511604bc6ed0a6aeb380c5113fdcf"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png": {
+    "mtime": 1777747015.933986,
+    "hash": "c9becc9105f8cabce934d20c7bfb6aac"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png": {
+    "mtime": 1777747015.9318812,
+    "hash": "8e0ae58e362a6636bdfccbc04da2c58c"
+  },
   "/home/guanaco/tfg/frontend/tfg_frontend/docs/logo.png": {
     "mtime": 1777886095.0416915,
     "hash": "521cfddacdab2d25a5f53ebb44b96c08"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/emerald.png": {
+    "mtime": 1777882889.5844533,
+    "hash": "1781757697b39c720661b1cfff4cb3cd"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/updown.png": {
+    "mtime": 1777882889.5843172,
+    "hash": "f2be44dc857eee05881fb4886355c5dc"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/glass.png": {
+    "mtime": 1777882889.5844855,
+    "hash": "d0bcded9081d6a0efda48c495867da73"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/amber.png": {
+    "mtime": 1777882889.5843508,
+    "hash": "71fbb1103d0eeed78bfdf1a9545ceb4c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/ruby.png": {
+    "mtime": 1777882889.5844214,
+    "hash": "bc09c2be56504f8e2d82c5d80bdafc44"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/snow.png": {
+    "mtime": 1777882889.58438,
+    "hash": "3d0fcd32ed86be159672d1fe52f8d3cc"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png": {
+    "mtime": 1777747015.947719,
+    "hash": "1b3b1538136316263c7092951e923e9d"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png": {
+    "mtime": 1777747015.9485652,
+    "hash": "36c0d7a7132bdde18898ffdfcfcdc4d2"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png": {
+    "mtime": 1777747015.9488873,
+    "hash": "e419d22a37bc40ba185aca1acb6d4ac6"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png": {
+    "mtime": 1777747015.948074,
+    "hash": "2247a840b6ee72b8a069208af170e5b1"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png": {
+    "mtime": 1777747015.9468806,
+    "hash": "c785f8932297af4acd5f5ccb7630f01c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png": {
+    "mtime": 1777747015.948223,
+    "hash": "2b1452c4c1bda6177b4fbbb832df217f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png": {
+    "mtime": 1777747015.9465306,
+    "hash": "a2f8558fb1d42514111fbbb19fb67314"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png": {
+    "mtime": 1777747015.9458432,
+    "hash": "be8887071dd7ec39cb754d236aa9584f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png": {
+    "mtime": 1777747015.9474277,
+    "hash": "2247a840b6ee72b8a069208af170e5b1"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png": {
+    "mtime": 1777747015.9487119,
+    "hash": "8245359312aea1b0d2412f79a07b0ca5"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png": {
+    "mtime": 1777747015.9478986,
+    "hash": "665cb5e3c5729da6d639d26eff47a503"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png": {
+    "mtime": 1777747015.947279,
+    "hash": "5b3c0902200ce596e9848f22e1f0fe0e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png": {
+    "mtime": 1777747015.9475706,
+    "hash": "5b3c0902200ce596e9848f22e1f0fe0e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png": {
+    "mtime": 1777747015.9484076,
+    "hash": "043119ef4faa026ff82bd03f241e5338"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png": {
+    "mtime": 1777747015.9470937,
+    "hash": "643842917530acf4c5159ae851b0baf2"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png": {
+    "mtime": 1777747015.9491813,
+    "hash": "978c1bee49d7ad5fc1a4d81099b13e18"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png": {
+    "mtime": 1777747015.9502027,
+    "hash": "978c1bee49d7ad5fc1a4d81099b13e18"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png": {
+    "mtime": 1777747015.9497025,
+    "hash": "978c1bee49d7ad5fc1a4d81099b13e18"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/web/favicon.png": {
+    "mtime": 1777747015.9682698,
+    "hash": "5dcef449791fa27946b3d35ad8803796"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/web/icons/Icon-maskable-192.png": {
+    "mtime": 1777747015.9677937,
+    "hash": "c457ef57daa1d16f64b27b786ec2ea3c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/web/icons/Icon-512.png": {
+    "mtime": 1777747015.9674253,
+    "hash": "96e752610906ba2a93c65f8abe1645f1"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/web/icons/Icon-192.png": {
+    "mtime": 1777747015.9671311,
+    "hash": "ac9a721a12bbc803b44f645561ecb1e1"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/web/icons/Icon-maskable-512.png": {
+    "mtime": 1777747015.9680073,
+    "hash": "301a7604d45b3e739efc881eb04896ea"
   }
 }

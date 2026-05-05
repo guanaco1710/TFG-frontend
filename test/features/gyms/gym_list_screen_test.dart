@@ -4,17 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
-import 'package:tfg_frontend/core/storage/token_storage.dart';
-import 'package:tfg_frontend/features/auth/data/models/auth_models.dart';
+import 'package:tfg_frontend/core/exceptions/api_exception.dart';
 import 'package:tfg_frontend/features/gyms/data/models/gym_models.dart';
 import 'package:tfg_frontend/features/gyms/data/repositories/gym_repository.dart';
 import 'package:tfg_frontend/features/gyms/presentation/providers/gym_list_provider.dart';
 import 'package:tfg_frontend/features/gyms/presentation/screens/gym_list_screen.dart';
+import 'package:tfg_frontend/features/membership_plans/data/repositories/membership_plan_repository.dart';
+import 'package:tfg_frontend/features/membership_plans/presentation/providers/gym_plans_provider.dart';
 import 'package:tfg_frontend/features/membership_plans/presentation/screens/gym_plans_screen.dart';
+import 'package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart';
 
 class MockGymRepository extends Mock implements GymRepository {}
 
-class MockTokenStorage extends Mock implements TokenStorage {}
+class MockMembershipPlanRepository extends Mock
+    implements MembershipPlanRepository {}
+
+class MockSubscriptionRepository extends Mock
+    implements SubscriptionRepository {}
 
 const _gymPageWithResults = GymPage(
   content: [
@@ -52,14 +58,24 @@ const _emptyGymPage = GymPage(
   hasMore: false,
 );
 
+Widget _gymPlansProviderBuilder(Gym gym) {
+  return ChangeNotifierProvider(
+    create: (_) => GymPlansProvider(
+      planRepository: MockMembershipPlanRepository(),
+      subscriptionRepository: MockSubscriptionRepository(),
+    ),
+    child: GymPlansScreen(gym: gym),
+  );
+}
+
 Widget _buildSubject(MockGymRepository repo) {
   return MultiProvider(
     providers: [
-      Provider<TokenStorage>.value(value: MockTokenStorage()),
-      Provider<String>.value(value: 'http://localhost:8080/api/v1'),
       ChangeNotifierProvider(create: (_) => GymListProvider(repository: repo)),
     ],
-    child: const MaterialApp(home: GymListScreen()),
+    child: MaterialApp(
+      home: GymListScreen(gymPlansProviderBuilder: _gymPlansProviderBuilder),
+    ),
   );
 }
 
@@ -144,6 +160,26 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(GymPlansScreen), findsOneWidget);
+  });
+
+  testWidgets('renders gym list without TokenStorage in provider tree', (
+    tester,
+  ) async {
+    when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => GymListProvider(repository: repo),
+        child: MaterialApp(
+          home: GymListScreen(
+            gymPlansProviderBuilder: _gymPlansProviderBuilder,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('gym_list')), findsOneWidget);
   });
 
   testWidgets('typing in search field triggers debounced search', (

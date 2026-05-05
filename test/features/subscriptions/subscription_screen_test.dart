@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
-import 'package:tfg_frontend/core/storage/token_storage.dart';
-import 'package:tfg_frontend/features/auth/data/models/auth_models.dart';
+import 'package:tfg_frontend/core/exceptions/api_exception.dart';
 import 'package:tfg_frontend/features/subscriptions/data/models/subscription_models.dart';
 import 'package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart';
 import 'package:tfg_frontend/features/subscriptions/presentation/providers/subscription_provider.dart';
@@ -11,10 +10,6 @@ import 'package:tfg_frontend/features/subscriptions/presentation/screens/my_subs
 
 class MockSubscriptionRepository extends Mock
     implements SubscriptionRepository {}
-
-class MockTokenStorage extends Mock implements TokenStorage {}
-
-const _baseUrl = 'http://localhost:8080/api/v1';
 
 const _activeSubscription = Subscription(
   id: 7,
@@ -70,17 +65,22 @@ const _cancelledSubscription = Subscription(
 );
 
 Widget _buildSubject(MockSubscriptionRepository repo) {
-  final tokenStorage = MockTokenStorage();
   return MultiProvider(
     providers: [
-      Provider<TokenStorage>.value(value: tokenStorage),
-      Provider<String>.value(value: _baseUrl),
       ChangeNotifierProvider(
         create: (_) => SubscriptionProvider(repository: repo),
       ),
     ],
-    // ignore: prefer_const_constructors
-    child: MaterialApp(home: Scaffold(body: MySubscriptionScreen())),
+    child: MaterialApp(
+      home: Scaffold(
+        body: MySubscriptionScreen(
+          gymListScreenBuilder: () => const Scaffold(
+            appBar: null,
+            body: Center(child: Text('Gimnasios')),
+          ),
+        ),
+      ),
+    ),
   );
 }
 
@@ -463,4 +463,27 @@ void main() {
 
     expect(find.text('Ya está pendiente de cancelación'), findsOneWidget);
   });
+
+  testWidgets(
+    'renders subscription screen without TokenStorage in provider tree',
+    (tester) async {
+      when(() => repo.fetchMySubscriptions()).thenAnswer((_) async => []);
+
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (_) => SubscriptionProvider(repository: repo),
+          child: MaterialApp(
+            home: Scaffold(
+              body: MySubscriptionScreen(
+                gymListScreenBuilder: () => const SizedBox.shrink(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('browse_gyms_button')), findsOneWidget);
+    },
+  );
 }
