@@ -310,9 +310,7 @@ void main() {
 
   group('restoreSession', () {
     test('returns AuthUser when refresh token stored', () async {
-      when(
-        () => tokenStorage.getRefreshToken(),
-      ).thenAnswer((_) async => 'ref');
+      when(() => tokenStorage.getRefreshToken()).thenAnswer((_) async => 'ref');
       when(
         () => httpClient.post(
           any(),
@@ -359,9 +357,7 @@ void main() {
     });
 
     test('returns null and clears tokens when refresh fails', () async {
-      when(
-        () => tokenStorage.getRefreshToken(),
-      ).thenAnswer((_) async => 'ref');
+      when(() => tokenStorage.getRefreshToken()).thenAnswer((_) async => 'ref');
       when(
         () => httpClient.post(
           any(),

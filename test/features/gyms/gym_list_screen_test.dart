@@ -239,8 +239,9 @@ void main() {
     expect(find.byKey(const Key('gym_list')), findsOneWidget);
   });
 
-  testWidgets('RefreshIndicator is present when gym list is loaded',
-      (tester) async {
+  testWidgets('RefreshIndicator is present when gym list is loaded', (
+    tester,
+  ) async {
     when(() => repo.fetchGyms()).thenAnswer((_) async => _gymPageWithResults);
 
     await tester.pumpWidget(_buildSubject(repo));

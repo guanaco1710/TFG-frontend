@@ -42,8 +42,7 @@ class GymPlansProvider extends ChangeNotifier {
       _plans = plans;
       _gymSubscription = subs
           .where(
-            (s) =>
-                s.gym.id == gymId && s.status == SubscriptionStatus.active,
+            (s) => s.gym.id == gymId && s.status == SubscriptionStatus.active,
           )
           .firstOrNull;
       _state = PlansLoadState.loaded;

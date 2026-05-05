@@ -147,11 +147,7 @@ void main() {
 
     test('parses pendingPlan when present', () async {
       final withPendingPlan = Map<String, dynamic>.from(_subscriptionJson)
-        ..['pendingPlan'] = {
-          'id': 3,
-          'name': 'Premium',
-          'priceMonthly': 49.99,
-        };
+        ..['pendingPlan'] = {'id': 3, 'name': 'Premium', 'priceMonthly': 49.99};
 
       when(
         () => httpClient.get(any(), headers: any(named: 'headers')),
@@ -232,11 +228,7 @@ void main() {
   group('upgradeSubscription', () {
     test('returns updated Subscription on 200', () async {
       final upgraded = Map<String, dynamic>.from(_subscriptionJson)
-        ..['pendingPlan'] = {
-          'id': 3,
-          'name': 'Premium',
-          'priceMonthly': 49.99,
-        };
+        ..['pendingPlan'] = {'id': 3, 'name': 'Premium', 'priceMonthly': 49.99};
 
       when(
         () => httpClient.post(
@@ -314,10 +306,7 @@ void main() {
   group('cancelSubscription', () {
     test('completes successfully on 204', () async {
       when(
-        () => httpClient.post(
-          any(),
-          headers: any(named: 'headers'),
-        ),
+        () => httpClient.post(any(), headers: any(named: 'headers')),
       ).thenAnswer((_) async => http.Response('', 204));
 
       await expectLater(
@@ -328,10 +317,7 @@ void main() {
 
     test('throws ApiException on 409 with JSON error body', () async {
       when(
-        () => httpClient.post(
-          any(),
-          headers: any(named: 'headers'),
-        ),
+        () => httpClient.post(any(), headers: any(named: 'headers')),
       ).thenAnswer(
         (_) async => http.Response(
           jsonEncode({
@@ -354,10 +340,7 @@ void main() {
 
     test('throws ApiException on non-204 with non-JSON body', () async {
       when(
-        () => httpClient.post(
-          any(),
-          headers: any(named: 'headers'),
-        ),
+        () => httpClient.post(any(), headers: any(named: 'headers')),
       ).thenAnswer((_) async => http.Response('Internal Server Error', 500));
 
       expect(

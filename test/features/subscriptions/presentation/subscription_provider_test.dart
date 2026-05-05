@@ -45,19 +45,17 @@ void main() {
 
       await provider.loadMySubscriptions();
 
-      expect(
-        states,
-        [SubscriptionLoadState.loading, SubscriptionLoadState.loaded],
-      );
+      expect(states, [
+        SubscriptionLoadState.loading,
+        SubscriptionLoadState.loaded,
+      ]);
       expect(provider.subscriptions.length, 1);
       expect(provider.subscriptions[0].id, 7);
       expect(provider.errorMessage, isNull);
     });
 
     test('returns empty list when no subscriptions', () async {
-      when(
-        () => repo.fetchMySubscriptions(),
-      ).thenAnswer((_) async => []);
+      when(() => repo.fetchMySubscriptions()).thenAnswer((_) async => []);
 
       await provider.loadMySubscriptions();
 
@@ -158,9 +156,7 @@ void main() {
       ).thenAnswer((_) async {});
 
       final cancellingValues = <bool>[];
-      provider.addListener(
-        () => cancellingValues.add(provider.isCancelling),
-      );
+      provider.addListener(() => cancellingValues.add(provider.isCancelling));
 
       await provider.cancelSubscription(subscriptionId: 7);
 

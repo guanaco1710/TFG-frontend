@@ -274,54 +274,68 @@ void main() {
     expect(find.textContaining('Premium'), findsOneWidget);
   });
 
-  testWidgets('shows CANCELACIÓN PENDIENTE badge when pendingCancellation true',
+  testWidgets(
+    'shows CANCELACIÓN PENDIENTE badge when pendingCancellation true',
     (tester) async {
-    const subPendingCancel = Subscription(
-      id: 7,
-      plan: SubscriptionPlan(id: 2, name: 'Premium Monthly', priceMonthly: 49.99),
-      gym: SubscriptionGym(
-        id: 1,
-        name: 'GymBook Central',
-        address: 'Calle Mayor 1',
-        city: 'Madrid',
-      ),
-      status: SubscriptionStatus.active,
-      startDate: '2024-05-01',
-      renewalDate: '2024-06-01',
-      classesUsedThisMonth: 5,
-      classesRemainingThisMonth: 7,
-      pendingCancellation: true,
-    );
+      const subPendingCancel = Subscription(
+        id: 7,
+        plan: SubscriptionPlan(
+          id: 2,
+          name: 'Premium Monthly',
+          priceMonthly: 49.99,
+        ),
+        gym: SubscriptionGym(
+          id: 1,
+          name: 'GymBook Central',
+          address: 'Calle Mayor 1',
+          city: 'Madrid',
+        ),
+        status: SubscriptionStatus.active,
+        startDate: '2024-05-01',
+        renewalDate: '2024-06-01',
+        classesUsedThisMonth: 5,
+        classesRemainingThisMonth: 7,
+        pendingCancellation: true,
+      );
 
-    when(
-      () => repo.fetchMySubscriptions(),
-    ).thenAnswer((_) async => [subPendingCancel]);
+      when(
+        () => repo.fetchMySubscriptions(),
+      ).thenAnswer((_) async => [subPendingCancel]);
 
-    await tester.pumpWidget(_buildSubject(repo));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_buildSubject(repo));
+      await tester.pumpAndSettle();
 
-    expect(find.text('CANCELACIÓN PENDIENTE'), findsOneWidget);
-  });
+      expect(find.text('CANCELACIÓN PENDIENTE'), findsOneWidget);
+    },
+  );
 
-  testWidgets('shows cancel button for active subscription without pending cancel', (
-    tester,
-  ) async {
-    when(
-      () => repo.fetchMySubscriptions(),
-    ).thenAnswer((_) async => [_activeSubscription]);
+  testWidgets(
+    'shows cancel button for active subscription without pending cancel',
+    (tester) async {
+      when(
+        () => repo.fetchMySubscriptions(),
+      ).thenAnswer((_) async => [_activeSubscription]);
 
-    await tester.pumpWidget(_buildSubject(repo));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_buildSubject(repo));
+      await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('cancel_subscription_button')), findsOneWidget);
-  });
+      expect(
+        find.byKey(const Key('cancel_subscription_button')),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('does not show cancel button when pendingCancellation is true', (
     tester,
   ) async {
     const subPendingCancel = Subscription(
       id: 7,
-      plan: SubscriptionPlan(id: 2, name: 'Premium Monthly', priceMonthly: 49.99),
+      plan: SubscriptionPlan(
+        id: 2,
+        name: 'Premium Monthly',
+        priceMonthly: 49.99,
+      ),
       gym: SubscriptionGym(
         id: 1,
         name: 'GymBook Central',
@@ -359,7 +373,9 @@ void main() {
     expect(find.byKey(const Key('cancel_subscription_button')), findsNothing);
   });
 
-  testWidgets('tapping cancel button shows confirmation dialog', (tester) async {
+  testWidgets('tapping cancel button shows confirmation dialog', (
+    tester,
+  ) async {
     when(
       () => repo.fetchMySubscriptions(),
     ).thenAnswer((_) async => [_activeSubscription]);
@@ -392,9 +408,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyNever(
-      () => repo.cancelSubscription(
-        subscriptionId: any(named: 'subscriptionId'),
-      ),
+      () =>
+          repo.cancelSubscription(subscriptionId: any(named: 'subscriptionId')),
     );
   });
 
@@ -403,7 +418,8 @@ void main() {
       () => repo.fetchMySubscriptions(),
     ).thenAnswer((_) async => [_activeSubscription]);
     when(
-      () => repo.cancelSubscription(subscriptionId: any(named: 'subscriptionId')),
+      () =>
+          repo.cancelSubscription(subscriptionId: any(named: 'subscriptionId')),
     ).thenAnswer((_) async {});
 
     await tester.pumpWidget(_buildSubject(repo));
@@ -425,7 +441,8 @@ void main() {
       () => repo.fetchMySubscriptions(),
     ).thenAnswer((_) async => [_activeSubscription]);
     when(
-      () => repo.cancelSubscription(subscriptionId: any(named: 'subscriptionId')),
+      () =>
+          repo.cancelSubscription(subscriptionId: any(named: 'subscriptionId')),
     ).thenThrow(
       const ApiException(
         status: 409,

@@ -24,10 +24,7 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
     });
   }
 
-  Future<void> _onCancelTapped(
-    BuildContext context,
-    Subscription subscription,
-  ) async {
+  Future<void> _onCancelTapped(Subscription subscription) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -66,7 +63,9 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Suscripción cancelada. Acceso activo hasta renovación.'),
+          content: Text(
+            'Suscripción cancelada. Acceso activo hasta renovación.',
+          ),
           backgroundColor: Colors.orange,
         ),
       );
@@ -138,9 +137,9 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
                           isCancelling: provider.isCancelling,
                           onCancel:
                               sub.status == SubscriptionStatus.active &&
-                                      !sub.pendingCancellation
-                                  ? () => _onCancelTapped(context, sub)
-                                  : null,
+                                  !sub.pendingCancellation
+                              ? () => _onCancelTapped(sub)
+                              : null,
                         );
                       },
                     ),
@@ -307,10 +306,7 @@ class _SubscriptionCard extends StatelessWidget {
 }
 
 class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({
-    required this.status,
-    required this.pendingCancellation,
-  });
+  const _StatusBadge({required this.status, required this.pendingCancellation});
 
   final SubscriptionStatus status;
   final bool pendingCancellation;
@@ -318,8 +314,10 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (label, color) = switch (status) {
-      SubscriptionStatus.active when pendingCancellation =>
-        ('CANCELACIÓN PENDIENTE', Colors.orange),
+      SubscriptionStatus.active when pendingCancellation => (
+        'CANCELACIÓN PENDIENTE',
+        Colors.orange,
+      ),
       SubscriptionStatus.active => ('ACTIVA', Colors.green),
       SubscriptionStatus.cancelled => ('CANCELADA', Colors.orange),
       SubscriptionStatus.expired => ('EXPIRADA', Colors.red),

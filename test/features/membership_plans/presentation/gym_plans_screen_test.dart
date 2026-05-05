@@ -182,7 +182,11 @@ void main() {
       classesUsedThisMonth: 5,
       classesRemainingThisMonth: 3,
       pendingCancellation: false,
-      pendingPlan: SubscriptionPlan(id: 2, name: 'Premium', priceMonthly: 49.99),
+      pendingPlan: SubscriptionPlan(
+        id: 2,
+        name: 'Premium',
+        priceMonthly: 49.99,
+      ),
     );
 
     when(() => planRepo.fetchActivePlans()).thenAnswer((_) async => _plans);
@@ -247,27 +251,29 @@ void main() {
     expect(find.text('Cancelar'), findsOneWidget);
   });
 
-  testWidgets('tapping Cambiar plan shows upgrade dialog with next-cycle text',
+  testWidgets(
+    'tapping Cambiar plan shows upgrade dialog with next-cycle text',
     (tester) async {
-    when(() => planRepo.fetchActivePlans()).thenAnswer((_) async => _plans);
-    when(
-      () => subRepo.fetchMySubscriptions(),
-    ).thenAnswer((_) async => [_activeSubBasic]);
+      when(() => planRepo.fetchActivePlans()).thenAnswer((_) async => _plans);
+      when(
+        () => subRepo.fetchMySubscriptions(),
+      ).thenAnswer((_) async => [_activeSubBasic]);
 
-    await tester.pumpWidget(_buildSubject(planRepo, subRepo));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_buildSubject(planRepo, subRepo));
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Cambiar plan'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('Cambiar plan'));
+      await tester.pumpAndSettle();
 
-    expect(find.text('Cambiar plan'), findsNWidgets(2));
-    expect(
-      find.textContaining('próximo ciclo de facturación'),
-      findsOneWidget,
-    );
-    expect(find.text('Aceptar'), findsOneWidget);
-    expect(find.text('Cancelar'), findsOneWidget);
-  });
+      expect(find.text('Cambiar plan'), findsNWidgets(2));
+      expect(
+        find.textContaining('próximo ciclo de facturación'),
+        findsOneWidget,
+      );
+      expect(find.text('Aceptar'), findsOneWidget);
+      expect(find.text('Cancelar'), findsOneWidget);
+    },
+  );
 
   testWidgets('cancelling upgrade dialog does not call upgradeSubscription', (
     tester,
@@ -313,7 +319,11 @@ void main() {
       classesUsedThisMonth: 5,
       classesRemainingThisMonth: 3,
       pendingCancellation: false,
-      pendingPlan: SubscriptionPlan(id: 2, name: 'Premium', priceMonthly: 49.99),
+      pendingPlan: SubscriptionPlan(
+        id: 2,
+        name: 'Premium',
+        priceMonthly: 49.99,
+      ),
     );
 
     when(() => planRepo.fetchActivePlans()).thenAnswer((_) async => _plans);
@@ -336,10 +346,7 @@ void main() {
     await tester.tap(find.text('Aceptar'));
     await tester.pumpAndSettle();
 
-    expect(
-      find.textContaining('próximo ciclo de facturación'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('próximo ciclo de facturación'), findsOneWidget);
   });
 
   testWidgets('confirming upgrade on failure shows error snackbar', (
