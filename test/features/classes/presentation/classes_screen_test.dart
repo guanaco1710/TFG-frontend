@@ -5,6 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_frontend/features/auth/data/models/auth_models.dart';
+import 'package:tfg_frontend/features/bookings/data/models/booking_models.dart';
+import 'package:tfg_frontend/features/bookings/data/repositories/booking_repository.dart';
+import 'package:tfg_frontend/features/bookings/presentation/providers/booking_provider.dart';
 import 'package:tfg_frontend/features/classes/data/models/class_session_models.dart';
 import 'package:tfg_frontend/features/classes/data/repositories/class_session_repository.dart';
 import 'package:tfg_frontend/features/classes/presentation/providers/class_session_provider.dart';
@@ -12,6 +15,8 @@ import 'package:tfg_frontend/features/classes/presentation/screens/classes_scree
 
 class MockClassSessionRepository extends Mock
     implements ClassSessionRepository {}
+
+class MockBookingRepository extends Mock implements BookingRepository {}
 
 ClassSession _makeSession(int id) => ClassSession(
   id: id,
@@ -52,16 +57,46 @@ ClassSessionPage _makePage(
   hasMore: hasMore,
 );
 
-Widget _wrap(ClassSessionProvider provider) => ChangeNotifierProvider.value(
-  value: provider,
+final _session = BookingClassSession(
+  id: 1,
+  classType: BookingClassType(
+    id: 1,
+    name: 'Spinning 45min',
+    durationMinutes: 45,
+  ),
+  gym: BookingGym(id: 1, name: 'GymBook Central', city: 'Madrid'),
+  startTime: DateTime.parse('2024-06-01T09:00:00Z'),
+);
+
+final _confirmedBooking = Booking(
+  id: 42,
+  classSession: _session,
+  status: BookingStatus.confirmed,
+  bookedAt: DateTime.parse('2024-05-20T10:00:00Z'),
+);
+
+Widget _wrap(
+  ClassSessionProvider sessionProvider, {
+  BookingProvider? bookingProvider,
+}) => MultiProvider(
+  providers: [
+    ChangeNotifierProvider.value(value: sessionProvider),
+    ChangeNotifierProvider.value(
+      value:
+          bookingProvider ??
+          BookingProvider(repository: MockBookingRepository()),
+    ),
+  ],
   child: const MaterialApp(home: Scaffold(body: ClassesScreen())),
 );
 
 void main() {
   late MockClassSessionRepository repository;
+  late MockBookingRepository bookingRepository;
 
   setUp(() {
     repository = MockClassSessionRepository();
+    bookingRepository = MockBookingRepository();
   });
 
   testWidgets('shows loading indicator initially', (tester) async {
@@ -188,5 +223,110 @@ void main() {
     await tester.pump();
 
     expect(find.byKey(const Key('load_more_indicator')), findsOneWidget);
+  });
+
+  testWidgets(
+    'shows Reservar button for scheduled session with available spots',
+    (tester) async {
+      when(
+        () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
+      ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+      final sessionProvider = ClassSessionProvider(repository: repository);
+      final bookingProvider = BookingProvider(repository: bookingRepository);
+
+      await tester.pumpWidget(
+        _wrap(sessionProvider, bookingProvider: bookingProvider),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('book_session_1')), findsOneWidget);
+      expect(find.text('Reservar'), findsOneWidget);
+    },
+  );
+
+  testWidgets('book button calls book and shows success snackbar', (
+    tester,
+  ) async {
+    when(
+      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
+    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+    when(
+      () =>
+          bookingRepository.book(classSessionId: any(named: 'classSessionId')),
+    ).thenAnswer((_) async => _confirmedBooking);
+    final sessionProvider = ClassSessionProvider(repository: repository);
+    final bookingProvider = BookingProvider(repository: bookingRepository);
+
+    await tester.pumpWidget(
+      _wrap(sessionProvider, bookingProvider: bookingProvider),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('book_session_1')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Reserva confirmada'), findsOneWidget);
+  });
+
+  testWidgets('book button shows waitlist snackbar on WAITLISTED result', (
+    tester,
+  ) async {
+    when(
+      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
+    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+
+    final waitlistedBooking = Booking(
+      id: 43,
+      classSession: _session,
+      status: BookingStatus.waitlisted,
+      waitlistPosition: 3,
+      bookedAt: DateTime.parse('2024-05-20T10:01:00Z'),
+    );
+
+    when(
+      () =>
+          bookingRepository.book(classSessionId: any(named: 'classSessionId')),
+    ).thenAnswer((_) async => waitlistedBooking);
+    final sessionProvider = ClassSessionProvider(repository: repository);
+    final bookingProvider = BookingProvider(repository: bookingRepository);
+
+    await tester.pumpWidget(
+      _wrap(sessionProvider, bookingProvider: bookingProvider),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('book_session_1')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Añadido a lista de espera'), findsOneWidget);
+  });
+
+  testWidgets('book button shows error snackbar on failure', (tester) async {
+    when(
+      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
+    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+    when(
+      () =>
+          bookingRepository.book(classSessionId: any(named: 'classSessionId')),
+    ).thenThrow(
+      const ApiException(
+        status: 409,
+        error: 'AlreadyBooked',
+        message: 'Ya tienes una reserva',
+        path: '/bookings',
+      ),
+    );
+    final sessionProvider = ClassSessionProvider(repository: repository);
+    final bookingProvider = BookingProvider(repository: bookingRepository);
+
+    await tester.pumpWidget(
+      _wrap(sessionProvider, bookingProvider: bookingProvider),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('book_session_1')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Ya tienes una reserva'), findsOneWidget);
   });
 }

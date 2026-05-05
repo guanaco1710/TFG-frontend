@@ -243,6 +243,22 @@
     "mtime": 1778012531.5558677,
     "hash": "6707363e20195a44fef209436fd24f5f"
   },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/data/repositories/booking_repository.dart": {
+    "mtime": 1778018863.1383219,
+    "hash": "a13ddeeed861ac38490f740471b1466e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/data/models/booking_models.dart": {
+    "mtime": 1778018863.1363218,
+    "hash": "21ee688777d47f94f1028d30e534d693"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/presentation/providers/booking_provider.dart": {
+    "mtime": 1778018863.1403217,
+    "hash": "0455f078c1ec377a5dff3679b668e73f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/presentation/screens/my_bookings_screen.dart": {
+    "mtime": 1778018908.785318,
+    "hash": "5ee605cd29d13ca90b6ef8da64d8ba43"
+  },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/gyms/data/repositories/gym_repository.dart": {
     "mtime": 1777903308.1967018,
     "hash": "28b612025b2a85d25931adb339b05057"
@@ -320,12 +336,12 @@
     "hash": "5341dd78da4d43b50ebc4098e8505505"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/screens/classes_screen.dart": {
-    "mtime": 1777989685.7624195,
-    "hash": "df397cc825853fc697acd30027130d7a"
+    "mtime": 1778018863.1583219,
+    "hash": "fb1c69655f94ae5f4182c9c41171c7fc"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/shell/home_shell.dart": {
-    "mtime": 1778012994.7468278,
-    "hash": "69df1bc2b8afac3acd228bc1eb289675"
+    "mtime": 1778018916.0633173,
+    "hash": "94430fbb42ee508dcb76aa8f0d9f339a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/core/exceptions/api_exception.dart": {
     "mtime": 1778012524.4202492,
@@ -374,6 +390,22 @@
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/subscriptions/presentation/subscription_provider_test.dart": {
     "mtime": 1777975614.7897575,
     "hash": "31bb86839ca182162eb88bff36fb8a3d"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/data/booking_repository_test.dart": {
+    "mtime": 1778018863.2583218,
+    "hash": "51b4dc4391322b6788873d8a98ee955e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/data/booking_models_test.dart": {
+    "mtime": 1778018863.2553217,
+    "hash": "070af18934204bc8213c6833ce1b8f70"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/presentation/my_bookings_screen_test.dart": {
+    "mtime": 1778019022.9063237,
+    "hash": "695b8dcac33c3620d8f230680e540f9b"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/presentation/booking_provider_test.dart": {
+    "mtime": 1778019014.602696,
+    "hash": "f4b7277b74faef1aeda959f360e59534"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/gyms/gym_list_screen_test.dart": {
     "mtime": 1778012531.6188676,
@@ -452,12 +484,12 @@
     "hash": "c2dbd1b5e97cc781861ad82161f0ea97"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/presentation/classes_screen_test.dart": {
-    "mtime": 1777989987.0943935,
-    "hash": "2f269d55cd99f03570d01fea1f17ae54"
+    "mtime": 1778018996.3946006,
+    "hash": "d47963f483a45f18f6e98d2640052e6f"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/shell/home_shell_test.dart": {
-    "mtime": 1777989685.9034195,
-    "hash": "4f867d0398783d08bff23db82bb454a0"
+    "mtime": 1778018462.0524433,
+    "hash": "e5d5aefa5f76c79a53da789ea79668bd"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/core/exceptions/api_exception_test.dart": {
     "mtime": 1778012524.4230945,
@@ -500,8 +532,8 @@
     "hash": "66d03d7647c8e438164feaf5b922d44a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/pubspec.yaml": {
-    "mtime": 1777905377.1965234,
-    "hash": "4bb702575708f75f56df403b18202bb1"
+    "mtime": 1778018462.0463157,
+    "hash": "933091d5c5bd00d5a9281bf3015b4b38"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/CLAUDE.md": {
     "mtime": 1777747641.4188273,
@@ -540,8 +572,8 @@
     "hash": "885d9137cd7a2c9a8c19a837e6560101"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/docs/endpoints.md": {
-    "mtime": 1777977923.1475585,
-    "hash": "54d7424bbc1b4cc432b52a7dc6dcab8d"
+    "mtime": 1778016936.429488,
+    "hash": "44b8e018f789bd5ffdbd4ba7babe9ddf"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/index-sort-f.html": {
     "mtime": 1777882889.6109066,

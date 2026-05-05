@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:tfg_frontend/core/storage/token_storage.dart';
+import 'package:tfg_frontend/features/bookings/data/repositories/booking_repository.dart';
+import 'package:tfg_frontend/features/bookings/presentation/providers/booking_provider.dart';
+import 'package:tfg_frontend/features/bookings/presentation/screens/my_bookings_screen.dart';
 import 'package:tfg_frontend/features/classes/data/repositories/class_session_repository.dart';
 import 'package:tfg_frontend/features/classes/presentation/providers/class_session_provider.dart';
 import 'package:tfg_frontend/features/classes/presentation/screens/classes_screen.dart';
@@ -62,14 +65,27 @@ class HomeShellState extends State<HomeShell> {
           index: currentIndex,
           children: [
             HomeTab(tokenStorage: tokenStorage, baseUrl: baseUrl),
-            ChangeNotifierProvider(
-              create: (_) => ClassSessionProvider(
-                repository: ClassSessionRepository(
-                  httpClient: http.Client(),
-                  tokenStorage: tokenStorage,
-                  baseUrl: baseUrl,
+            MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (_) => ClassSessionProvider(
+                    repository: ClassSessionRepository(
+                      httpClient: http.Client(),
+                      tokenStorage: tokenStorage,
+                      baseUrl: baseUrl,
+                    ),
+                  ),
                 ),
-              ),
+                ChangeNotifierProvider(
+                  create: (_) => BookingProvider(
+                    repository: BookingRepository(
+                      httpClient: http.Client(),
+                      tokenStorage: tokenStorage,
+                      baseUrl: baseUrl,
+                    ),
+                  ),
+                ),
+              ],
               child: const ClassesScreen(),
             ),
             ChangeNotifierProvider(
@@ -173,21 +189,20 @@ class HomeTab extends StatelessWidget {
                         child: GymListScreen(
                           gymPlansProviderBuilder: (gym) =>
                               ChangeNotifierProvider(
-                                create: (_) => GymPlansProvider(
-                                  planRepository: MembershipPlanRepository(
-                                    httpClient: http.Client(),
-                                    tokenStorage: tokenStorage,
-                                    baseUrl: baseUrl,
-                                  ),
-                                  subscriptionRepository:
-                                      SubscriptionRepository(
-                                        httpClient: http.Client(),
-                                        tokenStorage: tokenStorage,
-                                        baseUrl: baseUrl,
-                                      ),
-                                ),
-                                child: GymPlansScreen(gym: gym),
+                            create: (_) => GymPlansProvider(
+                              planRepository: MembershipPlanRepository(
+                                httpClient: http.Client(),
+                                tokenStorage: tokenStorage,
+                                baseUrl: baseUrl,
                               ),
+                              subscriptionRepository: SubscriptionRepository(
+                                httpClient: http.Client(),
+                                tokenStorage: tokenStorage,
+                                baseUrl: baseUrl,
+                              ),
+                            ),
+                            child: GymPlansScreen(gym: gym),
+                          ),
                         ),
                       ),
                     ),
@@ -246,6 +261,33 @@ class HomeTab extends StatelessWidget {
                 ),
               ),
               child: const Text('GIMNASIOS'),
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              key: const Key('my_bookings_button'),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ChangeNotifierProvider(
+                    create: (_) => BookingProvider(
+                      repository: BookingRepository(
+                        httpClient: http.Client(),
+                        tokenStorage: tokenStorage,
+                        baseUrl: baseUrl,
+                      ),
+                    ),
+                    child: const MyBookingsScreen(),
+                  ),
+                ),
+              ),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              child: const Text('MIS RESERVAS'),
             ),
           ],
         ),

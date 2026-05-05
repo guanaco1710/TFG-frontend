@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tfg_frontend/features/bookings/data/models/booking_models.dart';
+import 'package:tfg_frontend/features/bookings/presentation/providers/booking_provider.dart';
 import 'package:tfg_frontend/features/classes/data/models/class_session_models.dart';
 import 'package:tfg_frontend/features/classes/presentation/providers/class_session_provider.dart';
 
@@ -158,6 +160,9 @@ class _SessionCard extends StatelessWidget {
       ClassSessionStatus.finished => Colors.grey,
     };
 
+    final showBookButton = session.status == ClassSessionStatus.scheduled;
+    final isWaitlist = showBookButton && session.availableSpots == 0;
+
     return Card(
       key: const Key('session_card'),
       margin: const EdgeInsets.only(bottom: 12),
@@ -210,10 +215,54 @@ class _SessionCard extends StatelessWidget {
                   '${session.availableSpots} plazas disponibles'
                   ' de ${session.maxCapacity}',
             ),
+            if (showBookButton) ...[
+              const SizedBox(height: 12),
+              _BookButton(sessionId: session.id, isWaitlist: isWaitlist),
+            ],
           ],
         ),
       ),
     );
+  }
+}
+
+class _BookButton extends StatelessWidget {
+  const _BookButton({required this.sessionId, required this.isWaitlist});
+
+  final int sessionId;
+  final bool isWaitlist;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.tonal(
+      key: Key('book_session_$sessionId'),
+      onPressed: () => _onBook(context),
+      child: Text(isWaitlist ? 'Lista de espera' : 'Reservar'),
+    );
+  }
+
+  Future<void> _onBook(BuildContext context) async {
+    final provider = context.read<BookingProvider>();
+    final booking = await provider.book(classSessionId: sessionId);
+
+    if (!context.mounted) return;
+
+    if (booking != null) {
+      final message = booking.status == BookingStatus.waitlisted
+          ? 'Añadido a lista de espera'
+          : 'Reserva confirmada';
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            provider.bookingError ?? 'Error al realizar la reserva',
+          ),
+        ),
+      );
+    }
   }
 }
 
