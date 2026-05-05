@@ -129,27 +129,31 @@ class _GymListScreenState extends State<GymListScreen> {
                                 : 'Sin resultados para "${provider.query}"',
                           ),
                         )
-                      : ListView.builder(
-                          key: const Key('gym_list'),
-                          controller: _scrollController,
-                          itemCount:
-                              provider.gyms.length +
-                              (provider.isLoadingMore ? 1 : 0),
-                          itemBuilder: (_, index) {
-                            if (index == provider.gyms.length) {
-                              return const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                      : RefreshIndicator(
+                          onRefresh: () =>
+                              context.read<GymListProvider>().loadGyms(),
+                          child: ListView.builder(
+                            key: const Key('gym_list'),
+                            controller: _scrollController,
+                            itemCount:
+                                provider.gyms.length +
+                                (provider.isLoadingMore ? 1 : 0),
+                            itemBuilder: (_, index) {
+                              if (index == provider.gyms.length) {
+                                return const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+                              final gym = provider.gyms[index];
+                              return _GymCard(
+                                gym: gym,
+                                onTap: () => _openGymPlans(gym),
                               );
-                            }
-                            final gym = provider.gyms[index];
-                            return _GymCard(
-                              gym: gym,
-                              onTap: () => _openGymPlans(gym),
-                            );
-                          },
+                            },
+                          ),
                         ),
                 ),
               ],

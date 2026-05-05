@@ -309,17 +309,26 @@ void main() {
   });
 
   group('restoreSession', () {
-    test('returns AuthUser when valid tokens stored', () async {
-      when(() => tokenStorage.getAccessToken()).thenAnswer((_) async => 'acc');
+    test('returns AuthUser when refresh token stored', () async {
       when(() => tokenStorage.getRefreshToken()).thenAnswer((_) async => 'ref');
+      when(
+        () => httpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).thenAnswer((_) async => _jsonOk(_authEnvelope));
+      when(
+        () => tokenStorage.saveTokens(any(), any()),
+      ).thenAnswer((_) async {});
 
       final user = await repository.restoreSession();
 
-      expect(user, isNull);
+      expect(user, isNotNull);
+      expect(user!.email, 'alice@example.com');
     });
 
-    test('returns null when no tokens stored', () async {
-      when(() => tokenStorage.getAccessToken()).thenAnswer((_) async => null);
+    test('returns null when no refresh token stored', () async {
       when(() => tokenStorage.getRefreshToken()).thenAnswer((_) async => null);
 
       final user = await repository.restoreSession();
@@ -327,33 +336,27 @@ void main() {
       expect(user, isNull);
     });
 
-    test(
-      'attempts refresh when access token missing but refresh token present',
-      () async {
-        when(() => tokenStorage.getAccessToken()).thenAnswer((_) async => null);
-        when(
-          () => tokenStorage.getRefreshToken(),
-        ).thenAnswer((_) async => 'ref');
-        when(
-          () => httpClient.post(
-            any(),
-            headers: any(named: 'headers'),
-            body: any(named: 'body'),
-          ),
-        ).thenAnswer((_) async => _jsonOk(_authEnvelope));
-        when(
-          () => tokenStorage.saveTokens(any(), any()),
-        ).thenAnswer((_) async {});
+    test('saves new tokens after successful restore', () async {
+      when(
+        () => tokenStorage.getRefreshToken(),
+      ).thenAnswer((_) async => 'old-ref');
+      when(
+        () => httpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).thenAnswer((_) async => _jsonOk(_authEnvelope));
+      when(
+        () => tokenStorage.saveTokens(any(), any()),
+      ).thenAnswer((_) async {});
 
-        final user = await repository.restoreSession();
+      await repository.restoreSession();
 
-        expect(user, isNotNull);
-        expect(user!.email, 'alice@example.com');
-      },
-    );
+      verify(() => tokenStorage.saveTokens('acc', 'ref')).called(1);
+    });
 
-    test('returns null when refresh fails during session restore', () async {
-      when(() => tokenStorage.getAccessToken()).thenAnswer((_) async => null);
+    test('returns null and clears tokens when refresh fails', () async {
       when(() => tokenStorage.getRefreshToken()).thenAnswer((_) async => 'ref');
       when(
         () => httpClient.post(
@@ -369,6 +372,7 @@ void main() {
       final user = await repository.restoreSession();
 
       expect(user, isNull);
+      verify(() => tokenStorage.clearTokens()).called(1);
     });
   });
 }

@@ -105,22 +105,13 @@ class AuthRepository {
     await _tokenStorage.clearTokens();
   }
 
-  /// Attempts to restore a previous session from stored tokens.
+  /// Restores a previous session using the stored refresh token.
   ///
-  /// Returns the [AuthUser] if a valid session could be restored (either the
-  /// access token is present, or a stored refresh token was used to obtain a
-  /// new pair). Returns null when there are no usable tokens.
+  /// Returns the [AuthUser] when the stored refresh token is valid.
+  /// Returns null when there is no stored refresh token or it is expired/revoked.
   Future<AuthUser?> restoreSession() async {
-    final accessToken = await _tokenStorage.getAccessToken();
     final refreshToken = await _tokenStorage.getRefreshToken();
-
-    if (accessToken != null) {
-      return null;
-    }
-
-    if (refreshToken == null) {
-      return null;
-    }
+    if (refreshToken == null) return null;
 
     try {
       final authResponse = await refresh(refreshToken: refreshToken);

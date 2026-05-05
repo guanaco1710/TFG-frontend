@@ -20,8 +20,65 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SubscriptionProvider>().loadMySubscription();
+      context.read<SubscriptionProvider>().loadMySubscriptions();
     });
+  }
+
+  Future<void> _onCancelTapped(Subscription subscription) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Cancelar suscripción'),
+        content: Text(
+          '¿Quieres cancelar tu suscripción a ${subscription.gym.name}?\n\n'
+          'Seguirás teniendo acceso hasta el ${subscription.renewalDate}. '
+          'No se realizará ningún cargo adicional.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Volver'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+              foregroundColor: Theme.of(ctx).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Cancelar suscripción'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    final provider = context.read<SubscriptionProvider>();
+    final success = await provider.cancelSubscription(
+      subscriptionId: subscription.id,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Suscripción cancelada. Acceso activo hasta renovación.',
+          ),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            provider.errorMessage ?? 'Error al cancelar la suscripción',
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
   }
 
   void _browseGyms(BuildContext context) {
@@ -47,7 +104,7 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mi suscripción')),
+      appBar: AppBar(title: const Text('Mis suscripciones')),
       body: Consumer<SubscriptionProvider>(
         builder: (context, provider, _) {
           return switch (provider.state) {
@@ -62,15 +119,30 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> {
                 padding: const EdgeInsets.all(32),
                 child: Text(
                   key: const Key('subscription_error'),
-                  provider.errorMessage ?? 'Error al cargar la suscripción',
+                  provider.errorMessage ?? 'Error al cargar las suscripciones',
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
             SubscriptionLoadState.loaded =>
-              provider.subscription == null
+              provider.subscriptions.isEmpty
                   ? _EmptyState(onBrowseGyms: () => _browseGyms(context))
-                  : _SubscriptionCard(subscription: provider.subscription!),
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: provider.subscriptions.length,
+                      itemBuilder: (_, index) {
+                        final sub = provider.subscriptions[index];
+                        return _SubscriptionCard(
+                          subscription: sub,
+                          isCancelling: provider.isCancelling,
+                          onCancel:
+                              sub.status == SubscriptionStatus.active &&
+                                  !sub.pendingCancellation
+                              ? () => _onCancelTapped(sub)
+                              : null,
+                        );
+                      },
+                    ),
           };
         },
       ),
@@ -133,64 +205,100 @@ class _EmptyState extends StatelessWidget {
 }
 
 class _SubscriptionCard extends StatelessWidget {
-  const _SubscriptionCard({required this.subscription});
+  const _SubscriptionCard({
+    required this.subscription,
+    required this.isCancelling,
+    required this.onCancel,
+  });
 
   final Subscription subscription;
+  final bool isCancelling;
+  final VoidCallback? onCancel;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Card(
-        key: const Key('subscription_card'),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      subscription.gym.name,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
+    return Card(
+      key: const Key('subscription_card'),
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    subscription.gym.name,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                  _StatusBadge(status: subscription.status),
-                ],
+                ),
+                _StatusBadge(
+                  status: subscription.status,
+                  pendingCancellation: subscription.pendingCancellation,
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '${subscription.gym.address}, ${subscription.gym.city}',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(height: 4),
-              Text(
-                '${subscription.gym.address}, ${subscription.gym.city}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            const Divider(height: 32),
+            _InfoRow(label: 'Plan', value: subscription.plan.name),
+            const SizedBox(height: 8),
+            _InfoRow(
+              label: 'Precio',
+              value:
+                  '${subscription.plan.priceMonthly.toStringAsFixed(2)} € / mes',
+            ),
+            const SizedBox(height: 8),
+            _InfoRow(
+              label: 'Clases utilizadas',
+              value: '${subscription.classesUsedThisMonth}',
+            ),
+            const SizedBox(height: 8),
+            _InfoRow(
+              label: 'Clases restantes',
+              value: subscription.classesRemainingThisMonth == null
+                  ? 'Ilimitadas'
+                  : '${subscription.classesRemainingThisMonth}',
+            ),
+            const SizedBox(height: 8),
+            _InfoRow(label: 'Renovación', value: subscription.renewalDate),
+            if (subscription.pendingPlan != null) ...[
+              const SizedBox(height: 8),
+              _InfoRow(
+                label: 'Próximo plan',
+                value:
+                    '${subscription.pendingPlan!.name} — ${subscription.pendingPlan!.priceMonthly.toStringAsFixed(2)} € / mes',
+              ),
+            ],
+            if (onCancel != null) ...[
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  key: const Key('cancel_subscription_button'),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    foregroundColor: Theme.of(context).colorScheme.onError,
+                  ),
+                  onPressed: isCancelling ? null : onCancel,
+                  child: isCancelling
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Cancelar'),
                 ),
               ),
-              const Divider(height: 32),
-              _InfoRow(label: 'Plan', value: subscription.plan.name),
-              const SizedBox(height: 8),
-              _InfoRow(
-                label: 'Precio',
-                value:
-                    '${subscription.plan.priceMonthly.toStringAsFixed(2)} € / mes',
-              ),
-              const SizedBox(height: 8),
-              _InfoRow(
-                label: 'Clases utilizadas',
-                value: '${subscription.classesUsedThisMonth}',
-              ),
-              const SizedBox(height: 8),
-              _InfoRow(
-                label: 'Clases restantes',
-                value: subscription.classesRemainingThisMonth == null
-                    ? 'Ilimitadas'
-                    : '${subscription.classesRemainingThisMonth}',
-              ),
-              const SizedBox(height: 8),
-              _InfoRow(label: 'Renovación', value: subscription.renewalDate),
             ],
-          ),
+          ],
         ),
       ),
     );
@@ -198,13 +306,18 @@ class _SubscriptionCard extends StatelessWidget {
 }
 
 class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({required this.status});
+  const _StatusBadge({required this.status, required this.pendingCancellation});
 
   final SubscriptionStatus status;
+  final bool pendingCancellation;
 
   @override
   Widget build(BuildContext context) {
     final (label, color) = switch (status) {
+      SubscriptionStatus.active when pendingCancellation => (
+        'CANCELACIÓN PENDIENTE',
+        Colors.orange,
+      ),
       SubscriptionStatus.active => ('ACTIVA', Colors.green),
       SubscriptionStatus.cancelled => ('CANCELADA', Colors.orange),
       SubscriptionStatus.expired => ('EXPIRADA', Colors.red),
@@ -246,7 +359,13 @@ class _InfoRow extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
-        Text(value, style: Theme.of(context).textTheme.bodyMedium),
+        Flexible(
+          child: Text(
+            value,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.end,
+          ),
+        ),
       ],
     );
   }
