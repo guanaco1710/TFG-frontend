@@ -265,4 +265,63 @@ void main() {
 
     verify(() => repo.fetchGyms()).called(greaterThanOrEqualTo(2));
   });
+
+  testWidgets('scrolling near bottom triggers loadMore when hasMore is true', (
+    tester,
+  ) async {
+    final manyGyms = List.generate(
+      20,
+      (i) => Gym(
+        id: i + 1,
+        name: 'Gym $i',
+        address: 'Street $i',
+        city: 'City',
+        active: true,
+      ),
+    );
+    final firstPage = GymPage(
+      content: manyGyms,
+      page: 0,
+      size: 20,
+      totalElements: 40,
+      totalPages: 2,
+      hasMore: true,
+    );
+    const secondPage = GymPage(
+      content: [],
+      page: 1,
+      size: 20,
+      totalElements: 40,
+      totalPages: 2,
+      hasMore: false,
+    );
+
+    when(
+      () => repo.fetchGyms(
+        page: any(named: 'page'),
+        size: any(named: 'size'),
+        name: any(named: 'name'),
+      ),
+    ).thenAnswer((invocation) async {
+      final page = invocation.namedArguments[#page] as int? ?? 0;
+      return page == 0 ? firstPage : secondPage;
+    });
+
+    await tester.pumpWidget(_buildSubject(repo));
+    await tester.pumpAndSettle();
+
+    await tester.drag(
+      find.byKey(const Key('gym_list')),
+      const Offset(0, -10000),
+    );
+    await tester.pumpAndSettle();
+
+    verify(
+      () => repo.fetchGyms(
+        page: any(named: 'page'),
+        size: any(named: 'size'),
+        name: any(named: 'name'),
+      ),
+    ).called(greaterThanOrEqualTo(2));
+  });
 }

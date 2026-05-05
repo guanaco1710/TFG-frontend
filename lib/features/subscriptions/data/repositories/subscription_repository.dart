@@ -26,15 +26,11 @@ class SubscriptionRepository {
     };
   }
 
-  /// Returns the active subscription for the current user, or null when the
-  /// user has no subscription (200 with null body).
-  Future<Subscription?> fetchMySubscription() async {
+  Future<List<Subscription>> fetchMySubscriptions() async {
     final response = await _client.get(
       Uri.parse('$_baseUrl/subscriptions/me'),
       headers: await _authHeaders(),
     );
-
-    if (response.statusCode == 204) return null;
 
     if (response.statusCode != 200) {
       try {
@@ -54,12 +50,14 @@ class SubscriptionRepository {
     }
 
     final bodyStr = response.body.trim();
-    if (bodyStr.isEmpty) return null;
+    if (bodyStr.isEmpty) return [];
 
     final json = jsonDecode(bodyStr);
-    if (json == null) return null;
+    if (json == null) return [];
 
-    return Subscription.fromJson(json as Map<String, dynamic>);
+    return (json as List<dynamic>)
+        .map((e) => Subscription.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> subscribe({
@@ -87,5 +85,59 @@ class SubscriptionRepository {
         );
       }
     }
+  }
+
+  Future<void> cancelSubscription({required int subscriptionId}) async {
+    final response = await _client.post(
+      Uri.parse('$_baseUrl/subscriptions/$subscriptionId/cancel'),
+      headers: await _authHeaders(),
+    );
+
+    if (response.statusCode != 204) {
+      try {
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        throw ApiException.fromJson(body, response.statusCode);
+      } on ApiException {
+        rethrow;
+      } catch (_) {
+        throw ApiException(
+          status: response.statusCode,
+          error: 'Server error',
+          message: 'Server returned ${response.statusCode}.',
+          path: '/subscriptions/$subscriptionId/cancel',
+        );
+      }
+    }
+  }
+
+  Future<Subscription> upgradeSubscription({
+    required int subscriptionId,
+    required int newMembershipPlanId,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('$_baseUrl/subscriptions/$subscriptionId/upgrade'),
+      headers: await _authHeaders(),
+      body: jsonEncode({'newMembershipPlanId': newMembershipPlanId}),
+    );
+
+    if (response.statusCode != 200) {
+      try {
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        throw ApiException.fromJson(body, response.statusCode);
+      } on ApiException {
+        rethrow;
+      } catch (_) {
+        throw ApiException(
+          status: response.statusCode,
+          error: 'Server error',
+          message: 'Server returned ${response.statusCode}.',
+          path: '/subscriptions/$subscriptionId/upgrade',
+        );
+      }
+    }
+
+    return Subscription.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
   }
 }

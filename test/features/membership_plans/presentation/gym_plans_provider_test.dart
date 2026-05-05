@@ -4,6 +4,7 @@ import 'package:tfg_frontend/features/auth/data/models/auth_models.dart';
 import 'package:tfg_frontend/features/membership_plans/data/models/membership_plan_models.dart';
 import 'package:tfg_frontend/features/membership_plans/data/repositories/membership_plan_repository.dart';
 import 'package:tfg_frontend/features/membership_plans/presentation/providers/gym_plans_provider.dart';
+import 'package:tfg_frontend/features/subscriptions/data/models/subscription_models.dart';
 import 'package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart';
 
 class MockMembershipPlanRepository extends Mock
@@ -24,6 +25,23 @@ const _plans = [
   ),
 ];
 
+const _activeSubscription = Subscription(
+  id: 7,
+  plan: SubscriptionPlan(id: 2, name: 'Premium Monthly', priceMonthly: 49.99),
+  gym: SubscriptionGym(
+    id: 1,
+    name: 'GymBook Central',
+    address: 'Calle Mayor 1',
+    city: 'Madrid',
+  ),
+  status: SubscriptionStatus.active,
+  startDate: '2024-05-01',
+  renewalDate: '2024-06-01',
+  classesUsedThisMonth: 5,
+  classesRemainingThisMonth: 7,
+  pendingCancellation: false,
+);
+
 void main() {
   late MockMembershipPlanRepository planRepo;
   late MockSubscriptionRepository subRepo;
@@ -36,6 +54,7 @@ void main() {
       planRepository: planRepo,
       subscriptionRepository: subRepo,
     );
+    when(() => subRepo.fetchMySubscriptions()).thenAnswer((_) async => []);
   });
 
   group('loadPlans', () {
@@ -45,12 +64,35 @@ void main() {
       final states = <PlansLoadState>[];
       provider.addListener(() => states.add(provider.state));
 
-      await provider.loadPlans();
+      await provider.loadPlans(gymId: 1);
 
       expect(states, [PlansLoadState.loading, PlansLoadState.loaded]);
       expect(provider.plans.length, 1);
       expect(provider.plans[0].name, 'Basic');
       expect(provider.errorMessage, isNull);
+    });
+
+    test('sets gymSubscription when user has active sub for gym', () async {
+      when(() => planRepo.fetchActivePlans()).thenAnswer((_) async => _plans);
+      when(
+        () => subRepo.fetchMySubscriptions(),
+      ).thenAnswer((_) async => [_activeSubscription]);
+
+      await provider.loadPlans(gymId: 1);
+
+      expect(provider.gymSubscription, isNotNull);
+      expect(provider.gymSubscription!.id, 7);
+    });
+
+    test('gymSubscription is null when no sub for this gym', () async {
+      when(() => planRepo.fetchActivePlans()).thenAnswer((_) async => _plans);
+      when(
+        () => subRepo.fetchMySubscriptions(),
+      ).thenAnswer((_) async => [_activeSubscription]);
+
+      await provider.loadPlans(gymId: 99);
+
+      expect(provider.gymSubscription, isNull);
     });
 
     test('transitions to error and sets message on ApiException', () async {
@@ -63,7 +105,7 @@ void main() {
         ),
       );
 
-      await provider.loadPlans();
+      await provider.loadPlans(gymId: 1);
 
       expect(provider.state, PlansLoadState.error);
       expect(provider.errorMessage, 'Token expired');
@@ -74,7 +116,7 @@ void main() {
         () => planRepo.fetchActivePlans(),
       ).thenThrow(Exception('Network failure'));
 
-      await provider.loadPlans();
+      await provider.loadPlans(gymId: 1);
 
       expect(provider.state, PlansLoadState.error);
       expect(provider.errorMessage, isNotNull);
@@ -148,6 +190,95 @@ void main() {
       await provider.subscribe(membershipPlanId: 1, gymId: 2);
 
       expect(subscribingValues, containsAllInOrder([true, false]));
+    });
+  });
+
+  group('upgrade', () {
+    test('returns true and updates gymSubscription on success', () async {
+      const upgraded = Subscription(
+        id: 7,
+        plan: SubscriptionPlan(
+          id: 2,
+          name: 'Premium Monthly',
+          priceMonthly: 49.99,
+        ),
+        gym: SubscriptionGym(
+          id: 1,
+          name: 'GymBook Central',
+          address: 'Calle Mayor 1',
+          city: 'Madrid',
+        ),
+        status: SubscriptionStatus.active,
+        startDate: '2024-05-01',
+        renewalDate: '2024-06-01',
+        classesUsedThisMonth: 5,
+        classesRemainingThisMonth: 7,
+        pendingCancellation: false,
+        pendingPlan: SubscriptionPlan(
+          id: 3,
+          name: 'Premium',
+          priceMonthly: 49.99,
+        ),
+      );
+
+      when(
+        () => subRepo.upgradeSubscription(
+          subscriptionId: any(named: 'subscriptionId'),
+          newMembershipPlanId: any(named: 'newMembershipPlanId'),
+        ),
+      ).thenAnswer((_) async => upgraded);
+
+      final result = await provider.upgrade(
+        subscriptionId: 7,
+        newMembershipPlanId: 3,
+      );
+
+      expect(result, true);
+      expect(provider.gymSubscription?.pendingPlan?.name, 'Premium');
+      expect(provider.isSubscribing, false);
+    });
+
+    test('returns false and sets errorMessage on ApiException', () async {
+      when(
+        () => subRepo.upgradeSubscription(
+          subscriptionId: any(named: 'subscriptionId'),
+          newMembershipPlanId: any(named: 'newMembershipPlanId'),
+        ),
+      ).thenThrow(
+        const ApiException(
+          status: 409,
+          error: 'Conflict',
+          message: 'Subscription not active',
+          path: '/subscriptions/7/upgrade',
+        ),
+      );
+
+      final result = await provider.upgrade(
+        subscriptionId: 7,
+        newMembershipPlanId: 3,
+      );
+
+      expect(result, false);
+      expect(provider.errorMessage, 'Subscription not active');
+      expect(provider.isSubscribing, false);
+    });
+
+    test('returns false and sets errorMessage on generic exception', () async {
+      when(
+        () => subRepo.upgradeSubscription(
+          subscriptionId: any(named: 'subscriptionId'),
+          newMembershipPlanId: any(named: 'newMembershipPlanId'),
+        ),
+      ).thenThrow(Exception('Network failure'));
+
+      final result = await provider.upgrade(
+        subscriptionId: 7,
+        newMembershipPlanId: 3,
+      );
+
+      expect(result, false);
+      expect(provider.errorMessage, isNotNull);
+      expect(provider.isSubscribing, false);
     });
   });
 }

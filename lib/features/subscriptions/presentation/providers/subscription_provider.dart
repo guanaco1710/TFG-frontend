@@ -12,20 +12,43 @@ class SubscriptionProvider extends ChangeNotifier {
   final SubscriptionRepository _repository;
 
   SubscriptionLoadState _state = SubscriptionLoadState.initial;
-  Subscription? _subscription;
+  List<Subscription> _subscriptions = [];
   String? _errorMessage;
+  bool _isCancelling = false;
 
   SubscriptionLoadState get state => _state;
-  Subscription? get subscription => _subscription;
+  List<Subscription> get subscriptions => _subscriptions;
   String? get errorMessage => _errorMessage;
+  bool get isCancelling => _isCancelling;
 
-  Future<void> loadMySubscription() async {
+  Future<bool> cancelSubscription({required int subscriptionId}) async {
+    _isCancelling = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _repository.cancelSubscription(subscriptionId: subscriptionId);
+      await loadMySubscriptions();
+      return true;
+    } on ApiException catch (e) {
+      _errorMessage = e.message;
+      return false;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isCancelling = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadMySubscriptions() async {
     _state = SubscriptionLoadState.loading;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      _subscription = await _repository.fetchMySubscription();
+      _subscriptions = await _repository.fetchMySubscriptions();
       _state = SubscriptionLoadState.loaded;
     } on ApiException catch (e) {
       _errorMessage = e.message;

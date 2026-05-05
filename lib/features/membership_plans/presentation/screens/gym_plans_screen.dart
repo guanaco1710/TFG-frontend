@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tfg_frontend/features/gyms/data/models/gym_models.dart';
 import 'package:tfg_frontend/features/membership_plans/data/models/membership_plan_models.dart';
 import 'package:tfg_frontend/features/membership_plans/presentation/providers/gym_plans_provider.dart';
+import 'package:tfg_frontend/features/subscriptions/data/models/subscription_models.dart';
 
 class GymPlansScreen extends StatefulWidget {
   const GymPlansScreen({super.key, required this.gym});
@@ -18,7 +19,7 @@ class _GymPlansScreenState extends State<GymPlansScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<GymPlansProvider>().loadPlans();
+      context.read<GymPlansProvider>().loadPlans(gymId: widget.gym.id);
     });
   }
 
@@ -72,6 +73,61 @@ class _GymPlansScreenState extends State<GymPlansScreen> {
     }
   }
 
+  Future<void> _onUpgradeTapped(
+    MembershipPlan plan,
+    Subscription currentSub,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Cambiar plan'),
+        content: Text(
+          '¿Quieres cambiar al plan "${plan.name}" en ${widget.gym.name}?\n\n'
+          '${plan.priceMonthly.toStringAsFixed(2)} € / mes\n\n'
+          'El cambio se aplicará a partir del próximo ciclo de facturación.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    final provider = context.read<GymPlansProvider>();
+    final success = await provider.upgrade(
+      subscriptionId: currentSub.id,
+      newMembershipPlanId: plan.id,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Cambio de plan programado para el próximo ciclo de facturación.',
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(provider.errorMessage ?? 'Error al cambiar el plan'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,11 +153,19 @@ class _GymPlansScreenState extends State<GymPlansScreen> {
                   : ListView.builder(
                       padding: const EdgeInsets.all(16),
                       itemCount: provider.plans.length,
-                      itemBuilder: (_, index) => _PlanCard(
-                        plan: provider.plans[index],
-                        isSubscribing: provider.isSubscribing,
-                        onJoin: () => _onJoinTapped(provider.plans[index]),
-                      ),
+                      itemBuilder: (_, index) {
+                        final plan = provider.plans[index];
+                        final sub = provider.gymSubscription;
+                        return _PlanCard(
+                          plan: plan,
+                          gymSubscription: sub,
+                          isSubscribing: provider.isSubscribing,
+                          onJoin: () => _onJoinTapped(plan),
+                          onUpgrade: sub != null
+                              ? () => _onUpgradeTapped(plan, sub)
+                              : null,
+                        );
+                      },
                     ),
           };
         },
@@ -113,13 +177,35 @@ class _GymPlansScreenState extends State<GymPlansScreen> {
 class _PlanCard extends StatelessWidget {
   const _PlanCard({
     required this.plan,
+    required this.gymSubscription,
     required this.isSubscribing,
     required this.onJoin,
+    required this.onUpgrade,
   });
 
   final MembershipPlan plan;
+  final Subscription? gymSubscription;
   final bool isSubscribing;
   final VoidCallback onJoin;
+  final VoidCallback? onUpgrade;
+
+  bool get _isCurrentPlan => gymSubscription?.plan.id == plan.id;
+  bool get _isPendingPlan => gymSubscription?.pendingPlan?.id == plan.id;
+  bool get _hasOtherActiveSub =>
+      gymSubscription != null && !_isCurrentPlan && !_isPendingPlan;
+
+  String get _buttonLabel {
+    if (_isCurrentPlan) return 'Suscrito';
+    if (_isPendingPlan) return 'Cambio pendiente';
+    if (_hasOtherActiveSub) return 'Cambiar plan';
+    return 'Unirse';
+  }
+
+  VoidCallback? get _onPressed {
+    if (isSubscribing || _isCurrentPlan || _isPendingPlan) return null;
+    if (_hasOtherActiveSub) return onUpgrade;
+    return onJoin;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,14 +266,14 @@ class _PlanCard extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: isSubscribing ? null : onJoin,
-                child: isSubscribing
+                onPressed: _onPressed,
+                child: isSubscribing && !_isCurrentPlan && !_isPendingPlan
                     ? const SizedBox(
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Unirse'),
+                    : Text(_buttonLabel),
               ),
             ),
           ],

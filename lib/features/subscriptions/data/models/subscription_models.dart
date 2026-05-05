@@ -67,6 +67,9 @@ class Subscription {
     this.endDate,
     required this.classesUsedThisMonth,
     this.classesRemainingThisMonth,
+    required this.pendingCancellation,
+    this.cancelledAt,
+    this.pendingPlan,
   });
 
   final int id;
@@ -78,6 +81,9 @@ class Subscription {
   final String? endDate;
   final int classesUsedThisMonth;
   final int? classesRemainingThisMonth;
+  final bool pendingCancellation;
+  final String? cancelledAt;
+  final SubscriptionPlan? pendingPlan;
 
   factory Subscription.fromJson(Map<String, dynamic> json) {
     return Subscription(
@@ -90,6 +96,13 @@ class Subscription {
       endDate: json['endDate'] as String?,
       classesUsedThisMonth: json['classesUsedThisMonth'] as int,
       classesRemainingThisMonth: json['classesRemainingThisMonth'] as int?,
+      pendingCancellation: json['pendingCancellation'] as bool? ?? false,
+      cancelledAt: json['cancelledAt'] as String?,
+      pendingPlan: json['pendingPlan'] == null
+          ? null
+          : SubscriptionPlan.fromJson(
+              json['pendingPlan'] as Map<String, dynamic>,
+            ),
     );
   }
 }
