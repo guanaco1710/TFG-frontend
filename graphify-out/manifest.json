@@ -204,16 +204,16 @@
     "hash": "6a99062f3dfd3aaeb19812b3e6d04658"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/main.dart": {
-    "mtime": 1777989685.8184195,
-    "hash": "b9d04d1a78c3671020d6e3cbf26063c1"
+    "mtime": 1778012524.4344187,
+    "hash": "98892a892eac02d347736ccb6d68a5ae"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/auth/data/repositories/auth_repository.dart": {
     "mtime": 1777975231.0007906,
     "hash": "f016f8a0cfbf845839a4b61b0b0722ea"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/auth/data/models/auth_models.dart": {
-    "mtime": 1777884994.66867,
-    "hash": "b5c8e0b2fdaed0e25f546b55e516f79d"
+    "mtime": 1778012524.4258382,
+    "hash": "9709a9256a595969cad9f5e15ff7ad2b"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/auth/presentation/providers/auth_provider.dart": {
     "mtime": 1777884994.6693554,
@@ -232,16 +232,16 @@
     "hash": "6fc6381f09366388e5dd0f2ff70ccd08"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/subscriptions/data/models/subscription_models.dart": {
-    "mtime": 1777973616.8039298,
-    "hash": "add35b6d6440681d9653cf1756cb885e"
+    "mtime": 1778012524.4310343,
+    "hash": "a93c06de85d5c4cd81fad79ce5026c76"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/subscriptions/presentation/providers/subscription_provider.dart": {
     "mtime": 1777974481.3948553,
     "hash": "8304cadd33128825bbf89fad8b9a937a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/subscriptions/presentation/screens/my_subscription_screen.dart": {
-    "mtime": 1777975651.1477544,
-    "hash": "04020831a8e3b92ff542ba762b592386"
+    "mtime": 1778012531.5558677,
+    "hash": "6707363e20195a44fef209436fd24f5f"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/gyms/data/repositories/gym_repository.dart": {
     "mtime": 1777903308.1967018,
@@ -256,8 +256,8 @@
     "hash": "f4d6c2ef637f814506a78038f9728adc"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/gyms/presentation/screens/gym_list_screen.dart": {
-    "mtime": 1777907274.49436,
-    "hash": "d2f87402da734f52596b8eba08dd272f"
+    "mtime": 1778012524.4268682,
+    "hash": "4ce50b8e1b312186476def9f890ced10"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/profile/data/repositories/user_repository.dart": {
     "mtime": 1777978563.3985033,
@@ -300,12 +300,12 @@
     "hash": "934388735b5627f277fd7e348f17b6c2"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/membership_plans/presentation/providers/gym_plans_provider.dart": {
-    "mtime": 1777975614.7207575,
-    "hash": "789750c8c9e303bc3c977eff511ea0b2"
+    "mtime": 1778012524.4286046,
+    "hash": "daea979021ebbca7ffde7e1e86d6f65e"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/membership_plans/presentation/screens/gym_plans_screen.dart": {
-    "mtime": 1777973699.9779227,
-    "hash": "3adfbb73ba3f99346503321b90aeb418"
+    "mtime": 1778012524.4298222,
+    "hash": "fc8d4a5bbf5c7ae33feb5f3fdb7b42c0"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/data/repositories/class_session_repository.dart": {
     "mtime": 1777978444.0515137,
@@ -324,8 +324,16 @@
     "hash": "df397cc825853fc697acd30027130d7a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/shell/home_shell.dart": {
-    "mtime": 1777978538.2495055,
-    "hash": "4f542eb9073bbdedeb2c8d0e04c5c793"
+    "mtime": 1778012598.8048618,
+    "hash": "749aefc823e340f6ea377b478087968f"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/core/exceptions/api_exception.dart": {
+    "mtime": 1778012524.4202492,
+    "hash": "6ee677a9f230c59e9c63091827cf279e"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/core/models/subscription.dart": {
+    "mtime": 1778012524.42186,
+    "hash": "add35b6d6440681d9653cf1756cb885e"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/widget_test.dart": {
     "mtime": 1777884994.6747696,
@@ -352,8 +360,8 @@
     "hash": "d390e9e3f1a4e1a5fad38c133efd21b9"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/subscriptions/subscription_screen_test.dart": {
-    "mtime": 1777975614.7967575,
-    "hash": "39d818ff76c8cf915261eb791616e05f"
+    "mtime": 1778012524.4370341,
+    "hash": "479c5b71f2fe63297d4af727f5b780f6"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/subscriptions/data/subscription_models_test.dart": {
     "mtime": 1777973898.4769056,
@@ -368,8 +376,8 @@
     "hash": "31bb86839ca182162eb88bff36fb8a3d"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/gyms/gym_list_screen_test.dart": {
-    "mtime": 1777975614.7657576,
-    "hash": "018c11a4b57a3ce7d3c200d5e94c5eae"
+    "mtime": 1778012531.6188676,
+    "hash": "30ba776fea1d87b077a9fada8dd5b0eb"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/gyms/data/gym_models_test.dart": {
     "mtime": 1777884994.6737866,
@@ -450,6 +458,14 @@
   "/home/guanaco/tfg/frontend/tfg_frontend/test/shell/home_shell_test.dart": {
     "mtime": 1777989685.9034195,
     "hash": "4f867d0398783d08bff23db82bb454a0"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/core/exceptions/api_exception_test.dart": {
+    "mtime": 1778012524.4230945,
+    "hash": "40ef3c76b86b92d7270ebbc9975bae8c"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/core/models/subscription_test.dart": {
+    "mtime": 1778012531.5768676,
+    "hash": "2cef5930a858ef45599d9abe21a37117"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/ios/RunnerTests/RunnerTests.swift": {
     "mtime": 1777747015.944029,

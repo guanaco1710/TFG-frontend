@@ -173,20 +173,21 @@ class HomeTab extends StatelessWidget {
                         child: GymListScreen(
                           gymPlansProviderBuilder: (gym) =>
                               ChangeNotifierProvider(
-                            create: (_) => GymPlansProvider(
-                              planRepository: MembershipPlanRepository(
-                                httpClient: http.Client(),
-                                tokenStorage: tokenStorage,
-                                baseUrl: baseUrl,
+                                create: (_) => GymPlansProvider(
+                                  planRepository: MembershipPlanRepository(
+                                    httpClient: http.Client(),
+                                    tokenStorage: tokenStorage,
+                                    baseUrl: baseUrl,
+                                  ),
+                                  subscriptionRepository:
+                                      SubscriptionRepository(
+                                        httpClient: http.Client(),
+                                        tokenStorage: tokenStorage,
+                                        baseUrl: baseUrl,
+                                      ),
+                                ),
+                                child: GymPlansScreen(gym: gym),
                               ),
-                              subscriptionRepository: SubscriptionRepository(
-                                httpClient: http.Client(),
-                                tokenStorage: tokenStorage,
-                                baseUrl: baseUrl,
-                              ),
-                            ),
-                            child: GymPlansScreen(gym: gym),
-                          ),
                         ),
                       ),
                     ),
