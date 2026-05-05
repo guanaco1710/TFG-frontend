@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:tfg_frontend/features/auth/data/models/auth_models.dart';
 import 'package:tfg_frontend/features/membership_plans/data/models/membership_plan_models.dart';
 import 'package:tfg_frontend/features/membership_plans/data/repositories/membership_plan_repository.dart';
-import 'package:tfg_frontend/features/subscriptions/data/models/subscription_models.dart';
+import 'package:tfg_frontend/core/models/subscription.dart';
 import 'package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart';
 
 enum PlansLoadState { initial, loading, loaded, error }

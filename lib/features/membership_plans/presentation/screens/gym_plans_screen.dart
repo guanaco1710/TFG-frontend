@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tfg_frontend/features/gyms/data/models/gym_models.dart';
 import 'package:tfg_frontend/features/membership_plans/data/models/membership_plan_models.dart';
 import 'package:tfg_frontend/features/membership_plans/presentation/providers/gym_plans_provider.dart';
-import 'package:tfg_frontend/features/subscriptions/data/models/subscription_models.dart';
+import 'package:tfg_frontend/core/models/subscription.dart';
 
 class GymPlansScreen extends StatefulWidget {
   const GymPlansScreen({super.key, required this.gym});
