@@ -386,7 +386,7 @@ Returns a flat `List` (no pagination). Same object shape as content items above.
 |--------|------|-------------|------|
 | `POST` | `/bookings` | Book a spot in a class session | `CUSTOMER` |
 | `GET` | `/bookings/{id}` | Get booking by ID | Owner, `INSTRUCTOR` (own sessions), `ADMIN` |
-| `PATCH` | `/bookings/{id}/cancel` | Cancel a booking | Owner, `ADMIN` |
+| `POST` | `/bookings/{id}/cancel` | Cancel a booking | Owner, `ADMIN` |
 | `GET` | `/bookings/me` | List own bookings (paginated) | `CUSTOMER` |
 | `GET` | `/bookings` | List all bookings (paginated) | `ADMIN` |
 
@@ -852,8 +852,8 @@ Notifications are created automatically by the backend on booking confirmed/canc
 | `GET` | `/notifications/me` | List own notifications (paginated, filterable) | Any authenticated |
 | `GET` | `/notifications/me/unread-count` | Count unread notifications | Any authenticated |
 | `GET` | `/notifications/{id}` | Get a single notification | Owner or `ADMIN` |
-| `POST` | `/notifications/{id}/read` | Mark notification as read (idempotent) | Owner or `ADMIN` |
-| `POST` | `/notifications/me/read-all` | Mark all own notifications as read | Any authenticated |
+| `PATCH` | `/notifications/{id}/read` | Mark notification as read (idempotent) | Owner or `ADMIN` |
+| `PATCH` | `/notifications/me/read-all` | Mark all own notifications as read | Any authenticated |
 | `DELETE` | `/notifications/{id}` | Delete a notification | Owner or `ADMIN` |
 | `GET` | `/notifications/users/{userId}` | List all notifications for a user | `ADMIN` |
 | `GET` | `/class-sessions/{sessionId}/notifications` | List all notifications for a session | `INSTRUCTOR`, `ADMIN` |
@@ -863,7 +863,7 @@ Notifications are created automatically by the backend on booking confirmed/canc
 |-------|------|---------|-------------|
 | `type` | `CONFIRMATION\|REMINDER\|CANCELLATION` | — | Filter by type |
 | `unreadOnly` | boolean | `false` | Only unread notifications |
-| `sentOnly` | boolean | `true` | Only dispatched notifications |
+| `sentOnly` | boolean | `false` | Only dispatched notifications |
 | `page` | int | 0 | |
 | `size` | int | 20 | |
 
@@ -879,7 +879,11 @@ Notifications are created automatically by the backend on booking confirmed/canc
       "sentAt": "2026-05-01T09:00:05Z",
       "read": false,
       "userId": 1,
-      "sessionId": 10
+      "session": {
+        "id": 10,
+        "startTime": "2026-05-01T10:00:00Z",
+        "classType": { "name": "Spinning 45min" }
+      }
     }
   ],
   "page": 0,
@@ -890,16 +894,23 @@ Notifications are created automatically by the backend on booking confirmed/canc
 }
 ```
 
-### POST /notifications/{id}/read — Response 200
+### GET /notifications/me/unread-count — Response 200
+```json
+{ "unread": 3 }
+```
+
+### PATCH /notifications/{id}/read — Response 200
 ```json
 { "updated": 1 }
 // Returns 0 if already read (idempotent)
 ```
 
-### POST /notifications/me/read-all — Response 200
+### PATCH /notifications/me/read-all — Response 200
 ```json
 { "updated": 3 }
 ```
+
+### DELETE /notifications/{id} — Response 204 No Content
 
 ---
 

@@ -4,9 +4,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_frontend/core/storage/token_storage.dart';
+import 'package:tfg_frontend/features/bookings/data/models/booking_models.dart';
+import 'package:tfg_frontend/features/bookings/data/repositories/booking_repository.dart';
+import 'package:tfg_frontend/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:tfg_frontend/shell/home_shell.dart';
 
 class MockTokenStorage extends Mock implements TokenStorage {}
+
+class MockBookingRepository extends Mock implements BookingRepository {}
+
+final _emptyPage = BookingPage(
+  content: [],
+  page: 0,
+  size: 3,
+  totalElements: 0,
+  totalPages: 0,
+  hasMore: false,
+);
 
 Widget _wrap({VoidCallback? onLogout}) {
   return MultiProvider(
@@ -141,10 +155,27 @@ void main() {
   });
 
   group('HomeTab', () {
+    late MockBookingRepository bookingRepo;
+
+    setUp(() {
+      bookingRepo = MockBookingRepository();
+      when(
+        () => bookingRepo.fetchMyBookings(
+          page: any(named: 'page'),
+          size: any(named: 'size'),
+          status: any(named: 'status'),
+          from: any(named: 'from'),
+        ),
+      ).thenAnswer((_) async => _emptyPage);
+    });
+
     Widget wrapTab() => MultiProvider(
       providers: [
         Provider<TokenStorage>.value(value: MockTokenStorage()),
         Provider<String>.value(value: 'http://localhost:8080/api/v1'),
+        ChangeNotifierProvider(
+          create: (_) => DashboardProvider(repository: bookingRepo),
+        ),
       ],
       child: MaterialApp(
         home: Scaffold(

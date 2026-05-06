@@ -103,4 +103,95 @@ void main() {
       expect(notifyCount, 2);
     });
   });
+
+  group('updateProfile', () {
+    setUp(() {
+      when(() => repository.getMe()).thenAnswer((_) async => _profile);
+    });
+
+    test('returns true and updates profile on success', () async {
+      final updated = const UserProfile(
+        id: 1,
+        name: 'Alice Updated',
+        email: 'alice@example.com',
+        phone: '+34 600 000 000',
+        role: 'CUSTOMER',
+        active: true,
+        createdAt: '2024-01-01T00:00:00Z',
+        specialty: null,
+      );
+      when(
+        () => repository.updateMe(
+          name: any(named: 'name'),
+          phone: any(named: 'phone'),
+          specialty: any(named: 'specialty'),
+        ),
+      ).thenAnswer((_) async => updated);
+
+      final result = await provider.updateProfile(
+        name: 'Alice Updated',
+        phone: '+34 600 000 000',
+      );
+
+      expect(result, isTrue);
+      expect(provider.profile?.name, 'Alice Updated');
+      expect(provider.saveError, isNull);
+      expect(provider.isSaving, isFalse);
+    });
+
+    test('sets isSaving during call', () async {
+      when(
+        () => repository.updateMe(
+          name: any(named: 'name'),
+          phone: any(named: 'phone'),
+          specialty: any(named: 'specialty'),
+        ),
+      ).thenAnswer((_) async => _profile);
+
+      final savingStates = <bool>[];
+      provider.addListener(() => savingStates.add(provider.isSaving));
+
+      await provider.updateProfile(name: 'Alice');
+
+      expect(savingStates, containsAllInOrder([true, false]));
+    });
+
+    test('returns false and sets saveError on ApiException', () async {
+      when(
+        () => repository.updateMe(
+          name: any(named: 'name'),
+          phone: any(named: 'phone'),
+          specialty: any(named: 'specialty'),
+        ),
+      ).thenThrow(
+        const ApiException(
+          status: 400,
+          error: 'Bad Request',
+          message: 'Formato de teléfono inválido',
+          path: '/users/me',
+        ),
+      );
+
+      final result = await provider.updateProfile(phone: 'bad');
+
+      expect(result, isFalse);
+      expect(provider.saveError, 'Formato de teléfono inválido');
+      expect(provider.isSaving, isFalse);
+    });
+
+    test('returns false on generic exception', () async {
+      when(
+        () => repository.updateMe(
+          name: any(named: 'name'),
+          phone: any(named: 'phone'),
+          specialty: any(named: 'specialty'),
+        ),
+      ).thenThrow(Exception('network'));
+
+      final result = await provider.updateProfile(name: 'Alice');
+
+      expect(result, isFalse);
+      expect(provider.saveError, isNotNull);
+    });
+  });
 }

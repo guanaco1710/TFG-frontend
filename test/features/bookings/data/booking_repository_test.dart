@@ -290,7 +290,7 @@ void main() {
         ..['status'] = 'CANCELLED';
 
       when(
-        () => httpClient.patch(any(), headers: any(named: 'headers')),
+        () => httpClient.post(any(), headers: any(named: 'headers'), body: any(named: 'body')),
       ).thenAnswer(
         (_) async => http.Response(
           jsonEncode(cancelledJson),
@@ -307,7 +307,7 @@ void main() {
 
     test('throws ApiException on 404 BookingNotFound', () async {
       when(
-        () => httpClient.patch(any(), headers: any(named: 'headers')),
+        () => httpClient.post(any(), headers: any(named: 'headers'), body: any(named: 'body')),
       ).thenAnswer(
         (_) async => http.Response(
           jsonEncode({
@@ -330,7 +330,7 @@ void main() {
 
     test('throws ApiException on 403 Forbidden', () async {
       when(
-        () => httpClient.patch(any(), headers: any(named: 'headers')),
+        () => httpClient.post(any(), headers: any(named: 'headers'), body: any(named: 'body')),
       ).thenAnswer(
         (_) async => http.Response(
           jsonEncode({
@@ -353,7 +353,7 @@ void main() {
 
     test('throws ApiException on non-JSON body', () async {
       when(
-        () => httpClient.patch(any(), headers: any(named: 'headers')),
+        () => httpClient.post(any(), headers: any(named: 'headers'), body: any(named: 'body')),
       ).thenAnswer((_) async => http.Response('Internal Server Error', 500));
 
       expect(
