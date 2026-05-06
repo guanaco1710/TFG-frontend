@@ -90,7 +90,7 @@ class BookingRepository {
   }
 
   Future<Booking> cancelBooking({required int bookingId}) async {
-    final response = await _client.post(
+    final response = await _client.patch(
       Uri.parse('$_baseUrl/bookings/$bookingId/cancel'),
       headers: await _authHeaders(),
     );
