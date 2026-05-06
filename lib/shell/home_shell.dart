@@ -18,6 +18,8 @@ import 'package:tfg_frontend/features/membership_plans/presentation/screens/gym_
 import 'package:tfg_frontend/features/profile/data/repositories/user_repository.dart';
 import 'package:tfg_frontend/features/profile/presentation/providers/profile_provider.dart';
 import 'package:tfg_frontend/features/profile/presentation/screens/profile_screen.dart';
+import 'package:tfg_frontend/features/ratings/data/repositories/rating_repository.dart';
+import 'package:tfg_frontend/features/ratings/presentation/providers/rating_provider.dart';
 import 'package:tfg_frontend/features/stats/data/repositories/stats_repository.dart';
 import 'package:tfg_frontend/features/stats/presentation/providers/stats_provider.dart';
 import 'package:tfg_frontend/features/stats/presentation/screens/stats_screen.dart';
@@ -280,14 +282,27 @@ class HomeTab extends StatelessWidget {
               key: const Key('my_bookings_button'),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => ChangeNotifierProvider(
-                    create: (_) => BookingProvider(
-                      repository: BookingRepository(
-                        httpClient: http.Client(),
-                        tokenStorage: tokenStorage,
-                        baseUrl: baseUrl,
+                  builder: (_) => MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider(
+                        create: (_) => BookingProvider(
+                          repository: BookingRepository(
+                            httpClient: http.Client(),
+                            tokenStorage: tokenStorage,
+                            baseUrl: baseUrl,
+                          ),
+                        ),
                       ),
-                    ),
+                      ChangeNotifierProvider(
+                        create: (_) => RatingProvider(
+                          repository: RatingRepository(
+                            httpClient: http.Client(),
+                            tokenStorage: tokenStorage,
+                            baseUrl: baseUrl,
+                          ),
+                        ),
+                      ),
+                    ],
                     child: const MyBookingsScreen(),
                   ),
                 ),
