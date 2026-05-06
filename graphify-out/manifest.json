@@ -332,12 +332,12 @@
     "hash": "8304d7e60ba8e1a457d24af9fbb7851a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/providers/class_session_provider.dart": {
-    "mtime": 1778064070.0355194,
-    "hash": "5b8f90dbd7eeb6b6a26553e8189d07cb"
+    "mtime": 1778066198.4203358,
+    "hash": "bd34bb721209bad40b60bd299ce36603"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/screens/classes_screen.dart": {
-    "mtime": 1778064118.7475152,
-    "hash": "2818e0295a7bbdf20902df6b6c339429"
+    "mtime": 1778066217.0443342,
+    "hash": "ee9c96928af93a4edfa11c81812afbc1"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/shell/home_shell.dart": {
     "mtime": 1778063263.0075889,
@@ -484,8 +484,8 @@
     "hash": "52945d1594422155c5fd4a5644648ff7"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/presentation/classes_screen_test.dart": {
-    "mtime": 1778064173.5765104,
-    "hash": "34e838ef51398eca3afa13a907332699"
+    "mtime": 1778065604.309387,
+    "hash": "aff37599380dd20a668e55239d831aa2"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/shell/home_shell_test.dart": {
     "mtime": 1778057045.9422424,

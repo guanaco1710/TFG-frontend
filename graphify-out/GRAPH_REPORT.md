@@ -1,16 +1,16 @@
 # Graph Report - tfg_frontend  (2026-05-06)
 
 ## Corpus Check
-- 132 files · ~87,630 words
+- 132 files · ~87,855 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 712 nodes · 1051 edges · 62 communities detected
+- 717 nodes · 1056 edges · 58 communities detected
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 54 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d39cc1fb`
+- Built from commit: `4e0dd3ce`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -59,24 +59,20 @@
 - [[_COMMUNITY_Community 41|Community 41]]
 - [[_COMMUNITY_Community 42|Community 42]]
 - [[_COMMUNITY_Community 43|Community 43]]
-- [[_COMMUNITY_Community 44|Community 44]]
-- [[_COMMUNITY_Community 45|Community 45]]
-- [[_COMMUNITY_Community 46|Community 46]]
-- [[_COMMUNITY_Community 47|Community 47]]
+- [[_COMMUNITY_Community 54|Community 54]]
+- [[_COMMUNITY_Community 55|Community 55]]
+- [[_COMMUNITY_Community 56|Community 56]]
+- [[_COMMUNITY_Community 57|Community 57]]
 - [[_COMMUNITY_Community 58|Community 58]]
 - [[_COMMUNITY_Community 59|Community 59]]
 - [[_COMMUNITY_Community 60|Community 60]]
 - [[_COMMUNITY_Community 61|Community 61]]
-- [[_COMMUNITY_Community 62|Community 62]]
-- [[_COMMUNITY_Community 63|Community 63]]
-- [[_COMMUNITY_Community 64|Community 64]]
-- [[_COMMUNITY_Community 65|Community 65]]
+- [[_COMMUNITY_Community 89|Community 89]]
+- [[_COMMUNITY_Community 90|Community 90]]
+- [[_COMMUNITY_Community 91|Community 91]]
+- [[_COMMUNITY_Community 92|Community 92]]
 - [[_COMMUNITY_Community 93|Community 93]]
 - [[_COMMUNITY_Community 94|Community 94]]
-- [[_COMMUNITY_Community 95|Community 95]]
-- [[_COMMUNITY_Community 96|Community 96]]
-- [[_COMMUNITY_Community 97|Community 97]]
-- [[_COMMUNITY_Community 98|Community 98]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `package:tfg_frontend/features/auth/data/models/auth_models.dart` - 41 edges
@@ -113,51 +109,51 @@
 - **GymPlansProvider Aggregates MembershipPlan and Subscription Repos** — gym_plans_provider, membership_plan_repository, subscription_repository [EXTRACTED 1.00]
 - **HomeShell NavigationBar Tabs** — home_shell, classes_screen, stats_screen, profile_screen [INFERRED 0.95]
 
-## Communities (99 total, 21 thin omitted)
+## Communities (95 total, 21 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.05
-Nodes (46): dart:convert, AuthRepository, ApiException, BookingRepository, ClassSessionRepository, GymRepository, ApiException, MembershipPlanRepository (+38 more)
+Nodes (53): dart:convert, AuthRepository, ApiException, BookingRepository, ClassSessionRepository, GymRepository, ApiException, MembershipPlanRepository (+45 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.06
 Nodes (61): API Error Envelope, ApiException / Auth Models, Bottom Navigation Bar (4 tabs), ClassSession, ClassSession Models, ClassSession Models Test, ClassSessionPage, ClassSessionProvider (+53 more)
 
 ### Community 2 - "Community 2"
+Cohesion: 0.05
+Nodes (43): dart:async, AuthProvider, clearError, ProfileProvider, StatsProvider, build, Card, _DetailRow (+35 more)
+
+### Community 3 - "Community 3"
+Cohesion: 0.05
+Nodes (41): dispose, GymListProvider, query, _browseGyms, build, Card, Center, Container (+33 more)
+
+### Community 4 - "Community 4"
+Cohesion: 0.05
+Nodes (38): _BookButton, build, Card, Center, ClassesScreen, ClassesScreenState, Column, Container (+30 more)
+
+### Community 5 - "Community 5"
 Cohesion: 0.09
 Nodes (37): ApiException, AuthResponse, AuthTokens, AuthUser, UserRole, AuthProvider, AuthStatus, AuthRepository (+29 more)
 
-### Community 3 - "Community 3"
-Cohesion: 0.06
-Nodes (34): _BookButton, build, Card, Center, ClassesScreen, ClassesScreenState, Column, Container (+26 more)
-
-### Community 4 - "Community 4"
-Cohesion: 0.06
-Nodes (31): build, Card, _Chip, Container, GymPlansScreen, _GymPlansScreenState, initState, _PlanCard (+23 more)
-
-### Community 5 - "Community 5"
+### Community 6 - "Community 6"
 Cohesion: 0.11
 Nodes (19): RegisterPlugins(), FlutterWindow(), OnCreate(), Create(), Destroy(), EnableFullDpiSupportIfAvailable(), GetClientArea(), GetThisFromHandle() (+11 more)
 
-### Community 6 - "Community 6"
-Cohesion: 0.08
-Nodes (23): StatsProvider, build, Card, _DetailRow, Icon, initState, Padding, SingleChildScrollView (+15 more)
-
 ### Community 7 - "Community 7"
-Cohesion: 0.08
-Nodes (22): build, Card, _clearSearch, dispose, Function, _GymCard, GymListScreen, _GymListScreenState (+14 more)
+Cohesion: 0.12
+Nodes (16): _BookingCard, build, Card, Center, Container, dispose, _formatStartTime, Icon (+8 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.11
-Nodes (17): _BookingCard, build, Card, Center, Container, dispose, _formatStartTime, Icon (+9 more)
-
-### Community 9 - "Community 9"
 Cohesion: 0.12
 Nodes (15): build, Card, Container, Divider, Icon, _InfoCard, _InfoRow, initState (+7 more)
 
+### Community 9 - "Community 9"
+Cohesion: 0.12
+Nodes (15): build, Card, _clearSearch, dispose, Function, _GymCard, GymListScreen, _GymListScreenState (+7 more)
+
 ### Community 10 - "Community 10"
-Cohesion: 0.16
-Nodes (12): ProfileProvider, main, main, MockUserRepository, main, MockUserRepository, _wrap, package:mocktail/mocktail.dart (+4 more)
+Cohesion: 0.15
+Nodes (13): ApiException, _buildSubject, ChangeNotifierProvider, _fakeAuthResponse, main, MockAuthRepository, main, MockAuthRepository (+5 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.13
@@ -168,136 +164,120 @@ Cohesion: 0.14
 Nodes (4): fl_register_plugins(), main(), my_application_activate(), my_application_new()
 
 ### Community 13 - "Community 13"
-Cohesion: 0.15
-Nodes (11): BookingProvider, main, ApiException, _buildSubject, ChangeNotifierProvider, main, _makePage, MockBookingRepository (+3 more)
+Cohesion: 0.14
+Nodes (13): ApiException, main, _makePage, _makeSession, MockBookingRepository, MockClassSessionRepository, MockSubscriptionRepository, MultiProvider (+5 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.15
-Nodes (12): ApiException, _buildSubject, ChangeNotifierProvider, _gymPlansProviderBuilder, main, MockGymRepository, MockMembershipPlanRepository, MockSubscriptionRepository (+4 more)
+Cohesion: 0.18
+Nodes (9): ClassSessionProvider, main, main, _makePage, _makeSession, MockClassSessionRepository, package:tfg_frontend/features/classes/data/models/class_session_models.dart, package:tfg_frontend/features/classes/data/repositories/class_session_repository.dart (+1 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.17
-Nodes (10): ClassSessionProvider, main, main, _makePage, _makeSession, MockClassSessionRepository, package:flutter/foundation.dart, package:tfg_frontend/features/classes/data/models/class_session_models.dart (+2 more)
+Nodes (11): build, Card, _Chip, Container, GymPlansScreen, _GymPlansScreenState, initState, _PlanCard (+3 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.18
-Nodes (9): loadMySubscriptions, SubscriptionProvider, main, ApiException, main, MockSubscriptionRepository, package:tfg_frontend/features/subscriptions/data/models/subscription_models.dart, package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart (+1 more)
-
-### Community 17 - "Community 17"
-Cohesion: 0.18
-Nodes (10): ApiException, main, _makePage, _makeSession, MockBookingRepository, MockClassSessionRepository, MockSubscriptionRepository, MultiProvider (+2 more)
-
-### Community 18 - "Community 18"
 Cohesion: 0.2
 Nodes (9): ApiException, _buildSubject, _buildWithParent, ChangeNotifierProvider, main, MaterialApp, MockMembershipPlanRepository, MockSubscriptionRepository (+1 more)
 
-### Community 19 - "Community 19"
+### Community 17 - "Community 17"
 Cohesion: 0.22
 Nodes (3): FlutterAppDelegate, FlutterImplicitEngineDelegate, AppDelegate
 
+### Community 18 - "Community 18"
+Cohesion: 0.22
+Nodes (7): main, ApiException, main, MockMembershipPlanRepository, MockSubscriptionRepository, package:tfg_frontend/features/membership_plans/data/models/membership_plan_models.dart, package:tfg_frontend/features/membership_plans/presentation/providers/gym_plans_provider.dart
+
+### Community 19 - "Community 19"
+Cohesion: 0.22
+Nodes (6): main, main, main, package:flutter_test/flutter_test.dart, package:tfg_frontend/core/exceptions/api_exception.dart, package:tfg_frontend/core/models/subscription.dart
+
 ### Community 20 - "Community 20"
 Cohesion: 0.22
-Nodes (8): build, dispose, LoginScreen, _LoginScreenState, Scaffold, SizedBox, SnackBar, package:provider/provider.dart
+Nodes (8): build, dispose, LoginScreen, _LoginScreenState, Scaffold, SizedBox, SnackBar, package:flutter/material.dart
 
 ### Community 21 - "Community 21"
-Cohesion: 0.22
-Nodes (8): build, Center, HomeShell, HomeShellState, HomeTab, PopScope, SizedBox, package:tfg_frontend/features/classes/presentation/screens/classes_screen.dart
-
-### Community 22 - "Community 22"
 Cohesion: 0.25
 Nodes (7): ApiException, AuthResponse, AuthTokens, AuthUser, fromString, toJson, toString
 
-### Community 23 - "Community 23"
-Cohesion: 0.25
-Nodes (7): ApiException, _buildSubject, ChangeNotifierProvider, _fakeAuthResponse, main, MockAuthRepository, package:tfg_frontend/features/auth/presentation/screens/login_screen.dart
-
-### Community 24 - "Community 24"
-Cohesion: 0.25
-Nodes (7): main, MockTokenStorage, MultiProvider, _wrap, wrapTab, package:flutter/services.dart, package:tfg_frontend/shell/home_shell.dart
-
-### Community 25 - "Community 25"
-Cohesion: 0.25
-Nodes (7): ApiException, _buildSubject, ChangeNotifierProvider, _fakeAuthResponse, main, MockAuthRepository, package:tfg_frontend/features/auth/presentation/screens/signup_screen.dart
-
-### Community 26 - "Community 26"
-Cohesion: 0.25
-Nodes (7): build, dispose, Scaffold, SignupScreen, _SignupScreenState, SizedBox, SnackBar
-
-### Community 27 - "Community 27"
-Cohesion: 0.25
-Nodes (6): GymPlansProvider, FakeUri, main, MockHttpClient, MockTokenStorage, package:tfg_frontend/features/membership_plans/data/repositories/membership_plan_repository.dart
-
-### Community 28 - "Community 28"
+### Community 22 - "Community 22"
 Cohesion: 0.25
 Nodes (7): ApiException, _buildSubject, main, MockSubscriptionRepository, MockTokenStorage, MultiProvider, package:tfg_frontend/features/subscriptions/presentation/screens/my_subscription_screen.dart
 
-### Community 29 - "Community 29"
+### Community 23 - "Community 23"
 Cohesion: 0.25
 Nodes (7): Booking, BookingClassSession, BookingClassType, BookingGym, BookingPage, fromString, toJson
 
-### Community 30 - "Community 30"
+### Community 24 - "Community 24"
+Cohesion: 0.25
+Nodes (7): ApiException, _buildSubject, ChangeNotifierProvider, main, _makePage, MockBookingRepository, package:tfg_frontend/features/bookings/presentation/screens/my_bookings_screen.dart
+
+### Community 25 - "Community 25"
 Cohesion: 0.25
 Nodes (7): ClassSession, ClassSessionPage, fromString, SessionClassType, SessionGym, SessionInstructor, toJson
 
-### Community 31 - "Community 31"
-Cohesion: 0.29
-Nodes (5): main, main, package:flutter_test/flutter_test.dart, package:tfg_frontend/core/exceptions/api_exception.dart, package:tfg_frontend/features/membership_plans/data/models/membership_plan_models.dart
+### Community 26 - "Community 26"
+Cohesion: 0.25
+Nodes (7): main, MockTokenStorage, MultiProvider, _wrap, wrapTab, package:flutter/services.dart, package:tfg_frontend/shell/home_shell.dart
 
-### Community 32 - "Community 32"
+### Community 27 - "Community 27"
+Cohesion: 0.25
+Nodes (7): ApiException, _buildSubject, ChangeNotifierProvider, _fakeAuthResponse, main, MockAuthRepository, package:tfg_frontend/features/auth/presentation/screens/signup_screen.dart
+
+### Community 28 - "Community 28"
+Cohesion: 0.25
+Nodes (7): build, dispose, Scaffold, SignupScreen, _SignupScreenState, SizedBox, SnackBar
+
+### Community 29 - "Community 29"
+Cohesion: 0.33
+Nodes (5): GymPlansProvider, loadMySubscriptions, SubscriptionProvider, package:tfg_frontend/features/subscriptions/data/models/subscription_models.dart, package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart
+
+### Community 30 - "Community 30"
 Cohesion: 0.47
 Nodes (4): wWinMain(), CreateAndAttachConsole(), GetCommandLineArguments(), Utf8FromUtf16()
 
-### Community 33 - "Community 33"
+### Community 31 - "Community 31"
 Cohesion: 0.33
 Nodes (3): RegisterGeneratedPlugins(), NSWindow, MainFlutterWindow
+
+### Community 32 - "Community 32"
+Cohesion: 0.33
+Nodes (4): BookingProvider, main, package:tfg_frontend/features/bookings/data/models/booking_models.dart, package:tfg_frontend/features/bookings/data/repositories/booking_repository.dart
+
+### Community 33 - "Community 33"
+Cohesion: 0.33
+Nodes (5): ApiException, main, _makePage, MockBookingRepository, package:tfg_frontend/features/bookings/presentation/providers/booking_provider.dart
 
 ### Community 34 - "Community 34"
 Cohesion: 0.33
 Nodes (5): ApiException, _fakeAuthResponse, main, MockAuthRepository, package:tfg_frontend/features/auth/presentation/providers/auth_provider.dart
 
-### Community 35 - "Community 35"
-Cohesion: 0.33
-Nodes (5): main, MockAuthRepository, _noop, Scaffold, package:flutter/material.dart
-
 ### Community 36 - "Community 36"
-Cohesion: 0.33
-Nodes (5): ApiException, main, MockMembershipPlanRepository, MockSubscriptionRepository, package:tfg_frontend/features/membership_plans/presentation/providers/gym_plans_provider.dart
-
-### Community 37 - "Community 37"
-Cohesion: 0.33
-Nodes (5): ApiException, main, _makePage, MockBookingRepository, package:tfg_frontend/features/bookings/presentation/providers/booking_provider.dart
-
-### Community 39 - "Community 39"
 Cohesion: 0.4
 Nodes (5): fromString, Subscription, SubscriptionGym, SubscriptionPlan, subscription_models.dart
 
-### Community 40 - "Community 40"
+### Community 37 - "Community 37"
 Cohesion: 0.4
-Nodes (4): dart:async, dispose, GymListProvider, query
-
-### Community 41 - "Community 41"
-Cohesion: 0.5
-Nodes (3): AuthProvider, clearError, package:tfg_frontend/features/auth/data/repositories/auth_repository.dart
+Nodes (4): ApiException, main, MockSubscriptionRepository, package:tfg_frontend/features/subscriptions/presentation/providers/subscription_provider.dart
 
 ## Knowledge Gaps
-- **391 isolated node(s):** `MainActivity`, `XCTestCase`, `NSWindow`, `FlutterAppDelegate`, `App` (+386 more)
+- **396 isolated node(s):** `MainActivity`, `XCTestCase`, `NSWindow`, `FlutterAppDelegate`, `App` (+391 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **21 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `package:flutter/material.dart` connect `Community 35` to `Community 3`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 13`, `Community 14`, `Community 17`, `Community 18`, `Community 20`, `Community 21`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 28`?**
-  _High betweenness centrality (0.071) - this node is a cross-community bridge._
-- **Why does `package:provider/provider.dart` connect `Community 20` to `Community 3`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 13`, `Community 14`, `Community 17`, `Community 18`, `Community 21`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 28`, `Community 35`?**
-  _High betweenness centrality (0.071) - this node is a cross-community bridge._
-- **Why does `package:tfg_frontend/features/auth/data/models/auth_models.dart` connect `Community 0` to `Community 6`, `Community 7`, `Community 10`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 23`, `Community 25`, `Community 27`, `Community 28`, `Community 34`, `Community 35`, `Community 36`, `Community 37`, `Community 40`, `Community 41`?**
+- **Why does `package:flutter/material.dart` connect `Community 20` to `Community 2`, `Community 3`, `Community 4`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 13`, `Community 15`, `Community 16`, `Community 22`, `Community 24`, `Community 26`, `Community 27`, `Community 28`?**
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+- **Why does `package:provider/provider.dart` connect `Community 10` to `Community 2`, `Community 3`, `Community 4`, `Community 7`, `Community 8`, `Community 9`, `Community 11`, `Community 13`, `Community 15`, `Community 16`, `Community 20`, `Community 22`, `Community 24`, `Community 26`, `Community 27`, `Community 28`?**
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+- **Why does `package:tfg_frontend/features/auth/data/models/auth_models.dart` connect `Community 0` to `Community 33`, `Community 2`, `Community 3`, `Community 34`, `Community 37`, `Community 10`, `Community 13`, `Community 14`, `Community 16`, `Community 18`, `Community 22`, `Community 24`, `Community 27`, `Community 29`?**
   _High betweenness centrality (0.056) - this node is a cross-community bridge._
 - **What connects `MainActivity`, `XCTestCase`, `NSWindow` to the rest of the system?**
-  _391 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _396 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.05 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.06 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.09 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05 - nodes in this community are weakly interconnected._
