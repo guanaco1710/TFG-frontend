@@ -204,19 +204,19 @@
     "hash": "6a99062f3dfd3aaeb19812b3e6d04658"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/main.dart": {
-    "mtime": 1778057869.8338242,
+    "mtime": 1778102450.1265824,
     "hash": "b9d04d1a78c3671020d6e3cbf26063c1"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/ratings/data/repositories/rating_repository.dart": {
-    "mtime": 1778100984.946854,
+    "mtime": 1778102450.1264904,
     "hash": "679b76a4dbe8a83be303b1bb8e2dd4eb"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/ratings/data/models/rating_models.dart": {
-    "mtime": 1778100977.8338547,
+    "mtime": 1778102450.1264904,
     "hash": "8443dd8541a268204df2a5dfc67520e2"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/ratings/presentation/providers/rating_provider.dart": {
-    "mtime": 1778100992.6858532,
+    "mtime": 1778102450.1265824,
     "hash": "4c8204c5c65b3430be8b593a347e17cf"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/auth/data/repositories/auth_repository.dart": {
@@ -256,20 +256,24 @@
     "hash": "6707363e20195a44fef209436fd24f5f"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/data/repositories/booking_repository.dart": {
-    "mtime": 1778101712.5577912,
-    "hash": "807624e5b7d5a6311fbfe3f91efb5934"
+    "mtime": 1778104749.3355296,
+    "hash": "5324698be565eaaa23cee4f9ba063798"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/data/models/booking_models.dart": {
-    "mtime": 1778057045.94021,
+    "mtime": 1778102450.1259444,
     "hash": "21ee688777d47f94f1028d30e534d693"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/presentation/providers/booking_provider.dart": {
-    "mtime": 1778057045.9403977,
+    "mtime": 1778102450.1261117,
     "hash": "0455f078c1ec377a5dff3679b668e73f"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/presentation/screens/my_bookings_screen.dart": {
-    "mtime": 1778101108.6608434,
+    "mtime": 1778102450.1261117,
     "hash": "7756f014fa2395e29564284dab1608d9"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/dashboard/presentation/providers/dashboard_provider.dart": {
+    "mtime": 1778104333.8315654,
+    "hash": "ba8b416ca0b0497d124fe585fdc0dfde"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/gyms/data/repositories/gym_repository.dart": {
     "mtime": 1778019357.5087414,
@@ -296,12 +300,12 @@
     "hash": "a9eb3f46c07431b56783cf9f6b5d0fa5"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/profile/presentation/providers/profile_provider.dart": {
-    "mtime": 1778019357.5090609,
-    "hash": "c950050e5b4ee1b76658f0da68e4586b"
+    "mtime": 1778102630.014712,
+    "hash": "0c159d18ecdb89dbf29773e9052dbea1"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/profile/presentation/screens/profile_screen.dart": {
-    "mtime": 1778019357.5090609,
-    "hash": "2dfc3c395a3e15e624117d76bdfcf7cc"
+    "mtime": 1778103798.9316113,
+    "hash": "4f5dc518cd8fca5ab277cfdd93b08220"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/stats/data/repositories/stats_repository.dart": {
     "mtime": 1778019357.5091186,
@@ -336,32 +340,48 @@
     "hash": "fc8d4a5bbf5c7ae33feb5f3fdb7b42c0"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/data/repositories/class_session_repository.dart": {
-    "mtime": 1778100210.6799207,
+    "mtime": 1778102450.1261117,
     "hash": "4a2cb1de802ef644d396824ff7a2c588"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/data/models/class_session_models.dart": {
-    "mtime": 1778099966.0009654,
+    "mtime": 1778102450.1261117,
     "hash": "31744a3cee0c078eb49e2ea376ec610d"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/providers/class_session_provider.dart": {
-    "mtime": 1778066517.5244832,
+    "mtime": 1778102450.1261117,
     "hash": "bd34bb721209bad40b60bd299ce36603"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/providers/session_roster_provider.dart": {
-    "mtime": 1778099611.3169725,
+    "mtime": 1778102450.1261117,
     "hash": "6105b87d0f4715ea5e9b23dd7ab53b2a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/screens/class_session_detail_screen.dart": {
-    "mtime": 1778099634.8239703,
+    "mtime": 1778102450.1261117,
     "hash": "d616688c7b0ac179e222da65d624dfd5"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/screens/classes_screen.dart": {
-    "mtime": 1778099966.0009654,
-    "hash": "171ad4997593dd961c1eef4c0a48ed84"
+    "mtime": 1778105030.0395052,
+    "hash": "f12d14179b34590861bf14c76110a425"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/notifications/data/repositories/notification_repository.dart": {
+    "mtime": 1778105960.346425,
+    "hash": "911fb0e55cfdf0db71368a1a96292991"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/notifications/data/models/notification_models.dart": {
+    "mtime": 1778105945.0444264,
+    "hash": "442b6347ad1735a08075d42afd25b06a"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/notifications/presentation/providers/notification_provider.dart": {
+    "mtime": 1778106422.8143852,
+    "hash": "6a9151a63310b030c925729e30319be2"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/notifications/presentation/screens/notifications_screen.dart": {
+    "mtime": 1778106417.9813857,
+    "hash": "4c35c691673991cbb60925a829fa5157"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/shell/home_shell.dart": {
-    "mtime": 1778101119.0638425,
-    "hash": "dc763b4c97fc752b8cc3f220d7a8b4b5"
+    "mtime": 1778106109.6494122,
+    "hash": "60963b1f5e2e2462157a2f2953d3a76a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/core/exceptions/api_exception.dart": {
     "mtime": 1778019357.508279,
@@ -376,15 +396,15 @@
     "hash": "1bd6453cf9033770a049cb671e3b49bf"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/ratings/data/rating_repository_test.dart": {
-    "mtime": 1778100949.898857,
+    "mtime": 1778102450.1273465,
     "hash": "064b43c1f31bb98b4d2ceb8074f04e8e"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/ratings/data/rating_models_test.dart": {
-    "mtime": 1778100927.132859,
+    "mtime": 1778102450.1273077,
     "hash": "6ee5b567eff31f52ad52ae888b731803"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/ratings/presentation/providers/rating_provider_test.dart": {
-    "mtime": 1778101015.8668513,
+    "mtime": 1778102450.127389,
     "hash": "d99b59a9b453144ec199281d4e7e2e32"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/auth/data/auth_models_test.dart": {
@@ -424,20 +444,24 @@
     "hash": "31bb86839ca182162eb88bff36fb8a3d"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/data/booking_repository_test.dart": {
-    "mtime": 1778057045.9411407,
-    "hash": "51b4dc4391322b6788873d8a98ee955e"
+    "mtime": 1778104804.6105247,
+    "hash": "bb01652669615385ce4b0c4c2f7abc71"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/data/booking_models_test.dart": {
-    "mtime": 1778057393.4298654,
+    "mtime": 1778102450.1268327,
     "hash": "3d60fc15c6415672dff058060c1faf57"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/presentation/my_bookings_screen_test.dart": {
-    "mtime": 1778101226.6068332,
+    "mtime": 1778102450.126977,
     "hash": "f8c46e8e88544ffc5640c49427c63a7c"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/presentation/booking_provider_test.dart": {
-    "mtime": 1778057045.9411407,
+    "mtime": 1778102450.1268792,
     "hash": "f4b7277b74faef1aeda959f360e59534"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/features/dashboard/presentation/dashboard_provider_test.dart": {
+    "mtime": 1778104401.4155595,
+    "hash": "bb65a435668fda1de6ca72a93df66bdb"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/gyms/gym_list_screen_test.dart": {
     "mtime": 1778019357.5096436,
@@ -464,12 +488,12 @@
     "hash": "8020eb7285d8a201017cff8ac75b1179"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/profile/presentation/profile_screen_test.dart": {
-    "mtime": 1778019357.5099735,
-    "hash": "564ce114be0780c0950947dc6e4d3c9f"
+    "mtime": 1778103822.2556093,
+    "hash": "39c03fbd79a6fc97ad286534a4654743"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/profile/presentation/profile_provider_test.dart": {
-    "mtime": 1778019357.5099237,
-    "hash": "d97b6c1cfec9fecd5d2c8791d36a90a5"
+    "mtime": 1778102670.7337086,
+    "hash": "5434087d96c50b34024b7e8b70d97a56"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/stats/data/stats_repository_test.dart": {
     "mtime": 1778019357.5100193,
@@ -504,32 +528,44 @@
     "hash": "a59dbfe26b621ca7a503a9b8f8566957"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/data/class_session_repository_test.dart": {
-    "mtime": 1778099966.0009654,
+    "mtime": 1778102450.126977,
     "hash": "3f9dae122a6e9d1215fb999caba6c2cc"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/data/class_session_models_test.dart": {
-    "mtime": 1778099966.0009654,
+    "mtime": 1778102450.126977,
     "hash": "8ee5de16dbda38d50e84eb800451bbc6"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/presentation/class_session_provider_test.dart": {
-    "mtime": 1778064194.1375086,
+    "mtime": 1778102450.126977,
     "hash": "52945d1594422155c5fd4a5644648ff7"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/presentation/classes_screen_test.dart": {
-    "mtime": 1778066517.5244832,
+    "mtime": 1778102450.126977,
     "hash": "aff37599380dd20a668e55239d831aa2"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/presentation/providers/session_roster_provider_test.dart": {
-    "mtime": 1778099542.3159783,
+    "mtime": 1778102450.126977,
     "hash": "b845f18f611b48703a17ebaae4338327"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/presentation/screens/class_session_detail_screen_test.dart": {
-    "mtime": 1778099886.1829488,
+    "mtime": 1778102450.126977,
     "hash": "5e4d140ad46838c827517798882d0e29"
   },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/features/notifications/data/notification_repository_test.dart": {
+    "mtime": 1778106412.905386,
+    "hash": "db1bd61ed2e768a3e8657fe95ff5064a"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/features/notifications/presentation/notification_provider_test.dart": {
+    "mtime": 1778106174.8034065,
+    "hash": "980ddbbae3fd8d67ec5e598e778e6784"
+  },
+  "/home/guanaco/tfg/frontend/tfg_frontend/test/features/notifications/presentation/notifications_screen_test.dart": {
+    "mtime": 1778106120.4394112,
+    "hash": "4e9a0313d7631a57c809e7c27ba674d6"
+  },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/shell/home_shell_test.dart": {
-    "mtime": 1778057045.9422424,
-    "hash": "e5d5aefa5f76c79a53da789ea79668bd"
+    "mtime": 1778104455.9585547,
+    "hash": "ba7ed40408d453ad1911e0a29088e716"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/core/exceptions/api_exception_test.dart": {
     "mtime": 1778019357.5094838,
@@ -572,7 +608,7 @@
     "hash": "66d03d7647c8e438164feaf5b922d44a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/pubspec.yaml": {
-    "mtime": 1778057045.9409394,
+    "mtime": 1778102450.1265824,
     "hash": "933091d5c5bd00d5a9281bf3015b4b38"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/CLAUDE.md": {
@@ -612,8 +648,8 @@
     "hash": "885d9137cd7a2c9a8c19a837e6560101"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/docs/endpoints.md": {
-    "mtime": 1778057045.9368951,
-    "hash": "44b8e018f789bd5ffdbd4ba7babe9ddf"
+    "mtime": 1778105864.1574333,
+    "hash": "108fec075e66d194cfce1d942eb0bf4a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/coverage/html/index-sort-f.html": {
     "mtime": 1777882889.6109066,

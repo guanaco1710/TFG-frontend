@@ -56,11 +56,15 @@ class BookingRepository {
     required int page,
     int size = 20,
     BookingStatus? status,
+    String? from,
+    String? to,
   }) async {
     final queryParams = <String, String>{
       'page': '$page',
       'size': '$size',
       if (status != null) 'status': status.toJson(),
+      if (from != null) 'from': from,
+      if (to != null) 'to': to,
     };
 
     final response = await _client.get(
@@ -90,7 +94,7 @@ class BookingRepository {
   }
 
   Future<Booking> cancelBooking({required int bookingId}) async {
-    final response = await _client.patch(
+    final response = await _client.post(
       Uri.parse('$_baseUrl/bookings/$bookingId/cancel'),
       headers: await _authHeaders(),
     );

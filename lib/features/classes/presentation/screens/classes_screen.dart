@@ -15,7 +15,9 @@ import 'package:tfg_frontend/features/classes/presentation/screens/class_session
 import 'package:tfg_frontend/features/subscriptions/presentation/providers/subscription_provider.dart';
 
 class ClassesScreen extends StatefulWidget {
-  const ClassesScreen({super.key});
+  const ClassesScreen({super.key, this.onBookingSuccess});
+
+  final VoidCallback? onBookingSuccess;
 
   @override
   State<ClassesScreen> createState() => ClassesScreenState();
@@ -139,7 +141,10 @@ class ClassesScreenState extends State<ClassesScreen> {
                       ? const _EmptyState()
                       : _SessionList(
                           sessions: provider.sessions,
-                          onRefresh: _reloadCurrentDay,
+                          onRefresh: () {
+                            _reloadCurrentDay();
+                            widget.onBookingSuccess?.call();
+                          },
                         ),
               };
             },

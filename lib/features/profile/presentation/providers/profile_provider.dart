@@ -14,10 +14,14 @@ class ProfileProvider extends ChangeNotifier {
   ProfileLoadState _state = ProfileLoadState.initial;
   UserProfile? _profile;
   String? _errorMessage;
+  bool _isSaving = false;
+  String? _saveError;
 
   ProfileLoadState get state => _state;
   UserProfile? get profile => _profile;
   String? get errorMessage => _errorMessage;
+  bool get isSaving => _isSaving;
+  String? get saveError => _saveError;
 
   Future<void> loadProfile() async {
     _state = ProfileLoadState.loading;
@@ -35,6 +39,37 @@ class ProfileProvider extends ChangeNotifier {
       _state = ProfileLoadState.error;
     } finally {
       notifyListeners();
+    }
+  }
+
+  Future<bool> updateProfile({
+    String? name,
+    String? phone,
+    String? specialty,
+  }) async {
+    _isSaving = true;
+    _saveError = null;
+    notifyListeners();
+
+    try {
+      _profile = await _repository.updateMe(
+        name: name,
+        phone: phone,
+        specialty: specialty,
+      );
+      _isSaving = false;
+      notifyListeners();
+      return true;
+    } on ApiException catch (e) {
+      _saveError = e.message;
+      _isSaving = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _saveError = e.toString();
+      _isSaving = false;
+      notifyListeners();
+      return false;
     }
   }
 }

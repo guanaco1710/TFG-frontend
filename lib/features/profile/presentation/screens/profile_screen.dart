@@ -50,23 +50,92 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          ProfileLoadState.loaded => _ProfileContent(
-            profile: provider.profile!,
-          ),
+          ProfileLoadState.loaded => _ProfileContent(profile: provider.profile!),
         };
       },
     );
   }
 }
 
-class _ProfileContent extends StatelessWidget {
+class _ProfileContent extends StatefulWidget {
   const _ProfileContent({required this.profile});
 
   final UserProfile profile;
 
   @override
+  State<_ProfileContent> createState() => _ProfileContentState();
+}
+
+class _ProfileContentState extends State<_ProfileContent> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _nameController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _specialtyController;
+
+  bool _nameEditing = false;
+  bool _phoneEditing = false;
+  bool _specialtyEditing = false;
+
+  bool get _anyEditing => _nameEditing || _phoneEditing || _specialtyEditing;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.profile.name);
+    _phoneController = TextEditingController(text: widget.profile.phone ?? '');
+    _specialtyController = TextEditingController(
+      text: widget.profile.specialty ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _specialtyController.dispose();
+    super.dispose();
+  }
+
+  void _cancel() {
+    _nameController.text = widget.profile.name;
+    _phoneController.text = widget.profile.phone ?? '';
+    _specialtyController.text = widget.profile.specialty ?? '';
+    setState(() {
+      _nameEditing = false;
+      _phoneEditing = false;
+      _specialtyEditing = false;
+    });
+  }
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) return;
+    final provider = context.read<ProfileProvider>();
+    final phone = _phoneController.text.trim();
+    final specialty = _specialtyController.text.trim();
+    final success = await provider.updateProfile(
+      name: _nameController.text.trim(),
+      phone: phone.isEmpty ? null : phone,
+      specialty: specialty.isEmpty ? null : specialty,
+    );
+    if (!mounted) return;
+    if (success) {
+      setState(() {
+        _nameEditing = false;
+        _phoneEditing = false;
+        _specialtyEditing = false;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(provider.saveError ?? 'Error al guardar')),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final profile = widget.profile;
+    final isInstructor = profile.role == 'INSTRUCTOR';
     final initials = profile.name
         .split(' ')
         .take(2)
@@ -75,62 +144,162 @@ class _ProfileContent extends StatelessWidget {
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 16),
-          CircleAvatar(
-            key: const Key('profile_avatar'),
-            radius: 48,
-            backgroundColor: theme.colorScheme.primaryContainer,
-            child: Text(
-              initials,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                color: theme.colorScheme.onPrimaryContainer,
-                fontWeight: FontWeight.bold,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 16),
+            CircleAvatar(
+              key: const Key('profile_avatar'),
+              radius: 48,
+              backgroundColor: theme.colorScheme.primaryContainer,
+              child: Text(
+                initials,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            key: const Key('profile_name'),
-            profile.name,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
+            const SizedBox(height: 16),
+            _RoleBadge(role: profile.role),
+            const SizedBox(height: 32),
+            _InfoCard(
+              children: [
+                if (!_nameEditing)
+                  _InfoRow(
+                    icon: Icons.person_outline,
+                    label: 'Nombre',
+                    value: _nameController.text,
+                    valueKey: const Key('profile_name'),
+                    pencilKey: const Key('edit_name_pencil'),
+                    onEdit: () => setState(() => _nameEditing = true),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: TextFormField(
+                      key: const Key('edit_name_field'),
+                      controller: _nameController,
+                      autofocus: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Nombre',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? 'Nombre requerido'
+                          : null,
+                    ),
+                  ),
+                const Divider(height: 1),
+                _InfoRow(
+                  icon: Icons.email_outlined,
+                  label: 'Email',
+                  value: profile.email,
+                  valueKey: const Key('profile_email'),
+                ),
+                const Divider(height: 1),
+                if (!_phoneEditing)
+                  _InfoRow(
+                    icon: Icons.phone_outlined,
+                    label: 'Teléfono',
+                    value: _phoneController.text.isEmpty
+                        ? 'no hay teléfono agregado'
+                        : _phoneController.text,
+                    valueKey: const Key('profile_phone'),
+                    pencilKey: const Key('edit_phone_pencil'),
+                    onEdit: () => setState(() => _phoneEditing = true),
+                    muted: _phoneController.text.isEmpty,
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: TextFormField(
+                      key: const Key('edit_phone_field'),
+                      controller: _phoneController,
+                      autofocus: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Teléfono',
+                        border: OutlineInputBorder(),
+                        hintText: 'no hay teléfono agregado',
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ),
+                if (isInstructor) ...[
+                  const Divider(height: 1),
+                  if (!_specialtyEditing)
+                    _InfoRow(
+                      icon: Icons.star_outline,
+                      label: 'Especialidad',
+                      value: _specialtyController.text.isEmpty
+                          ? 'sin especialidad'
+                          : _specialtyController.text,
+                      valueKey: const Key('profile_specialty'),
+                      pencilKey: const Key('edit_specialty_pencil'),
+                      onEdit: () => setState(() => _specialtyEditing = true),
+                      muted: _specialtyController.text.isEmpty,
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: TextFormField(
+                        key: const Key('edit_specialty_field'),
+                        controller: _specialtyController,
+                        autofocus: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Especialidad',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                ],
+              ],
             ),
-          ),
-          const SizedBox(height: 4),
-          _RoleBadge(role: profile.role),
-          const SizedBox(height: 32),
-          _InfoCard(
-            children: [
-              _InfoRow(
-                icon: Icons.email_outlined,
-                label: 'Email',
-                value: profile.email,
-                valueKey: const Key('profile_email'),
+            if (_anyEditing) ...[
+              const SizedBox(height: 24),
+              ListenableBuilder(
+                listenable: context.read<ProfileProvider>(),
+                builder: (ctx, _) {
+                  final saving = ctx.read<ProfileProvider>().isSaving;
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: FilledButton(
+                          key: const Key('edit_save_button'),
+                          onPressed: saving ? null : _save,
+                          child: saving
+                              ? const SizedBox(
+                                  key: Key('edit_saving_indicator'),
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text('Guardar'),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton(
+                          key: const Key('edit_cancel_button'),
+                          onPressed: saving ? null : _cancel,
+                          style: FilledButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(ctx).colorScheme.error,
+                          ),
+                          child: const Text('Cancelar'),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
-              if (profile.phone != null) ...[
-                const Divider(height: 1),
-                _InfoRow(
-                  icon: Icons.phone_outlined,
-                  label: 'Teléfono',
-                  value: profile.phone!,
-                  valueKey: const Key('profile_phone'),
-                ),
-              ],
-              if (profile.specialty != null) ...[
-                const Divider(height: 1),
-                _InfoRow(
-                  icon: Icons.star_outline,
-                  label: 'Especialidad',
-                  value: profile.specialty!,
-                  valueKey: const Key('profile_specialty'),
-                ),
-              ],
             ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -191,12 +360,18 @@ class _InfoRow extends StatelessWidget {
     required this.label,
     required this.value,
     this.valueKey,
+    this.pencilKey,
+    this.onEdit,
+    this.muted = false,
   });
 
   final IconData icon;
   final String label;
   final String value;
   final Key? valueKey;
+  final Key? pencilKey;
+  final VoidCallback? onEdit;
+  final bool muted;
 
   @override
   Widget build(BuildContext context) {
@@ -217,10 +392,23 @@ class _InfoRow extends StatelessWidget {
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-                Text(key: valueKey, value, style: theme.textTheme.bodyMedium),
+                Text(
+                  key: valueKey,
+                  value,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: muted ? theme.colorScheme.onSurfaceVariant : null,
+                    fontStyle: muted ? FontStyle.italic : null,
+                  ),
+                ),
               ],
             ),
           ),
+          if (onEdit != null)
+            IconButton(
+              key: pencilKey,
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: onEdit,
+            ),
         ],
       ),
     );
