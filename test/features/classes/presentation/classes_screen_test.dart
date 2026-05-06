@@ -86,6 +86,15 @@ final _confirmedBooking = Booking(
   bookedAt: DateTime.parse('2024-05-20T10:00:00Z'),
 );
 
+final _emptyBookingPage = BookingPage(
+  content: [],
+  page: 0,
+  size: 20,
+  totalElements: 0,
+  totalPages: 0,
+  hasMore: false,
+);
+
 Widget _wrap(
   ClassSessionProvider sessionProvider, {
   BookingProvider? bookingProvider,
@@ -98,14 +107,21 @@ Widget _wrap(
     ).thenAnswer((_) async => [_activeSubscription]);
     subscriptionProvider = SubscriptionProvider(repository: subRepo);
   }
+  if (bookingProvider == null) {
+    final bookRepo = MockBookingRepository();
+    when(
+      () => bookRepo.fetchMyBookings(
+        page: any(named: 'page'),
+        size: any(named: 'size'),
+        status: any(named: 'status'),
+      ),
+    ).thenAnswer((_) async => _emptyBookingPage);
+    bookingProvider = BookingProvider(repository: bookRepo);
+  }
   return MultiProvider(
     providers: [
       ChangeNotifierProvider.value(value: sessionProvider),
-      ChangeNotifierProvider.value(
-        value:
-            bookingProvider ??
-            BookingProvider(repository: MockBookingRepository()),
-      ),
+      ChangeNotifierProvider.value(value: bookingProvider),
       ChangeNotifierProvider.value(value: subscriptionProvider),
     ],
     child: const MaterialApp(home: Scaffold(body: ClassesScreen())),
@@ -329,14 +345,15 @@ void main() {
     expect(find.text('Spinning 45min'), findsOneWidget);
   });
 
-  testWidgets('session card shows status chip PROGRAMADA', (tester) async {
+  testWidgets('session card shows capacity and instructor', (tester) async {
     stubScheduleAny([_makeSession(1)]);
     final provider = ClassSessionProvider(repository: repository);
 
     await tester.pumpWidget(_wrap(provider));
     await tester.pumpAndSettle();
 
-    expect(find.text('PROGRAMADA'), findsOneWidget);
+    expect(find.textContaining('15/20 inscritos'), findsOneWidget);
+    expect(find.textContaining('Jane Doe'), findsOneWidget);
   });
 
   testWidgets('shows error state with retry button on failure', (tester) async {
@@ -392,10 +409,30 @@ void main() {
     expect(find.byKey(const Key('session_card')), findsOneWidget);
   });
 
+  void stubFetchMyBookings([List<Booking> bookings = const []]) {
+    when(
+      () => bookingRepository.fetchMyBookings(
+        page: any(named: 'page'),
+        size: any(named: 'size'),
+        status: any(named: 'status'),
+      ),
+    ).thenAnswer(
+      (_) async => BookingPage(
+        content: bookings,
+        page: 0,
+        size: 20,
+        totalElements: bookings.length,
+        totalPages: 1,
+        hasMore: false,
+      ),
+    );
+  }
+
   testWidgets(
     'shows Reservar button for scheduled session with available spots',
     (tester) async {
       stubScheduleAny([_makeSession(1)]);
+      stubFetchMyBookings();
       final sessionProvider = ClassSessionProvider(repository: repository);
       final bookingProvider = BookingProvider(repository: bookingRepository);
 
@@ -405,14 +442,15 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('book_session_1')), findsOneWidget);
-      expect(find.text('Reservar'), findsOneWidget);
+      expect(find.text('Unirse a la clase'), findsOneWidget);
     },
   );
 
-  testWidgets('book button calls book and shows success snackbar', (
+  testWidgets('booking success changes button to Salir de la clase', (
     tester,
   ) async {
     stubScheduleAny([_makeSession(1)]);
+    stubFetchMyBookings();
     when(
       () =>
           bookingRepository.book(classSessionId: any(named: 'classSessionId')),
@@ -428,24 +466,46 @@ void main() {
     await tester.tap(find.byKey(const Key('book_session_1')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Reserva confirmada'), findsOneWidget);
+    expect(find.byKey(const Key('cancel_session_1')), findsOneWidget);
+    expect(find.text('Salir de la clase'), findsOneWidget);
+    expect(find.byKey(const Key('book_session_1')), findsNothing);
   });
 
-  testWidgets('book button shows waitlist snackbar on WAITLISTED result', (
+  testWidgets('cancel button reverts to Unirse a la clase', (tester) async {
+    stubScheduleAny([_makeSession(1)]);
+    stubFetchMyBookings();
+    when(
+      () =>
+          bookingRepository.book(classSessionId: any(named: 'classSessionId')),
+    ).thenAnswer((_) async => _confirmedBooking);
+    when(
+      () => bookingRepository.cancelBooking(
+        bookingId: any(named: 'bookingId'),
+      ),
+    ).thenAnswer((_) async => _confirmedBooking);
+    final sessionProvider = ClassSessionProvider(repository: repository);
+    final bookingProvider = BookingProvider(repository: bookingRepository);
+
+    await tester.pumpWidget(
+      _wrap(sessionProvider, bookingProvider: bookingProvider),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('book_session_1')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('cancel_session_1')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('book_session_1')), findsOneWidget);
+    expect(find.text('Unirse a la clase'), findsOneWidget);
+  });
+
+  testWidgets('already-booked session shows Salir de la clase on load', (
     tester,
   ) async {
     stubScheduleAny([_makeSession(1)]);
-    final waitlistedBooking = Booking(
-      id: 43,
-      classSession: _bookingSession,
-      status: BookingStatus.waitlisted,
-      waitlistPosition: 3,
-      bookedAt: DateTime.parse('2024-05-20T10:01:00Z'),
-    );
-    when(
-      () =>
-          bookingRepository.book(classSessionId: any(named: 'classSessionId')),
-    ).thenAnswer((_) async => waitlistedBooking);
+    stubFetchMyBookings([_confirmedBooking]);
     final sessionProvider = ClassSessionProvider(repository: repository);
     final bookingProvider = BookingProvider(repository: bookingRepository);
 
@@ -454,36 +514,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('book_session_1')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Añadido a lista de espera'), findsOneWidget);
-  });
-
-  testWidgets('book button shows error snackbar on failure', (tester) async {
-    stubScheduleAny([_makeSession(1)]);
-    when(
-      () =>
-          bookingRepository.book(classSessionId: any(named: 'classSessionId')),
-    ).thenThrow(
-      const ApiException(
-        status: 409,
-        error: 'AlreadyBooked',
-        message: 'Ya tienes una reserva',
-        path: '/bookings',
-      ),
-    );
-    final sessionProvider = ClassSessionProvider(repository: repository);
-    final bookingProvider = BookingProvider(repository: bookingRepository);
-
-    await tester.pumpWidget(
-      _wrap(sessionProvider, bookingProvider: bookingProvider),
-    );
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key('book_session_1')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Ya tienes una reserva'), findsOneWidget);
+    expect(find.byKey(const Key('cancel_session_1')), findsOneWidget);
+    expect(find.text('Salir de la clase'), findsOneWidget);
   });
 }

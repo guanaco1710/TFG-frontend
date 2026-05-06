@@ -204,8 +204,8 @@
     "hash": "6a99062f3dfd3aaeb19812b3e6d04658"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/main.dart": {
-    "mtime": 1778019357.5091715,
-    "hash": "98892a892eac02d347736ccb6d68a5ae"
+    "mtime": 1778057869.8338242,
+    "hash": "b9d04d1a78c3671020d6e3cbf26063c1"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/auth/data/repositories/auth_repository.dart": {
     "mtime": 1778019357.508279,
@@ -244,8 +244,8 @@
     "hash": "6707363e20195a44fef209436fd24f5f"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/data/repositories/booking_repository.dart": {
-    "mtime": 1778057045.94021,
-    "hash": "a13ddeeed861ac38490f740471b1466e"
+    "mtime": 1778061359.335753,
+    "hash": "76de059942ea848512b9d066cdcd4ec5"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/bookings/data/models/booking_models.dart": {
     "mtime": 1778057045.94021,
@@ -324,24 +324,24 @@
     "hash": "fc8d4a5bbf5c7ae33feb5f3fdb7b42c0"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/data/repositories/class_session_repository.dart": {
-    "mtime": 1778019357.5086658,
-    "hash": "8495dfef483d5ac70bbdab5327cbca09"
+    "mtime": 1778064063.8385198,
+    "hash": "99b20f2cd970f9c945aebd590fe64838"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/data/models/class_session_models.dart": {
-    "mtime": 1778019357.5086658,
-    "hash": "6c368e51f37c4c252046249dbd7d225e"
+    "mtime": 1778060723.5398078,
+    "hash": "8304d7e60ba8e1a457d24af9fbb7851a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/providers/class_session_provider.dart": {
-    "mtime": 1778019357.5087414,
-    "hash": "5341dd78da4d43b50ebc4098e8505505"
+    "mtime": 1778064070.0355194,
+    "hash": "5b8f90dbd7eeb6b6a26553e8189d07cb"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/features/classes/presentation/screens/classes_screen.dart": {
-    "mtime": 1778057045.94069,
-    "hash": "fb1c69655f94ae5f4182c9c41171c7fc"
+    "mtime": 1778064118.7475152,
+    "hash": "2818e0295a7bbdf20902df6b6c339429"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/shell/home_shell.dart": {
-    "mtime": 1778057045.94069,
-    "hash": "94430fbb42ee508dcb76aa8f0d9f339a"
+    "mtime": 1778063263.0075889,
+    "hash": "a686069d9e34f7a1e4ea2ba50815eaac"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/lib/core/exceptions/api_exception.dart": {
     "mtime": 1778019357.508279,
@@ -396,8 +396,8 @@
     "hash": "51b4dc4391322b6788873d8a98ee955e"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/data/booking_models_test.dart": {
-    "mtime": 1778057045.9410517,
-    "hash": "070af18934204bc8213c6833ce1b8f70"
+    "mtime": 1778057393.4298654,
+    "hash": "3d60fc15c6415672dff058060c1faf57"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/bookings/presentation/my_bookings_screen_test.dart": {
     "mtime": 1778057045.9413288,
@@ -480,12 +480,12 @@
     "hash": "6ba84a19f153774a9bd4842a3212536a"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/presentation/class_session_provider_test.dart": {
-    "mtime": 1778019357.5095985,
-    "hash": "c2dbd1b5e97cc781861ad82161f0ea97"
+    "mtime": 1778064194.1375086,
+    "hash": "52945d1594422155c5fd4a5644648ff7"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/features/classes/presentation/classes_screen_test.dart": {
-    "mtime": 1778057045.9419587,
-    "hash": "d47963f483a45f18f6e98d2640052e6f"
+    "mtime": 1778064173.5765104,
+    "hash": "34e838ef51398eca3afa13a907332699"
   },
   "/home/guanaco/tfg/frontend/tfg_frontend/test/shell/home_shell_test.dart": {
     "mtime": 1778057045.9422424,

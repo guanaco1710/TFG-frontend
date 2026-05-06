@@ -76,6 +76,21 @@ class ClassSessionProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshSessionsByDay(DateTime day, {int? gymId}) async {
+    try {
+      final from = DateTime.utc(day.year, day.month, day.day, 0, 0, 0);
+      final to = DateTime.utc(day.year, day.month, day.day, 23, 59, 59);
+      _sessions = await _repository.fetchSchedule(from: from, to: to, gymId: gymId ?? _gymId);
+      _errorMessage = null;
+    } on ApiException catch (e) {
+      _errorMessage = e.message;
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      notifyListeners();
+    }
+  }
+
   Future<void> loadMore() async {
     if (_isLoadingMore || !_hasMore) return;
 

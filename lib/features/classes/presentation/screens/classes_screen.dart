@@ -53,9 +53,12 @@ class ClassesScreenState extends State<ClassesScreen> {
       _activeGymId = activeSub?.gym.id;
     });
     if (activeSub != null) {
-      await context
-          .read<ClassSessionProvider>()
-          .loadSessionsByDay(_selectedDay, gymId: _activeGymId);
+      await Future.wait([
+        context
+            .read<ClassSessionProvider>()
+            .loadSessionsByDay(_selectedDay, gymId: _activeGymId),
+        context.read<BookingProvider>().loadMyBookings(),
+      ]);
     }
   }
 
@@ -67,6 +70,12 @@ class ClassesScreenState extends State<ClassesScreen> {
   }
 
   void _reloadCurrentDay() {
+    context
+        .read<ClassSessionProvider>()
+        .refreshSessionsByDay(_selectedDay, gymId: _activeGymId);
+  }
+
+  void _retryCurrentDay() {
     context
         .read<ClassSessionProvider>()
         .loadSessionsByDay(_selectedDay, gymId: _activeGymId);
@@ -112,7 +121,7 @@ class ClassesScreenState extends State<ClassesScreen> {
                         const SizedBox(height: 16),
                         FilledButton(
                           key: const Key('classes_retry_button'),
-                          onPressed: _reloadCurrentDay,
+                          onPressed: _retryCurrentDay,
                           child: const Text('Reintentar'),
                         ),
                       ],
@@ -122,7 +131,10 @@ class ClassesScreenState extends State<ClassesScreen> {
                 ClassSessionLoadState.loaded =>
                   provider.sessions.isEmpty
                       ? const _EmptyState()
-                      : _SessionList(sessions: provider.sessions),
+                      : _SessionList(
+                          sessions: provider.sessions,
+                          onRefresh: _reloadCurrentDay,
+                        ),
               };
             },
           ),
@@ -311,45 +323,117 @@ class _EmptyState extends StatelessWidget {
 }
 
 class _SessionList extends StatelessWidget {
-  const _SessionList({required this.sessions});
+  const _SessionList({required this.sessions, required this.onRefresh});
 
   final List<ClassSession> sessions;
+  final VoidCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: sessions.length,
-      itemBuilder: (context, index) => _SessionCard(session: sessions[index]),
+      itemBuilder: (context, index) => _SessionCard(
+        session: sessions[index],
+        onRefresh: onRefresh,
+      ),
     );
   }
 }
 
-class _SessionCard extends StatelessWidget {
-  const _SessionCard({required this.session});
+class _SessionCard extends StatefulWidget {
+  const _SessionCard({required this.session, required this.onRefresh});
 
   final ClassSession session;
+  final VoidCallback onRefresh;
 
-  String _formatTime(String isoTime) {
+  @override
+  State<_SessionCard> createState() => _SessionCardState();
+}
+
+class _SessionCardState extends State<_SessionCard> {
+  int? _activeBookingId;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final bookings = context.read<BookingProvider>().bookings;
+      final existing = bookings
+          .where(
+            (b) =>
+                b.classSession.id == widget.session.id &&
+                (b.status == BookingStatus.confirmed ||
+                    b.status == BookingStatus.waitlisted),
+          )
+          .firstOrNull;
+      if (existing != null) setState(() => _activeBookingId = existing.id);
+    });
+  }
+
+  String _formatTimeRange(String isoStart, int durationMinutes) {
     try {
-      return DateFormat('HH:mm').format(DateTime.parse(isoTime).toLocal());
+      final start = DateTime.parse(isoStart).toLocal();
+      final end = start.add(Duration(minutes: durationMinutes));
+      final fmt = DateFormat('HH:mm');
+      return '${fmt.format(start)} – ${fmt.format(end)}';
     } catch (_) {
-      return isoTime;
+      return isoStart;
     }
+  }
+
+  Future<void> _book(BuildContext context) async {
+    setState(() => _isLoading = true);
+    final provider = context.read<BookingProvider>();
+    final booking = await provider.book(classSessionId: widget.session.id);
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+      if (booking != null) _activeBookingId = booking.id;
+    });
+    if (!mounted) return;
+    final message = booking == null
+        ? (provider.bookingError ?? 'Error al realizar la reserva')
+        : booking.status == BookingStatus.waitlisted
+            ? 'Añadido a lista de espera'
+            : 'Reserva confirmada';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+    if (booking != null) widget.onRefresh();
+  }
+
+  Future<void> _cancel(BuildContext context) async {
+    final bookingId = _activeBookingId;
+    if (bookingId == null) return;
+    setState(() => _isLoading = true);
+    final provider = context.read<BookingProvider>();
+    final success = await provider.cancelBooking(bookingId: bookingId);
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+      if (success) _activeBookingId = null;
+    });
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success ? 'Reserva cancelada' : (provider.bookingError ?? 'Error al cancelar'),
+        ),
+      ),
+    );
+    if (success) widget.onRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final statusColor = switch (session.status) {
-      ClassSessionStatus.scheduled => Colors.blue,
-      ClassSessionStatus.active => Colors.green,
-      ClassSessionStatus.cancelled => Colors.red,
-      ClassSessionStatus.finished => Colors.grey,
-    };
-
-    final showBookButton = session.status == ClassSessionStatus.scheduled;
-    final isWaitlist = showBookButton && session.availableSpots == 0;
+    final session = widget.session;
+    final showBookButton = session.status == ClassSessionStatus.scheduled ||
+        session.status == ClassSessionStatus.active;
+    final isBooked = _activeBookingId != null;
 
     return Card(
       key: const Key('session_card'),
@@ -360,52 +444,92 @@ class _SessionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    session.classType.name,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: theme.colorScheme.primaryContainer,
+                  child: Icon(
+                    Icons.fitness_center,
+                    color: theme.colorScheme.onPrimaryContainer,
+                    size: 24,
                   ),
                 ),
-                _StatusChip(status: session.status, color: statusColor),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        session.classType.name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _formatTimeRange(
+                          session.startTime,
+                          session.durationMinutes,
+                        ),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              session.classType.level ?? '',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const Divider(height: 20),
-            _IconRow(
-              icon: Icons.location_on_outlined,
-              text: '${session.gym.name} · ${session.room}',
-            ),
-            const SizedBox(height: 6),
-            _IconRow(
-              icon: Icons.person_outline,
-              text: session.instructor.specialty != null
-                  ? '${session.instructor.name} · ${session.instructor.specialty}'
-                  : session.instructor.name,
-            ),
-            const SizedBox(height: 6),
-            _IconRow(
-              icon: Icons.schedule_outlined,
-              text: '${_formatTime(session.startTime)} · ${session.durationMinutes} min',
-            ),
-            const SizedBox(height: 6),
-            _IconRow(
-              icon: Icons.people_outline,
-              text:
-                  '${session.availableSpots} plazas disponibles'
-                  ' de ${session.maxCapacity}',
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Icon(
+                  Icons.group_outlined,
+                  size: 16,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${session.confirmedCount}/${session.maxCapacity} inscritos',
+                  style: theme.textTheme.bodySmall,
+                ),
+                const Spacer(),
+                Icon(
+                  Icons.person_outline,
+                  size: 16,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  session.instructor.name,
+                  style: theme.textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
             if (showBookButton) ...[
               const SizedBox(height: 12),
-              _BookButton(sessionId: session.id, isWaitlist: isWaitlist),
+              SizedBox(
+                width: double.infinity,
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : isBooked
+                        ? FilledButton(
+                            key: Key('cancel_session_${session.id}'),
+                            onPressed: () => _cancel(context),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: theme.colorScheme.error,
+                              foregroundColor: theme.colorScheme.onError,
+                            ),
+                            child: const Text('Salir de la clase'),
+                          )
+                        : FilledButton.tonal(
+                            key: Key('book_session_${session.id}'),
+                            onPressed: () => _book(context),
+                            child: const Text('Unirse a la clase'),
+                          ),
+              ),
             ],
           ],
         ),
@@ -414,100 +538,4 @@ class _SessionCard extends StatelessWidget {
   }
 }
 
-class _BookButton extends StatelessWidget {
-  const _BookButton({required this.sessionId, required this.isWaitlist});
 
-  final int sessionId;
-  final bool isWaitlist;
-
-  @override
-  Widget build(BuildContext context) {
-    return FilledButton.tonal(
-      key: Key('book_session_$sessionId'),
-      onPressed: () => _onBook(context),
-      child: Text(isWaitlist ? 'Lista de espera' : 'Reservar'),
-    );
-  }
-
-  Future<void> _onBook(BuildContext context) async {
-    final provider = context.read<BookingProvider>();
-    final booking = await provider.book(classSessionId: sessionId);
-
-    if (!context.mounted) return;
-
-    if (booking != null) {
-      final message = booking.status == BookingStatus.waitlisted
-          ? 'Añadido a lista de espera'
-          : 'Reserva confirmada';
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            provider.bookingError ?? 'Error al realizar la reserva',
-          ),
-        ),
-      );
-    }
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  const _StatusChip({required this.status, required this.color});
-
-  final ClassSessionStatus status;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final label = switch (status) {
-      ClassSessionStatus.scheduled => 'PROGRAMADA',
-      ClassSessionStatus.active => 'ACTIVA',
-      ClassSessionStatus.cancelled => 'CANCELADA',
-      ClassSessionStatus.finished => 'FINALIZADA',
-    };
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-class _IconRow extends StatelessWidget {
-  const _IconRow({required this.icon, required this.text});
-
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 16,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(text, style: Theme.of(context).textTheme.bodySmall),
-        ),
-      ],
-    );
-  }
-}
