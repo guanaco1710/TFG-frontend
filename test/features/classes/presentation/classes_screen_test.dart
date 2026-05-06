@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+import 'package:tfg_frontend/core/models/subscription.dart';
 import 'package:tfg_frontend/features/auth/data/models/auth_models.dart';
 import 'package:tfg_frontend/features/bookings/data/models/booking_models.dart';
 import 'package:tfg_frontend/features/bookings/data/repositories/booking_repository.dart';
@@ -12,11 +14,32 @@ import 'package:tfg_frontend/features/classes/data/models/class_session_models.d
 import 'package:tfg_frontend/features/classes/data/repositories/class_session_repository.dart';
 import 'package:tfg_frontend/features/classes/presentation/providers/class_session_provider.dart';
 import 'package:tfg_frontend/features/classes/presentation/screens/classes_screen.dart';
+import 'package:tfg_frontend/features/subscriptions/data/repositories/subscription_repository.dart';
+import 'package:tfg_frontend/features/subscriptions/presentation/providers/subscription_provider.dart';
 
 class MockClassSessionRepository extends Mock
     implements ClassSessionRepository {}
 
 class MockBookingRepository extends Mock implements BookingRepository {}
+
+class MockSubscriptionRepository extends Mock
+    implements SubscriptionRepository {}
+
+const _activeSubscription = Subscription(
+  id: 7,
+  plan: SubscriptionPlan(id: 2, name: 'Premium Monthly', priceMonthly: 49.99),
+  gym: SubscriptionGym(
+    id: 5,
+    name: 'GymBook Central',
+    address: 'Calle Mayor 1',
+    city: 'Madrid',
+  ),
+  status: SubscriptionStatus.active,
+  startDate: '2024-05-01',
+  renewalDate: '2024-06-01',
+  classesUsedThisMonth: 0,
+  pendingCancellation: false,
+);
 
 ClassSession _makeSession(int id) => ClassSession(
   id: id,
@@ -26,7 +49,7 @@ ClassSession _makeSession(int id) => ClassSession(
     level: 'INTERMEDIATE',
   ),
   gym: const SessionGym(
-    id: 1,
+    id: 5,
     name: 'GymBook Central',
     address: 'Calle Mayor 1',
     city: 'Madrid',
@@ -36,7 +59,7 @@ ClassSession _makeSession(int id) => ClassSession(
     name: 'Jane Doe',
     specialty: 'Cycling',
   ),
-  startTime: '2024-06-01T09:00:00',
+  startTime: '2024-06-01T09:00:00Z',
   durationMinutes: 45,
   maxCapacity: 20,
   room: 'Studio A',
@@ -45,32 +68,20 @@ ClassSession _makeSession(int id) => ClassSession(
   availableSpots: 5,
 );
 
-ClassSessionPage _makePage(
-  List<ClassSession> content, {
-  bool hasMore = false,
-}) => ClassSessionPage(
-  content: content,
-  page: 0,
-  size: 20,
-  totalElements: content.length,
-  totalPages: 1,
-  hasMore: hasMore,
-);
-
-final _session = BookingClassSession(
+final _bookingSession = BookingClassSession(
   id: 1,
   classType: BookingClassType(
     id: 1,
     name: 'Spinning 45min',
     durationMinutes: 45,
   ),
-  gym: BookingGym(id: 1, name: 'GymBook Central', city: 'Madrid'),
+  gym: BookingGym(id: 5, name: 'GymBook Central', city: 'Madrid'),
   startTime: DateTime.parse('2024-06-01T09:00:00Z'),
 );
 
 final _confirmedBooking = Booking(
   id: 42,
-  classSession: _session,
+  classSession: _bookingSession,
   status: BookingStatus.confirmed,
   bookedAt: DateTime.parse('2024-05-20T10:00:00Z'),
 );
@@ -78,31 +89,206 @@ final _confirmedBooking = Booking(
 Widget _wrap(
   ClassSessionProvider sessionProvider, {
   BookingProvider? bookingProvider,
-}) => MultiProvider(
-  providers: [
-    ChangeNotifierProvider.value(value: sessionProvider),
-    ChangeNotifierProvider.value(
-      value:
-          bookingProvider ??
-          BookingProvider(repository: MockBookingRepository()),
-    ),
-  ],
-  child: const MaterialApp(home: Scaffold(body: ClassesScreen())),
-);
+  SubscriptionProvider? subscriptionProvider,
+}) {
+  if (subscriptionProvider == null) {
+    final subRepo = MockSubscriptionRepository();
+    when(
+      () => subRepo.fetchMySubscriptions(),
+    ).thenAnswer((_) async => [_activeSubscription]);
+    subscriptionProvider = SubscriptionProvider(repository: subRepo);
+  }
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider.value(value: sessionProvider),
+      ChangeNotifierProvider.value(
+        value:
+            bookingProvider ??
+            BookingProvider(repository: MockBookingRepository()),
+      ),
+      ChangeNotifierProvider.value(value: subscriptionProvider),
+    ],
+    child: const MaterialApp(home: Scaffold(body: ClassesScreen())),
+  );
+}
 
 void main() {
   late MockClassSessionRepository repository;
   late MockBookingRepository bookingRepository;
+
+  setUpAll(() {
+    registerFallbackValue(DateTime(2024));
+  });
 
   setUp(() {
     repository = MockClassSessionRepository();
     bookingRepository = MockBookingRepository();
   });
 
+  void stubScheduleAny(List<ClassSession> sessions) {
+    when(
+      () => repository.fetchSchedule(
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+        gymId: any(named: 'gymId'),
+      ),
+    ).thenAnswer((_) async => sessions);
+  }
+
+  testWidgets('shows no_subscription widget when no active subscription', (
+    tester,
+  ) async {
+    final subRepo = MockSubscriptionRepository();
+    when(
+      () => subRepo.fetchMySubscriptions(),
+    ).thenAnswer((_) async => []);
+    final subProvider = SubscriptionProvider(repository: subRepo);
+    final sessionProvider = ClassSessionProvider(repository: repository);
+
+    await tester.pumpWidget(
+      _wrap(sessionProvider, subscriptionProvider: subProvider),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('no_subscription')), findsOneWidget);
+    verifyNever(
+      () => repository.fetchSchedule(
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+        gymId: any(named: 'gymId'),
+      ),
+    );
+  });
+
+  testWidgets('loads sessions filtered by active subscription gymId', (
+    tester,
+  ) async {
+    final subRepo = MockSubscriptionRepository();
+    when(
+      () => subRepo.fetchMySubscriptions(),
+    ).thenAnswer((_) async => [_activeSubscription]);
+    final subProvider = SubscriptionProvider(repository: subRepo);
+
+    when(
+      () => repository.fetchSchedule(
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+        gymId: 5,
+      ),
+    ).thenAnswer((_) async => [_makeSession(1)]);
+    final sessionProvider = ClassSessionProvider(repository: repository);
+
+    await tester.pumpWidget(
+      _wrap(sessionProvider, subscriptionProvider: subProvider),
+    );
+    await tester.pumpAndSettle();
+
+    verify(
+      () => repository.fetchSchedule(
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+        gymId: 5,
+      ),
+    ).called(1);
+    expect(find.byKey(const Key('session_card')), findsOneWidget);
+  });
+
+  testWidgets('shows week strip with 7 day chips', (tester) async {
+    stubScheduleAny([]);
+    final provider = ClassSessionProvider(repository: repository);
+
+    await tester.pumpWidget(_wrap(provider));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('week_strip')), findsOneWidget);
+
+    final today = DateTime.now();
+    final monday = DateTime(
+      today.year,
+      today.month,
+      today.day,
+    ).subtract(Duration(days: today.weekday - 1));
+    for (var i = 0; i < 7; i++) {
+      final day = monday.add(Duration(days: i));
+      final key = Key(
+        'day_chip_${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}',
+      );
+      expect(find.byKey(key), findsOneWidget);
+    }
+  });
+
+  testWidgets('tapping a day chip fetches sessions for that day', (
+    tester,
+  ) async {
+    stubScheduleAny([]);
+    final provider = ClassSessionProvider(repository: repository);
+
+    await tester.pumpWidget(_wrap(provider));
+    await tester.pumpAndSettle();
+
+    // pick a day in current week that is not today
+    final today = DateTime.now();
+    final monday = DateTime(
+      today.year,
+      today.month,
+      today.day,
+    ).subtract(Duration(days: today.weekday - 1));
+    final tapDay =
+        today.weekday == 1 ? monday.add(const Duration(days: 1)) : monday;
+    final tapDayStr =
+        '${tapDay.year}-${tapDay.month.toString().padLeft(2, '0')}-${tapDay.day.toString().padLeft(2, '0')}';
+    final expectedFrom = DateTime.utc(tapDay.year, tapDay.month, tapDay.day);
+    final expectedTo = DateTime.utc(
+      tapDay.year,
+      tapDay.month,
+      tapDay.day,
+      23,
+      59,
+      59,
+    );
+
+    when(
+      () => repository.fetchSchedule(
+        from: expectedFrom,
+        to: expectedTo,
+        gymId: any(named: 'gymId'),
+      ),
+    ).thenAnswer((_) async => [_makeSession(1)]);
+
+    await tester.tap(find.byKey(Key('day_chip_$tapDayStr')));
+    await tester.pumpAndSettle();
+
+    verify(
+      () => repository.fetchSchedule(
+        from: expectedFrom,
+        to: expectedTo,
+        gymId: any(named: 'gymId'),
+      ),
+    ).called(1);
+  });
+
+  testWidgets('session card shows time only, not ISO date', (tester) async {
+    stubScheduleAny([_makeSession(1)]);
+    final provider = ClassSessionProvider(repository: repository);
+
+    await tester.pumpWidget(_wrap(provider));
+    await tester.pumpAndSettle();
+
+    final expectedTime = DateFormat('HH:mm').format(
+      DateTime.parse('2024-06-01T09:00:00Z').toLocal(),
+    );
+    expect(find.textContaining('2024-06-01'), findsNothing);
+    expect(find.textContaining(expectedTime), findsOneWidget);
+  });
+
   testWidgets('shows loading indicator initially', (tester) async {
     when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) => Completer<ClassSessionPage>().future);
+      () => repository.fetchSchedule(
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+        gymId: any(named: 'gymId'),
+      ),
+    ).thenAnswer((_) => Completer<List<ClassSession>>().future);
     final provider = ClassSessionProvider(repository: repository);
 
     await tester.pumpWidget(_wrap(provider));
@@ -112,9 +298,7 @@ void main() {
   });
 
   testWidgets('shows empty state when no sessions', (tester) async {
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([]));
+    stubScheduleAny([]);
     final provider = ClassSessionProvider(repository: repository);
 
     await tester.pumpWidget(_wrap(provider));
@@ -126,9 +310,7 @@ void main() {
   });
 
   testWidgets('shows session cards when sessions loaded', (tester) async {
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([_makeSession(1), _makeSession(2)]));
+    stubScheduleAny([_makeSession(1), _makeSession(2)]);
     final provider = ClassSessionProvider(repository: repository);
 
     await tester.pumpWidget(_wrap(provider));
@@ -138,9 +320,7 @@ void main() {
   });
 
   testWidgets('session card shows class type name', (tester) async {
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+    stubScheduleAny([_makeSession(1)]);
     final provider = ClassSessionProvider(repository: repository);
 
     await tester.pumpWidget(_wrap(provider));
@@ -150,9 +330,7 @@ void main() {
   });
 
   testWidgets('session card shows status chip PROGRAMADA', (tester) async {
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+    stubScheduleAny([_makeSession(1)]);
     final provider = ClassSessionProvider(repository: repository);
 
     await tester.pumpWidget(_wrap(provider));
@@ -163,13 +341,17 @@ void main() {
 
   testWidgets('shows error state with retry button on failure', (tester) async {
     when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
+      () => repository.fetchSchedule(
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+        gymId: any(named: 'gymId'),
+      ),
     ).thenThrow(
       ApiException(
         status: 401,
         error: 'Unauthorized',
         message: 'Token expired',
-        path: '/class-sessions',
+        path: '/class-sessions/schedule',
       ),
     );
     final provider = ClassSessionProvider(repository: repository);
@@ -182,15 +364,19 @@ void main() {
     expect(find.text('Token expired'), findsOneWidget);
   });
 
-  testWidgets('retry button calls loadSessions again', (tester) async {
+  testWidgets('retry button reloads sessions for selected day', (tester) async {
     when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
+      () => repository.fetchSchedule(
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+        gymId: any(named: 'gymId'),
+      ),
     ).thenThrow(
       ApiException(
         status: 500,
         error: 'Server Error',
         message: 'Internal error',
-        path: '/class-sessions',
+        path: '/class-sessions/schedule',
       ),
     );
     final provider = ClassSessionProvider(repository: repository);
@@ -198,9 +384,7 @@ void main() {
     await tester.pumpWidget(_wrap(provider));
     await tester.pumpAndSettle();
 
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+    stubScheduleAny([_makeSession(1)]);
 
     await tester.tap(find.byKey(const Key('classes_retry_button')));
     await tester.pumpAndSettle();
@@ -208,29 +392,10 @@ void main() {
     expect(find.byKey(const Key('session_card')), findsOneWidget);
   });
 
-  testWidgets('shows load_more_indicator when hasMore', (tester) async {
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([_makeSession(1)], hasMore: true));
-    // Stub page 1 with never-completing future to stop infinite scroll trigger
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 1),
-    ).thenAnswer((_) => Completer<ClassSessionPage>().future);
-    final provider = ClassSessionProvider(repository: repository);
-
-    await tester.pumpWidget(_wrap(provider));
-    await tester.pump();
-    await tester.pump();
-
-    expect(find.byKey(const Key('load_more_indicator')), findsOneWidget);
-  });
-
   testWidgets(
     'shows Reservar button for scheduled session with available spots',
     (tester) async {
-      when(
-        () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-      ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+      stubScheduleAny([_makeSession(1)]);
       final sessionProvider = ClassSessionProvider(repository: repository);
       final bookingProvider = BookingProvider(repository: bookingRepository);
 
@@ -247,9 +412,7 @@ void main() {
   testWidgets('book button calls book and shows success snackbar', (
     tester,
   ) async {
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+    stubScheduleAny([_makeSession(1)]);
     when(
       () =>
           bookingRepository.book(classSessionId: any(named: 'classSessionId')),
@@ -271,18 +434,14 @@ void main() {
   testWidgets('book button shows waitlist snackbar on WAITLISTED result', (
     tester,
   ) async {
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
-
+    stubScheduleAny([_makeSession(1)]);
     final waitlistedBooking = Booking(
       id: 43,
-      classSession: _session,
+      classSession: _bookingSession,
       status: BookingStatus.waitlisted,
       waitlistPosition: 3,
       bookedAt: DateTime.parse('2024-05-20T10:01:00Z'),
     );
-
     when(
       () =>
           bookingRepository.book(classSessionId: any(named: 'classSessionId')),
@@ -302,9 +461,7 @@ void main() {
   });
 
   testWidgets('book button shows error snackbar on failure', (tester) async {
-    when(
-      () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
-    ).thenAnswer((_) async => _makePage([_makeSession(1)]));
+    stubScheduleAny([_makeSession(1)]);
     when(
       () =>
           bookingRepository.book(classSessionId: any(named: 'classSessionId')),

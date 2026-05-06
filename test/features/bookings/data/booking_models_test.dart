@@ -13,7 +13,7 @@ const _sessionJson = {
   'id': 1,
   'classType': _classTypeJson,
   'gym': _gymJson,
-  'startTime': '2024-06-01T09:00:00Z',
+  'startTime': '2024-06-01T09:00:00.000Z',
 };
 
 const _bookingJson = {
@@ -21,7 +21,7 @@ const _bookingJson = {
   'classSession': _sessionJson,
   'status': 'CONFIRMED',
   'waitlistPosition': null,
-  'bookedAt': '2024-05-20T10:00:00Z',
+  'bookedAt': '2024-05-20T10:00:00.000Z',
 };
 
 const _waitlistedBookingJson = {
@@ -29,7 +29,7 @@ const _waitlistedBookingJson = {
   'classSession': _sessionJson,
   'status': 'WAITLISTED',
   'waitlistPosition': 3,
-  'bookedAt': '2024-05-20T10:01:00Z',
+  'bookedAt': '2024-05-20T10:01:00.000Z',
 };
 
 void main() {
@@ -81,7 +81,7 @@ void main() {
       expect(session.id, 1);
       expect(session.classType.name, 'Spinning 45min');
       expect(session.gym.name, 'GymBook Central');
-      expect(session.startTime, '2024-06-01T09:00:00Z');
+      expect(session.startTime, DateTime.parse('2024-06-01T09:00:00Z'));
     });
 
     test('toJson round-trips', () {
@@ -125,7 +125,7 @@ void main() {
       expect(booking.id, 42);
       expect(booking.status, BookingStatus.confirmed);
       expect(booking.waitlistPosition, isNull);
-      expect(booking.bookedAt, '2024-05-20T10:00:00Z');
+      expect(booking.bookedAt, DateTime.parse('2024-05-20T10:00:00Z'));
       expect(booking.classSession.id, 1);
     });
 

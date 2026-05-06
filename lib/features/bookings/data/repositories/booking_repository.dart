@@ -30,7 +30,7 @@ class BookingRepository {
     final response = await _client.post(
       Uri.parse('$_baseUrl/bookings'),
       headers: await _authHeaders(),
-      body: jsonEncode({'classSessionId': classSessionId}),
+      body: jsonEncode({'sessionId': classSessionId}),
     );
 
     if (response.statusCode != 201) {
@@ -90,7 +90,7 @@ class BookingRepository {
   }
 
   Future<Booking> cancelBooking({required int bookingId}) async {
-    final response = await _client.patch(
+    final response = await _client.post(
       Uri.parse('$_baseUrl/bookings/$bookingId/cancel'),
       headers: await _authHeaders(),
     );

@@ -37,6 +37,7 @@ class HomeShell extends StatefulWidget {
 @visibleForTesting
 class HomeShellState extends State<HomeShell> {
   int currentIndex = 0;
+  final _classesKey = GlobalKey<ClassesScreenState>();
 
   static const titles = ['Inicio', 'Clases', 'Estadísticas', 'Perfil'];
 
@@ -85,8 +86,17 @@ class HomeShellState extends State<HomeShell> {
                     ),
                   ),
                 ),
+                ChangeNotifierProvider(
+                  create: (_) => SubscriptionProvider(
+                    repository: SubscriptionRepository(
+                      httpClient: http.Client(),
+                      tokenStorage: tokenStorage,
+                      baseUrl: baseUrl,
+                    ),
+                  ),
+                ),
               ],
-              child: const ClassesScreen(),
+              child: ClassesScreen(key: _classesKey),
             ),
             ChangeNotifierProvider(
               create: (_) => StatsProvider(
@@ -112,7 +122,10 @@ class HomeShellState extends State<HomeShell> {
         ),
         bottomNavigationBar: NavigationBar(
           selectedIndex: currentIndex,
-          onDestinationSelected: (i) => setState(() => currentIndex = i),
+          onDestinationSelected: (i) {
+          setState(() => currentIndex = i);
+          if (i == 1) _classesKey.currentState?.refresh();
+        },
           destinations: const [
             NavigationDestination(
               icon: Icon(Icons.home_outlined),

@@ -26,6 +26,30 @@ class ClassSessionProvider extends ChangeNotifier {
   bool get isLoadingMore => _isLoadingMore;
   int? get gymId => _gymId;
 
+  Future<void> loadSessionsByDay(DateTime day, {int? gymId}) async {
+    _gymId = gymId;
+    _state = ClassSessionLoadState.loading;
+    _sessions = [];
+    _hasMore = false;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final from = DateTime.utc(day.year, day.month, day.day, 0, 0, 0);
+      final to = DateTime.utc(day.year, day.month, day.day, 23, 59, 59);
+      _sessions = await _repository.fetchSchedule(from: from, to: to, gymId: gymId);
+      _state = ClassSessionLoadState.loaded;
+    } on ApiException catch (e) {
+      _errorMessage = e.message;
+      _state = ClassSessionLoadState.error;
+    } catch (e) {
+      _errorMessage = e.toString();
+      _state = ClassSessionLoadState.error;
+    } finally {
+      notifyListeners();
+    }
+  }
+
   Future<void> loadSessions({int? gymId}) async {
     _gymId = gymId;
     _state = ClassSessionLoadState.loading;
