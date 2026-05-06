@@ -18,7 +18,7 @@ ClassSession _makeSession(int id) => ClassSession(
     city: 'Madrid',
   ),
   instructor: const SessionInstructor(id: 2, name: 'Jane Doe'),
-  startTime: '2024-06-01T09:00:00',
+  startTime: '2024-06-01T09:00:00Z',
   durationMinutes: 45,
   maxCapacity: 20,
   room: 'Studio A',
@@ -43,6 +43,10 @@ ClassSessionPage _makePage(
 void main() {
   late MockClassSessionRepository repository;
   late ClassSessionProvider provider;
+
+  setUpAll(() {
+    registerFallbackValue(DateTime(2024));
+  });
 
   setUp(() {
     repository = MockClassSessionRepository();
@@ -140,6 +144,116 @@ void main() {
       await provider.loadSessions();
 
       expect(provider.hasMore, isTrue);
+    });
+  });
+
+  group('loadSessionsByDay', () {
+    final day = DateTime(2024, 6, 1);
+    final expectedFrom = DateTime.utc(2024, 6, 1, 0, 0, 0);
+    final expectedTo = DateTime.utc(2024, 6, 1, 23, 59, 59);
+
+    test('transitions loading → loaded with sessions', () async {
+      when(
+        () => repository.fetchSchedule(
+          from: expectedFrom,
+          to: expectedTo,
+          gymId: any(named: 'gymId'),
+        ),
+      ).thenAnswer((_) async => [_makeSession(1), _makeSession(2)]);
+
+      final states = <ClassSessionLoadState>[];
+      provider.addListener(() => states.add(provider.state));
+
+      await provider.loadSessionsByDay(day);
+
+      expect(states, [
+        ClassSessionLoadState.loading,
+        ClassSessionLoadState.loaded,
+      ]);
+      expect(provider.sessions.length, 2);
+      expect(provider.hasMore, isFalse);
+    });
+
+    test('calls fetchSchedule with UTC start/end of day', () async {
+      when(
+        () => repository.fetchSchedule(
+          from: expectedFrom,
+          to: expectedTo,
+          gymId: any(named: 'gymId'),
+        ),
+      ).thenAnswer((_) async => []);
+
+      await provider.loadSessionsByDay(day);
+
+      verify(
+        () => repository.fetchSchedule(
+          from: expectedFrom,
+          to: expectedTo,
+          gymId: any(named: 'gymId'),
+        ),
+      ).called(1);
+    });
+
+    test('passes gymId to fetchSchedule', () async {
+      when(
+        () => repository.fetchSchedule(
+          from: expectedFrom,
+          to: expectedTo,
+          gymId: 5,
+        ),
+      ).thenAnswer((_) async => []);
+
+      await provider.loadSessionsByDay(day, gymId: 5);
+
+      verify(
+        () => repository.fetchSchedule(
+          from: expectedFrom,
+          to: expectedTo,
+          gymId: 5,
+        ),
+      ).called(1);
+    });
+
+    test('transitions loading → error on ApiException', () async {
+      when(
+        () => repository.fetchSchedule(
+          from: any(named: 'from'),
+          to: any(named: 'to'),
+          gymId: any(named: 'gymId'),
+        ),
+      ).thenThrow(
+        ApiException(
+          status: 500,
+          error: 'Server Error',
+          message: 'Schedule fetch failed',
+          path: '/class-sessions/schedule',
+        ),
+      );
+
+      await provider.loadSessionsByDay(day);
+
+      expect(provider.state, ClassSessionLoadState.error);
+      expect(provider.errorMessage, 'Schedule fetch failed');
+    });
+
+    test('clears sessions from previous paginated load', () async {
+      when(
+        () => repository.fetchSessions(gymId: any(named: 'gymId'), page: 0),
+      ).thenAnswer((_) async => _makePage([_makeSession(1), _makeSession(2)]));
+      await provider.loadSessions();
+      expect(provider.sessions.length, 2);
+
+      when(
+        () => repository.fetchSchedule(
+          from: expectedFrom,
+          to: expectedTo,
+          gymId: any(named: 'gymId'),
+        ),
+      ).thenAnswer((_) async => [_makeSession(99)]);
+      await provider.loadSessionsByDay(day);
+
+      expect(provider.sessions.length, 1);
+      expect(provider.sessions.first.id, 99);
     });
   });
 

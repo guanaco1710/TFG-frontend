@@ -187,5 +187,23 @@ void main() {
 
       expect(find.text('Gimnasios'), findsOneWidget);
     });
+
+    testWidgets('renders mis reservas button', (tester) async {
+      await tester.pumpWidget(wrapTab());
+
+      expect(find.byKey(const Key('my_bookings_button')), findsOneWidget);
+      expect(find.text('MIS RESERVAS'), findsOneWidget);
+    });
+
+    testWidgets('tapping mis reservas button navigates to bookings screen', (
+      tester,
+    ) async {
+      await tester.pumpWidget(wrapTab());
+
+      await tester.tap(find.byKey(const Key('my_bookings_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Mis Reservas'), findsOneWidget);
+    });
   });
 }

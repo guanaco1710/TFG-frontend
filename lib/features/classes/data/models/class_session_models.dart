@@ -2,18 +2,18 @@ class SessionClassType {
   const SessionClassType({
     required this.id,
     required this.name,
-    required this.level,
+    this.level,
   });
 
   final int id;
   final String name;
-  final String level;
+  final String? level;
 
   factory SessionClassType.fromJson(Map<String, dynamic> json) =>
       SessionClassType(
         id: json['id'] as int,
         name: json['name'] as String,
-        level: json['level'] as String,
+        level: json['level'] as String?,
       );
 
   Map<String, dynamic> toJson() => {'id': id, 'name': name, 'level': level};
@@ -34,19 +34,19 @@ class SessionGym {
   const SessionGym({
     required this.id,
     required this.name,
-    required this.address,
+    this.address,
     required this.city,
   });
 
   final int id;
   final String name;
-  final String address;
+  final String? address;
   final String city;
 
   factory SessionGym.fromJson(Map<String, dynamic> json) => SessionGym(
     id: json['id'] as int,
     name: json['name'] as String,
-    address: json['address'] as String,
+    address: json['address'] as String?,
     city: json['city'] as String,
   );
 
@@ -218,6 +218,24 @@ class ClassSession {
     status,
     confirmedCount,
     availableSpots,
+  );
+}
+
+class RosterEntry {
+  const RosterEntry({
+    required this.userId,
+    required this.userFullName,
+    required this.userEmail,
+  });
+
+  final int userId;
+  final String userFullName;
+  final String userEmail;
+
+  factory RosterEntry.fromJson(Map<String, dynamic> json) => RosterEntry(
+    userId: json['userId'] as int,
+    userFullName: json['userFullName'] as String,
+    userEmail: json['userEmail'] as String,
   );
 }
 

@@ -50,4 +50,47 @@ class ClassSessionRepository {
 
     return ClassSessionPage.fromJson(body);
   }
+
+  Future<List<RosterEntry>> fetchRoster(int sessionId) async {
+    final uri = Uri.parse('$_baseUrl/class-sessions/$sessionId/bookings');
+    final response = await _client.get(uri, headers: await _authHeaders());
+    final body = jsonDecode(response.body);
+    if (response.statusCode != 200) {
+      throw ApiException.fromJson(
+        body as Map<String, dynamic>,
+        response.statusCode,
+      );
+    }
+    final list = body is List
+        ? body as List<dynamic>
+        : (body as Map<String, dynamic>)['content'] as List<dynamic>;
+    return list
+        .map((e) => RosterEntry.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<List<ClassSession>> fetchSchedule({
+    required DateTime from,
+    required DateTime to,
+    int? gymId,
+  }) async {
+    final uri = Uri.parse('$_baseUrl/class-sessions/schedule').replace(
+      queryParameters: {
+        'from': from.toIso8601String(),
+        'to': to.toIso8601String(),
+        if (gymId != null) 'gymId': '$gymId',
+      },
+    );
+
+    final response = await _client.get(uri, headers: await _authHeaders());
+
+    final body = jsonDecode(response.body);
+    if (response.statusCode != 200) {
+      throw ApiException.fromJson(body as Map<String, dynamic>, response.statusCode);
+    }
+
+    return (body as List<dynamic>)
+        .map((e) => ClassSession.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
 }
