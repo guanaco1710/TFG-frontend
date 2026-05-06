@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_frontend/core/models/subscription.dart';
+import 'package:tfg_frontend/core/storage/token_storage.dart';
 import 'package:tfg_frontend/features/bookings/data/models/booking_models.dart';
+import 'package:tfg_frontend/features/bookings/data/repositories/booking_repository.dart';
 import 'package:tfg_frontend/features/bookings/presentation/providers/booking_provider.dart';
 import 'package:tfg_frontend/features/classes/data/models/class_session_models.dart';
+import 'package:tfg_frontend/features/classes/data/repositories/class_session_repository.dart';
 import 'package:tfg_frontend/features/classes/presentation/providers/class_session_provider.dart';
+import 'package:tfg_frontend/features/classes/presentation/providers/session_roster_provider.dart';
+import 'package:tfg_frontend/features/classes/presentation/screens/class_session_detail_screen.dart';
 import 'package:tfg_frontend/features/subscriptions/presentation/providers/subscription_provider.dart';
 
 class ClassesScreen extends StatefulWidget {
@@ -427,6 +433,41 @@ class _SessionCardState extends State<_SessionCard> {
     if (success) widget.onRefresh();
   }
 
+  void _openDetail(BuildContext context) {
+    final tokenStorage = context.read<TokenStorage>();
+    final baseUrl = context.read<String>();
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => SessionRosterProvider(
+                repository: ClassSessionRepository(
+                  httpClient: http.Client(),
+                  tokenStorage: tokenStorage,
+                  baseUrl: baseUrl,
+                ),
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => BookingProvider(
+                repository: BookingRepository(
+                  httpClient: http.Client(),
+                  tokenStorage: tokenStorage,
+                  baseUrl: baseUrl,
+                ),
+              ),
+            ),
+          ],
+          child: ClassSessionDetailScreen(
+            session: widget.session,
+            initialBookingId: _activeBookingId,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -438,7 +479,10 @@ class _SessionCardState extends State<_SessionCard> {
     return Card(
       key: const Key('session_card'),
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => _openDetail(context),
+        child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -533,6 +577,7 @@ class _SessionCardState extends State<_SessionCard> {
             ],
           ],
         ),
+      ),
       ),
     );
   }

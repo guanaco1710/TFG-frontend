@@ -230,4 +230,75 @@ void main() {
       expect(page.totalElements, 0);
     });
   });
+
+  group('fetchRoster', () {
+    final rosterJson = [
+      {'userId': 1, 'userFullName': 'Jane Doe', 'userEmail': 'jane@example.com'},
+      {'userId': 2, 'userFullName': 'Carlos M.', 'userEmail': 'carlos@gym.es'},
+    ];
+
+    test('returns list of RosterEntry on 200', () async {
+      when(
+        () => httpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((_) async => _jsonOk(rosterJson));
+
+      final entries = await repository.fetchRoster(5);
+
+      expect(entries.length, 2);
+      expect(entries.first.userFullName, 'Jane Doe');
+      expect(entries.last.userId, 2);
+    });
+
+    test('hits /class-sessions/{id}/bookings URL', () async {
+      when(
+        () => httpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((_) async => _jsonOk(rosterJson));
+
+      await repository.fetchRoster(7);
+
+      final captured = verify(
+        () => httpClient.get(captureAny(), headers: any(named: 'headers')),
+      ).captured;
+      expect((captured.first as Uri).path, '/api/v1/class-sessions/7/bookings');
+    });
+
+    test('sends Authorization header', () async {
+      when(
+        () => httpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((_) async => _jsonOk(rosterJson));
+
+      await repository.fetchRoster(1);
+
+      final captured = verify(
+        () => httpClient.get(any(), headers: captureAny(named: 'headers')),
+      ).captured;
+      expect(
+        (captured.first as Map<String, String>)['Authorization'],
+        'Bearer access-token',
+      );
+    });
+
+    test('throws ApiException on 401', () async {
+      when(
+        () => httpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer(
+        (_) async => _jsonError(401, 'Unauthorized', 'Token expired'),
+      );
+
+      expect(
+        () => repository.fetchRoster(1),
+        throwsA(isA<ApiException>().having((e) => e.status, 'status', 401)),
+      );
+    });
+
+    test('returns empty list when no attendees', () async {
+      when(
+        () => httpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((_) async => _jsonOk(<dynamic>[]));
+
+      final entries = await repository.fetchRoster(1);
+
+      expect(entries, isEmpty);
+    });
+  });
 }

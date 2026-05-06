@@ -221,6 +221,24 @@ class ClassSession {
   );
 }
 
+class RosterEntry {
+  const RosterEntry({
+    required this.userId,
+    required this.userFullName,
+    required this.userEmail,
+  });
+
+  final int userId;
+  final String userFullName;
+  final String userEmail;
+
+  factory RosterEntry.fromJson(Map<String, dynamic> json) => RosterEntry(
+    userId: json['userId'] as int,
+    userFullName: json['userFullName'] as String,
+    userEmail: json['userEmail'] as String,
+  );
+}
+
 class ClassSessionPage {
   const ClassSessionPage({
     required this.content,

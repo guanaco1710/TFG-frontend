@@ -203,6 +203,30 @@ void main() {
     });
   });
 
+  group('RosterEntry', () {
+    test('fromJson parses all fields', () {
+      final entry = RosterEntry.fromJson({
+        'userId': 1,
+        'userFullName': 'Jane Doe',
+        'userEmail': 'jane@example.com',
+      });
+      expect(entry.userId, 1);
+      expect(entry.userFullName, 'Jane Doe');
+      expect(entry.userEmail, 'jane@example.com');
+    });
+
+    test('fromJson parses different values', () {
+      final entry = RosterEntry.fromJson({
+        'userId': 42,
+        'userFullName': 'Carlos M.',
+        'userEmail': 'carlos@gym.es',
+      });
+      expect(entry.userId, 42);
+      expect(entry.userFullName, 'Carlos M.');
+      expect(entry.userEmail, 'carlos@gym.es');
+    });
+  });
+
   group('ClassSessionPage', () {
     test('fromJson parses page and sessions', () {
       final page = ClassSessionPage.fromJson({
